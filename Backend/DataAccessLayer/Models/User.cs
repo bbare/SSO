@@ -10,7 +10,6 @@ namespace DataAccessLayer.Models
         public User()
         {
             CreatedAt = DateTime.UtcNow;
-            Sessions = new HashSet<Session>();
             Id = Guid.NewGuid();
             Disabled = false;
         }
@@ -56,7 +55,5 @@ namespace DataAccessLayer.Models
 
         [Column(TypeName = "datetime2"), DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; }
-
-        public ICollection<Session> Sessions { get; set; }
     }
 }

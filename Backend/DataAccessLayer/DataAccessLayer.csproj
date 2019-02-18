@@ -87,7 +87,7 @@
     <Compile Include="Repositories\ClaimRepository.cs" />
     <Compile Include="Repositories\ClientRepository.cs" />
     <Compile Include="Repositories\OperationRepository.cs" />
-    <Compile Include="Repositories\SessionReposity.cs" />
+    <Compile Include="Repositories\SessionRepository.cs" />
     <Compile Include="Repositories\UserManagementRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
   </ItemGroup>

@@ -6,9 +6,12 @@ namespace DataAccessLayer.Models
 {
     public class Session
     {
+        public static readonly int MINUTES_UNTIL_EXPIRATION = 30;
         public Session()
         {
             CreatedAt = DateTime.UtcNow;
+            UpdatedAt = DateTime.UtcNow;
+            ExpiresAt = DateTime.UtcNow.AddMinutes(MINUTES_UNTIL_EXPIRATION);
             Id = Guid.NewGuid();
         }
 

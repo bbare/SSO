@@ -85,5 +85,13 @@ namespace UnitTesting
 
             Assert.IsTrue(hasAccess);
         }
+
+        [TestMethod]
+        public void userHasNoServiceAccess()
+        {
+            bool hasAccess = claimService.UserHasServiceAccess(user1, service2);
+
+            Assert.IsFalse(hasAccess);
+        }
     }
 }

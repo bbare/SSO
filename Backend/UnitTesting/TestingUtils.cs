@@ -22,9 +22,10 @@ namespace UnitTesting
 
         public User CreateUserInDb()
         {
-            
+
             User u = new User
             {
+                Id = Guid.NewGuid(),
                 Email = Guid.NewGuid() + "@" + Guid.NewGuid() + ".com",
                 DateOfBirth = DateTime.UtcNow,
                 City = "Los Angeles",
@@ -41,7 +42,7 @@ namespace UnitTesting
         {
             using (var _db = new DatabaseContext())
             {
-                _db.Users.Add(user);
+                _db.Entry(user).State = System.Data.Entity.EntityState.Added;
                 _db.SaveChanges();
 
                 return user;
@@ -52,6 +53,7 @@ namespace UnitTesting
         {
             User user = new User
             {
+                Id = Guid.NewGuid(),
                 Email = Guid.NewGuid() + "@" + Guid.NewGuid() + ".com",
                 DateOfBirth = DateTime.UtcNow,
                 City = "Los Angeles",
@@ -62,24 +64,33 @@ namespace UnitTesting
             };
             return user;
         }
-
-        public Session CreateSession(User user)
+        
+        public Session CreateSessionObject(User user)
         {
-           using (var _db = new DatabaseContext())
+            Session session = new Session
             {
-                Session s = new Session
-                {
-                    UserId = user.Id,
-                    ExpiresAt = DateTime.UtcNow,
-                    Token = "token"
-                };
-                _db.Sessions.Add(s);
-                _db.SaveChanges();
-
-                return s;
-            }
+                Id = Guid.NewGuid(),
+                CreatedAt = DateTime.UtcNow,
+                UserId = user.Id,
+                UpdatedAt = DateTime.UtcNow,
+                ExpiresAt = DateTime.UtcNow.AddMinutes(Session.MINUTES_UNTIL_EXPIRATION),
+                User = user,
+                Token = (Guid.NewGuid()).ToString()
+            };
+            return session;
         }
 
+        public Session CreateSessionInDb(Session session)
+        {
+            using (var _db = new DatabaseContext())
+            {
+                _db.Sessions.Add(session);
+                _db.SaveChanges();
+
+                return session;
+            }
+        }
+        
         public Service CreateServiceInDb(bool enabled)
         {
             using (var _db = new DatabaseContext())
