@@ -53,40 +53,14 @@
     <Compile Include="Migrations\201812040636053_create-table-user.Designer.cs">
       <DependentUpon>201812040636053_create-table-user.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201812040637147_create-table-service.cs" />
-    <Compile Include="Migrations\201812040637147_create-table-service.Designer.cs">
-      <DependentUpon>201812040637147_create-table-service.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201812040639143_create-table-claim.cs" />
-    <Compile Include="Migrations\201812040639143_create-table-claim.Designer.cs">
-      <DependentUpon>201812040639143_create-table-claim.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201812040642468_create-table-session.cs" />
     <Compile Include="Migrations\201812040642468_create-table-session.Designer.cs">
       <DependentUpon>201812040642468_create-table-session.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201812060647213_add-Client-ClientService-modified-Claim.cs" />
-    <Compile Include="Migrations\201812060647213_add-Client-ClientService-modified-Claim.Designer.cs">
-      <DependentUpon>201812060647213_add-Client-ClientService-modified-Claim.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201812100518074_user-add-manager.cs" />
-    <Compile Include="Migrations\201812100518074_user-add-manager.Designer.cs">
-      <DependentUpon>201812100518074_user-add-manager.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201812112324166_deleted-clientUser-added-ClientIdinUser.cs" />
-    <Compile Include="Migrations\201812112324166_deleted-clientUser-added-ClientIdinUser.Designer.cs">
-      <DependentUpon>201812112324166_deleted-clientUser-added-ClientIdinUser.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\Claim.cs" />
-    <Compile Include="Models\Client.cs" />
-    <Compile Include="Models\Service.cs" />
     <Compile Include="Models\Session.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\ClaimRepository.cs" />
-    <Compile Include="Repositories\ClientRepository.cs" />
-    <Compile Include="Repositories\OperationRepository.cs" />
     <Compile Include="Repositories\SessionRepository.cs" />
     <Compile Include="Repositories\UserManagementRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
@@ -104,23 +78,8 @@
     <EmbeddedResource Include="Migrations\201812040636053_create-table-user.resx">
       <DependentUpon>201812040636053_create-table-user.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812040637147_create-table-service.resx">
-      <DependentUpon>201812040637147_create-table-service.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812040639143_create-table-claim.resx">
-      <DependentUpon>201812040639143_create-table-claim.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201812040642468_create-table-session.resx">
       <DependentUpon>201812040642468_create-table-session.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812060647213_add-Client-ClientService-modified-Claim.resx">
-      <DependentUpon>201812060647213_add-Client-ClientService-modified-Claim.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812100518074_user-add-manager.resx">
-      <DependentUpon>201812100518074_user-add-manager.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812112324166_deleted-clientUser-added-ClientIdinUser.resx">
-      <DependentUpon>201812112324166_deleted-clientUser-added-ClientIdinUser.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
