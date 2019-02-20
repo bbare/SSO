@@ -67,16 +67,5 @@ namespace DataAccessLayer.Repositories
             }
             return false;
         }
-
-        public bool IsManagerOver(DatabaseContext _db, User user, User subject)
-        {
-            if (subject == null || subject.ManagerId == null || user == null) return false;
-
-            if (subject.ManagerId == user.Id) return true;
-
-            // Check if we're a manager of the subjects manager
-            var managerOfSubject = GetUser(_db, (Guid) subject.ManagerId);
-            return IsManagerOver(_db, user, managerOfSubject);
-        }
     }
 }

@@ -16,6 +16,5 @@ namespace ServiceLayer.Services
         User GetUser(DatabaseContext _db, Guid Id);
         User DeleteUser(DatabaseContext _db, Guid Id);
         User UpdateUser(DatabaseContext _db, User user);
-        bool IsManagerOver(DatabaseContext _db, User user, User subject);
     }
 }

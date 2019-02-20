@@ -48,11 +48,6 @@ namespace ServiceLayer.Services
             return _UserManagementRepo.UpdateUser(_db, user);
         }
 
-        public bool IsManagerOver(DatabaseContext _db, User user, User subject)
-        {
-            return _UserManagementRepo.IsManagerOver(_db, user, subject);
-        }
-
         public User Login(DatabaseContext _db, string email, string password)
         {
             UserRepository userRepo = new UserRepository();
