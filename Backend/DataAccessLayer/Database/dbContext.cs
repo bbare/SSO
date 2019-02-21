@@ -14,7 +14,7 @@ namespace DataAccessLayer.Database
     {
         public DatabaseContext()
         {
-            this.Database.Connection.ConnectionString = "Data Source=DESKTOP-9OTEOUK\\MSSQLSERVER01;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            this.Database.Connection.ConnectionString = "Data Source=localhost;Initial Catalog=SSO;Integrated Security=True";
         }
 
         public DbSet<User> Users { get; set; }
