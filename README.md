@@ -4,8 +4,7 @@ SSO for CECS-491A
 ## GitHub Flow
 ### For creating a branch
 A new branch is created off of master when working on a feature or a fix. Your branch name should be descriptive, for example:
-feature/user-registration
-chore/refactor-db
+(feature/user-registration, chore/refactor-db)
 
 ### Commits
 Write clear commit messages so you can make it easier for other people to follow along and provide feedback.
