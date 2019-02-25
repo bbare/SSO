@@ -25,8 +25,6 @@ namespace ServiceLayer.Services
             return userExists;
         }
 
-
-
         //Function to create token in the system
         public string createToken(string userName)
         {
@@ -83,13 +81,35 @@ namespace ServiceLayer.Services
 
         }
 
-        public void sendResetEmailUserExists()
+        public void sendResetEmailUserExists(string receiverEmail, string resetURL)
         {
 
+            //Need SQL Query to get info about user from DB
+            string userFirstName = "";
+            string userlastName = "";
+            string userFullName = userFirstName + " " + userlastName;
+            string template = "Hi {0}, \r\n" +
+                                             "You recently requested to reset your password for your KFC account, click the link below to reset it.\r\n" +
+                                             "The URL is only valid for the next 5 minutes\r\n {1}" +
+                                             "If you did not request to reset your password, please contact us by responding to this email.\r\n\r\n" +
+                                             "Thanks, KFC Team";
+            string data = "userFirstName, resetURL";
+            string resetPasswordBodyString = string.Format(template, data);
+
+        EmailService.sendEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, resetPasswordBodyString);
         }
-        public void sendResetEmailUserDoesNotExist()
-        {
 
+        public void sendResetEmailUserDoesNotExist(string receiverEmail)
+        {
+            string userFullName = "Unknown";
+            string resetPasswordUserDoesNotExistEmailBody = "Hello, \r\n" +
+                              "You (or someone else) entered this email address when trying to reset the password of a KFC account.\r\n" +
+                              "However, this email address is not on our database of registered users and therefore the attempt to reset the password has failed.\r\n" +
+                              "If you have a KFC account and were expecting this email, please try again using the email address you gave when opening your account." +
+                              "If you do not have a KFC account, please ignore this email.\r\n" +
+                              "For more information about KFC, please visit www.kfc.com/faq \r\n\r\n" +
+                              "Best Regards, KFC Team";
+            EmailService.sendEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, resetPasswordUserDoesNotExistEmailBody);
         }
     }
 }
