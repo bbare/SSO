@@ -44,7 +44,10 @@ namespace ServiceLayer.Services
         //Function to add the token to the database
         public void addTokenToDB(string userName, string token, DateTime expirationTime)
         {
+
             //SQL Query to add 3 arguments to token table in DB
+            //ResetRepository.addToken(userName, token, expirationTime);
+
             //sql query to disable the user
         }
 
@@ -56,7 +59,7 @@ namespace ServiceLayer.Services
             DateTime when = DateTime.FromBinary(BitConverter.ToInt64(data, 0));
 
             //Check to see if the token is valid
-            
+            //if ResetRepository.existingToken(token)
             //SQL Query to see if token exists in DB
                 //get the byte data from token in db
                     //Compare the two's data to see if they're the same token
@@ -65,20 +68,20 @@ namespace ServiceLayer.Services
             if(!(when < DateTime.Now))
             {
                 tokenValid = true;
-                deleteTokenFromDB();
+                ResetRepository.deleteToken(token);
                 return tokenValid;
             }
             //Case where token has expired
             else
             {
-                deleteTokenFromDB();
+                ResetRepository.deleteToken(token);
                 return tokenValid;
             }
         }
 
-        public void deleteTokenFromDB()
+        public void deleteTokenFromDB(string token)
         {
-
+            ResetRepository.deleteToken(token)
         }
 
         public void sendResetEmailUserExists(string receiverEmail, string resetURL)

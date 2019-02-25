@@ -13,7 +13,7 @@ namespace DataAccessLayer.Models
         [Required, Key] 
         public string resetToken { get; set; }
         [Required, ForeignKey("User")]
-        public string userID { get; set; }
+        public Guid userID { get; set; }
         [Required]
         public DateTime expirationTime { get; set; }
     }
