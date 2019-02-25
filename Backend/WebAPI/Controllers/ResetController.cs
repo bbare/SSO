@@ -7,8 +7,7 @@ using System.Web.Http;
 
 namespace WebAPI.Controllers
 {
-    public class ResetController : Controller
+    public class ResetController : ApiController
     {
-        
     }
 }
