@@ -8,36 +8,69 @@ using DataAccessLayer.Database;
 
 namespace DataAccessLayer.Repositories
 {
-    class ResetRepository
+    class ResetRepository: IResetRepository, IDisposable
     {
-        public string addToken(string userName, string token, DateTime expirationTime)
+        private DatabaseContext ResetContext;
+        public ResetRepository(DatabaseContext _db)
+        {
+            this.ResetContext = _db;
+        }
+
+        //Function to add the token to the DB
+        public void addToken(string userName, string token, DateTime expirationTime)
         {
             //Query to get the userID of the provided username
+            User userToAdd = ResetContext.Users.Find(userName);
+            Guid userIDToAdd = userToAdd.Id;
             //Query to add all data to reset token table
+            ResetToken tokenToAdd = new ResetToken
+            {
+                userID = userIDToAdd,
+                resetTokenString = token,
+                expirationTime = expirationTime
+            };
+            ResetContext.ResetTokens.Add(tokenToAdd);
         }
 
-        public string deleteToken(string token)
+        //Function to delete the token from the DB
+        public void deleteToken(string token)
         {
-
+            ResetToken tokenToRemove = ResetContext.ResetTokens.Find(token);
+            ResetContext.ResetTokens.Remove(tokenToRemove);
         }
 
-        public DateTime getExpirationTime()
+        //Function to get the expiration time of the token
+        public DateTime getExpirationTime(string token)
         {
-
-        }
-        public Guid getUserID()
-        {
-
-        }
-
-        public string getToken()
-        {
-
+            ResetToken matchingToken = ResetContext.ResetTokens.Find(token);
+            DateTime expirationTime = matchingToken.expirationTime;
+            return expirationTime;
         }
 
-        public bool existingToken(string token)
+        //Function to get the UserID associated with the reset token
+        public Guid getUserID(string token)
         {
+            ResetToken matchingToken = ResetContext.ResetTokens.Find(token);
+            Guid userID = matchingToken.userID;
+            return userID;
+        }
 
+        //Function to get the reset token given userID
+        public string getToken(Guid userID)
+        {
+            ResetToken tokenToGet = ResetContext.ResetTokens.Find(userID);
+            return tokenToGet.resetTokenString;
+        }
+
+        //Function to see if the token exists in the DB, given the token
+        public bool existingTokenWithToken(string token)
+        {
+            ResetContext
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
         }
     }
 }
