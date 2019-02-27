@@ -10,14 +10,14 @@ using DataAccessLayer.Repositories;
 
 namespace ServiceLayer.Services
 {
-    class ResetService
+    public class ResetService
     {
         //Variable for how long the token is supposed to be live
         private const double TimeToExpire = 5;
         //Constant for the password reset email subject line
         private const string resetPasswordSubjectString = "KFC SSO Password Reset";
 
-        private const string resetControllerURL = "kfcsso.com/api/reset";
+        private const string resetControllerURL = "kfcsso.com/api/reset/resetpassword/?id=";
 
         private ResetRepository _resetRepo;
         public ResetService()
@@ -36,20 +36,20 @@ namespace ServiceLayer.Services
 
             string token = Convert.ToBase64String(time.Concat(key).ToArray());
 
-            addTokenToDB(userName, token, expirationTime);
-
             return token;
         }
 
         public string createResetURL(string token)
         {
-            string resetURL = ;
+            string resetURL = resetControllerURL + token;
             return resetURL;
         }
 
         //Function to add the token to the database
-        public void addTokenToDB(string userName, string token, DateTime expirationTime)
+        public void addTokenToDB(string userName, string token)
         {
+            byte[] data = Convert.FromBase64String(token);
+            DateTime expirationTime = DateTime.FromBinary(BitConverter.ToInt64(data, 0));
             _resetRepo.addToken(userName, token, expirationTime);
             //TODO: add sql query to disable the user
         }
@@ -100,8 +100,8 @@ namespace ServiceLayer.Services
                                              "Thanks, KFC Team";
             string data = "userFirstName, resetURL";
             string resetPasswordBodyString = string.Format(template, data);
-
-            EmailService.sendEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, resetPasswordBodyString);
+            EmailService es = new EmailService();
+            es.sendEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, resetPasswordBodyString);
         }
 
         public void sendResetEmailUserDoesNotExist(string receiverEmail)
@@ -114,7 +114,8 @@ namespace ServiceLayer.Services
                               "If you do not have a KFC account, please ignore this email.\r\n" +
                               "For more information about KFC, please visit www.kfc.com/faq \r\n\r\n" +
                               "Best Regards, KFC Team";
-            EmailService.sendEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, resetPasswordUserDoesNotExistEmailBody);
+            EmailService es = new EmailService();
+            es.sendEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, resetPasswordUserDoesNotExistEmailBody);
         }
 
         public void sendPasswordChange(string receiverEmail)
@@ -129,8 +130,8 @@ namespace ServiceLayer.Services
                                              "Thanks, KFC Team";
             string data = "userFirstName";
             string resetPasswordBodyString = string.Format(template, data);
-
-            EmailService.sendEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, resetPasswordBodyString);
+            EmailService es = new EmailService();
+            es.sendEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, resetPasswordBodyString);
         }
         #endregion
     }
