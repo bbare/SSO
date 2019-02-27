@@ -4,14 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MailKit;
+using MailKit.Net.Smtp;
 using MimeKit;
 
 namespace ServiceLayer.Services
 {
-    class EmailService
+    public class EmailService: IEmailService
     {
+        //Need to setup email server before populating these variables with data
+        private const string SmtpServer = "";
+        private const int SmtpPort = ;
+        private const string SmtpUsername = "";
+        private const string SmtpPassword = "";
+
+
         //Function to send an email without formatting
-        public static void sendEmailPlainBody(string receiverName, string receiverEmail, string emailSubject, string emailBody)
+        public void sendEmailPlainBody(string receiverName, string receiverEmail, string emailSubject, string emailBody)
         {
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("Support", "support@kfcsso.com"));
@@ -21,10 +29,18 @@ namespace ServiceLayer.Services
             {
                 Text = emailBody
             };
+            using (var emailClient = new SmtpClient())
+            {
+                emailClient.Connect(SmtpServer, SmtpPort); //Need to setup email server before fully implementing sending email
+                emailClient.AuthenticationMechanisms.Remove("XOAUTH2");
+                emailClient.Authenticate(SmtpUsername, SmtpPassword);
+                emailClient.Send(message);
+                emailClient.Disconnect(true);
+            }
         }
 
         //Function to send an email with html formatting
-        public static void sendEmailHTMLBody(string receiverName, string receiverEmail, string emailSubject, string emailBody)
+        public void sendEmailHTMLBody(string receiverName, string receiverEmail, string emailSubject, string emailBody)
         {
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("Support", "support@kfcsso.com"));
@@ -34,6 +50,15 @@ namespace ServiceLayer.Services
             {
                 Text = emailBody
             };
+
+            using(var emailClient = new SmtpClient())
+            {
+                emailClient.Connect(SmtpServer, SmtpPort); //Need to setup email server before fully implementing sending email
+                emailClient.AuthenticationMechanisms.Remove("XOAUTH2");
+                emailClient.Authenticate(SmtpUsername, SmtpPassword);
+                emailClient.Send(message);
+                emailClient.Disconnect(true);
+            }
         }
     }
 }

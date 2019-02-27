@@ -77,13 +77,6 @@ namespace ServiceLayer.Services
             {
                 return false;
             }
-            //Check to see if the token is valid
-            //if ResetRepository.existingToken(token)
-            //SQL Query to see if token exists in DB
-                //get the byte data from token in db
-                    //Compare the two's data to see if they're the same token
-
-            
         }
 
         public void deleteTokenFromDB(string token)

@@ -9,5 +9,17 @@ namespace WebAPI.Controllers
 {
     public class ResetController : ApiController
     {
+        [HttpPost]
+        public void sendResetEmail()
+        {
+
+        }
+
+        [HttpPost]
+        [ActionName("ResetPassword")]
+        public void resetPassword(int id)
+        {
+
+        }
     }
 }
