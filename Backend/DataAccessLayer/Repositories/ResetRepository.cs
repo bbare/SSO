@@ -8,7 +8,7 @@ using DataAccessLayer.Database;
 
 namespace DataAccessLayer.Repositories
 {
-    class ResetRepository: IResetRepository, IDisposable
+    public class ResetRepository: IResetRepository
     {
         private DatabaseContext ResetContext;
         public ResetRepository(DatabaseContext _db)
@@ -63,14 +63,31 @@ namespace DataAccessLayer.Repositories
         }
 
         //Function to see if the token exists in the DB, given the token
-        public bool existingTokenWithToken(string token)
+        public bool existingTokenGivenToken(string token)
         {
-            ResetContext
+            if(ResetContext.ResetTokens.Any(ResetToken => ResetToken.resetTokenString == token))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
-        public void Dispose()
+        //Function to see if the token exists in the DB, given the username
+        public bool existingTokenGivenUsername(string userName)
         {
-            throw new NotImplementedException();
+            User userToCheckForResetToken = ResetContext.Users.Find(userName);
+            Guid userIDToCheckForResetToken = userToCheckForResetToken.Id;
+            if (ResetContext.ResetTokens.Any(ResetToken => ResetToken.userID == userIDToCheckForResetToken))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

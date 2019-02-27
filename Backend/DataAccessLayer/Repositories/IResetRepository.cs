@@ -13,6 +13,7 @@ namespace DataAccessLayer.Repositories
         DateTime getExpirationTime(string token);
         Guid getUserID(string token);
         string getToken(Guid userID);
-        bool existingTokenWithToken(string token);
+        bool existingTokenGivenToken(string token);
+        bool existingTokenGivenUsername(string token);
     }
 }
