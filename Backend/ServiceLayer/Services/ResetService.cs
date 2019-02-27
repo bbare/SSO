@@ -17,6 +17,8 @@ namespace ServiceLayer.Services
         //Constant for the password reset email subject line
         private const string resetPasswordSubjectString = "KFC SSO Password Reset";
 
+        private const string resetControllerURL = "kfcsso.com/api/reset";
+
         private ResetRepository _resetRepo;
         public ResetService()
         {
@@ -37,6 +39,12 @@ namespace ServiceLayer.Services
             addTokenToDB(userName, token, expirationTime);
 
             return token;
+        }
+
+        public string createResetURL(string token)
+        {
+            string resetURL = ;
+            return resetURL;
         }
 
         //Function to add the token to the database
@@ -84,6 +92,7 @@ namespace ServiceLayer.Services
         }
 
 
+
         #region Email Functions
         public void sendResetEmailUserExists(string receiverEmail, string resetURL)
         {
@@ -113,6 +122,22 @@ namespace ServiceLayer.Services
                               "For more information about KFC, please visit www.kfc.com/faq \r\n\r\n" +
                               "Best Regards, KFC Team";
             EmailService.sendEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, resetPasswordUserDoesNotExistEmailBody);
+        }
+
+        public void sendPasswordChange(string receiverEmail)
+        {
+            //Need SQL Query to get info about user from DB
+            string userFirstName = "";
+            string userlastName = "";
+            string userFullName = userFirstName + " " + userlastName;
+            string template = "Hi {0}, \r\n" +
+                                             "You have changed your password on KFC SSO.\r\n" +
+                                             "If you did not change your password, please contact us by responding to this email.\r\n\r\n" +
+                                             "Thanks, KFC Team";
+            string data = "userFirstName";
+            string resetPasswordBodyString = string.Format(template, data);
+
+            EmailService.sendEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, resetPasswordBodyString);
         }
         #endregion
     }
