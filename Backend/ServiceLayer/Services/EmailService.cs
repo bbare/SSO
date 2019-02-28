@@ -3,23 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MimeKit;
 using MailKit;
 using MailKit.Net.Smtp;
-using MimeKit;
+
 
 namespace ServiceLayer.Services
 {
     public class EmailService: IEmailService
     {
         //Need to setup email server before populating these variables with data
-        private const string SmtpServer = "";
-        private const int SmtpPort = ;
-        private const string SmtpUsername = "";
-        private const string SmtpPassword = "";
+        private const string SmtpServer = "email-smtp.us-west-2.amazonaws.com";
+        private const int SmtpPort = 587;
+        private const string SmtpUsername = "AKIAIKGDZB4JHYJW4NHQ";
+        private const string SmtpPassword = "BDREGCLUMHfpqXy36czX4B9zQre6IbvCx4CausIn3pgQ";
 
 
         //Function to send an email without formatting
-        public void sendEmailPlainBody(string receiverName, string receiverEmail, string emailSubject, string emailBody)
+        public MimeMessage createEmailPlainBody(string receiverName, string receiverEmail, string emailSubject, string emailBody)
         {
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("Support", "support@kfcsso.com"));
@@ -29,18 +30,11 @@ namespace ServiceLayer.Services
             {
                 Text = emailBody
             };
-            using (var emailClient = new SmtpClient())
-            {
-                emailClient.Connect(SmtpServer, SmtpPort); //Need to setup email server before fully implementing sending email
-                emailClient.AuthenticationMechanisms.Remove("XOAUTH2");
-                emailClient.Authenticate(SmtpUsername, SmtpPassword);
-                emailClient.Send(message);
-                emailClient.Disconnect(true);
-            }
+            return message;
         }
 
         //Function to send an email with html formatting
-        public void sendEmailHTMLBody(string receiverName, string receiverEmail, string emailSubject, string emailBody)
+        public MimeMessage createEmailHTMLBody(string receiverName, string receiverEmail, string emailSubject, string emailBody)
         {
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("Support", "support@kfcsso.com"));
@@ -50,13 +44,17 @@ namespace ServiceLayer.Services
             {
                 Text = emailBody
             };
+            return message;
+        }
 
-            using(var emailClient = new SmtpClient())
+        public void sendEmail(MimeMessage messageToSend)
+        {
+            using (var emailClient = new SmtpClient())
             {
                 emailClient.Connect(SmtpServer, SmtpPort); //Need to setup email server before fully implementing sending email
                 emailClient.AuthenticationMechanisms.Remove("XOAUTH2");
                 emailClient.Authenticate(SmtpUsername, SmtpPassword);
-                emailClient.Send(message);
+                emailClient.Send(messageToSend);
                 emailClient.Disconnect(true);
             }
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MimeKit;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,8 @@ namespace ServiceLayer.Services
 {
     public interface IEmailService
     {
-        void sendEmailPlainBody(string receiverName, string receiverEmail, string emailSubject, string emailBodyPlainText);
-        void sendEmailHTMLBody(string receiverName, string receiverEmail, string emailSubject, string emailBodyHTML);
+        MimeMessage createEmailPlainBody(string receiverName, string receiverEmail, string emailSubject, string emailBodyPlainText);
+        MimeMessage createEmailHTMLBody(string receiverName, string receiverEmail, string emailSubject, string emailBodyHTML);
+        void sendEmail(MimeMessage messageToSend);
     }
 }

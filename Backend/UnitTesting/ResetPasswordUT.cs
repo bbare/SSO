@@ -12,29 +12,31 @@ namespace UnitTesting
     class ResetPasswordUT
     {
         [TestMethod]
-        public void createToken_Pass()
+        public void createResetID_Pass()
         {
             //Arrange
-            string resetToken = "asdf";
+            int lengthOfID = 18;
             ResetService _resetService = new ResetService();
-            var expected = resetToken;
+            var expected = lengthOfID;
             //Act
-            var actual = _resetService.createToken("foo@bar.com");
+            string resetIDCreated = _resetService.createResetID();
+            var actual = resetIDCreated.Length;
             //Assert
-            Assert.AreEqual(expected, actual);
+            Assert.IsTrue(actual > expected);
         }
 
         [TestMethod]
         public void createToken_Fail()
         {
             //Arrange
-            string resetToken = "asdf";
+            int lengthOfID = 22;
             ResetService _resetService = new ResetService();
-            var expected = resetToken;
+            var expected = lengthOfID;
             //Act
-            var actual = _resetService.createToken("foo@bar.com");
+            string resetIDCreated = _resetService.createResetID();
+            var actual = resetIDCreated.Length;
             //Assert
-            Assert.AreNotEqual(expected, actual);
+            Assert.IsFalse(actual > expected);
         }
 
         [TestMethod]
