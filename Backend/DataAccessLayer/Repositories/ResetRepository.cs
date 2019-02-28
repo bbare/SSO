@@ -23,13 +23,13 @@ namespace DataAccessLayer.Repositories
             User userToAdd = ResetContext.Users.Find(userName);
             Guid userIDToAdd = userToAdd.Id;
             //Query to add all data to reset token table
-            Reset tokenToAdd = new Reset
+            Reset IDToAdd = new Reset
             {
                 userID = userIDToAdd,
                 resetID = resetIDToAdd,
                 expirationTime = expirationTime
             };
-            ResetContext.ResetIDs.Add(tokenToAdd);
+            ResetContext.ResetIDs.Add(IDToAdd);
         }
 
         //Function to delete the token from the DB
@@ -88,6 +88,59 @@ namespace DataAccessLayer.Repositories
             {
                 return false;
             }
+        }
+
+        //Function to update the password in the DB
+        public void updatePassword(Guid userIDToChangePassword, string newPasswordHash)
+        {
+            using (ResetContext)
+            {
+                //Query the User table get the user that matches the UserID in the arguments
+                var userToUpdate = ResetContext.Users.Find(userIDToChangePassword);
+                if (userToUpdate != null)
+                {
+                    //Set that retrieved user's password hash to the new password hash
+                    userToUpdate.PasswordHash = newPasswordHash;
+                    ResetContext.SaveChanges();
+                }
+            }
+        }
+
+        //Function to get security questions from the DB
+        public List<string> getSecurityQuestions(Guid userIDToGetQuestionsFrom)
+        {
+            List<string> listOfSecurityQuestions = new List<string>();
+            var userToGetSecurityQuestionsFor = ResetContext.Users.Find(userIDToGetQuestionsFrom);
+            var securityQ1 = userToGetSecurityQuestionsFor.SecurityQ1;
+            var securityQ2 = userToGetSecurityQuestionsFor.SecurityQ2;
+            var securityQ3 = userToGetSecurityQuestionsFor.SecurityQ3;
+            listOfSecurityQuestions.Add(securityQ1);
+            listOfSecurityQuestions.Add(securityQ2);
+            listOfSecurityQuestions.Add(securityQ3);
+
+            return listOfSecurityQuestions;
+        }
+
+        //Function to check security answers against the DB
+        public bool checkSecurityAnswers(Guid userIDToGetQuestionsFrom, List<string> userSubmittedSecurityAnswers)
+        {
+            List<string> listOfSecurityAnswers = new List<string>();
+            var userToGetSecurityQuestionsFor = ResetContext.Users.Find(userIDToGetQuestionsFrom);
+            var securityA1 = userToGetSecurityQuestionsFor.SecurityQ1Answer;
+            var securityA2 = userToGetSecurityQuestionsFor.SecurityQ2Answer;
+            var securityA3 = userToGetSecurityQuestionsFor.SecurityQ3Answer;
+            listOfSecurityAnswers.Add(securityA1);
+            listOfSecurityAnswers.Add(securityA2);
+            listOfSecurityAnswers.Add(securityA3);
+
+            for(int i = 0; i < listOfSecurityAnswers.Count; i++)
+            {
+                if(listOfSecurityAnswers[i] != userSubmittedSecurityAnswers[i])
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

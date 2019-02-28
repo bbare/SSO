@@ -15,5 +15,8 @@ namespace DataAccessLayer.Repositories
         string getResetID(Guid userID);
         bool existingResetIDGivenResetID(string resetID);
         bool existingResetIDGivenUsername(string resetID);
+        void updatePassword(Guid userIDToChangePassword, string newPasswordHash);
+        List<string> getSecurityQuestions(Guid userIDToGetQuestionsFrom);
+        bool checkSecurityAnswers(Guid userIDToGetQuestionsFrom, List<string> userSubmittedSecurityAnswers);
     }
 }
