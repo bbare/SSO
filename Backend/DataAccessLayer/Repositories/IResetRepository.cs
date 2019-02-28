@@ -8,12 +8,12 @@ namespace DataAccessLayer.Repositories
 {
     interface IResetRepository
     {
-        void addToken(string userName, string token, DateTime expirationTime);
-        void deleteToken(string token);
-        DateTime getExpirationTime(string token);
-        Guid getUserID(string token);
-        string getToken(Guid userID);
-        bool existingTokenGivenToken(string token);
-        bool existingTokenGivenUsername(string token);
+        void addResetID(string userName, string resetID, DateTime expirationTime);
+        void deleteResetID(string resetID);
+        DateTime getExpirationTime(string resetID);
+        Guid getUserID(string resetID);
+        string getResetID(Guid userID);
+        bool existingResetIDGivenResetID(string resetID);
+        bool existingResetIDGivenUsername(string resetID);
     }
 }

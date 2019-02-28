@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Models
 {
-    public class ResetToken
+    public class Reset
     {
         [Required, Key] 
-        public string resetTokenString { get; set; }
+        public string resetID { get; set; }
         [Required, ForeignKey("User")]
         public Guid userID { get; set; }
         [Required]

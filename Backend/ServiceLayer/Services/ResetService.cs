@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccessLayer.Database;
@@ -26,41 +27,49 @@ namespace ServiceLayer.Services
         }
 
         //Function to create token in the system
-        public string createToken(string userName)
+        public string createResetID()
         {
-            //Gets current time, and adds the time to expire constant
-            DateTime expirationTime = DateTime.Now.AddMinutes(TimeToExpire);
+            RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider();
+            List<string> listOfInts = new List<string>();
+            while (listOfInts.Count < 2)
+            {
+                byte[] randomNumber = new byte[8];
+                rngCsp.GetBytes(randomNumber);
+                int result = BitConverter.ToInt32(randomNumber, 0);
+                if (result < 0)
+                {
+                    result = result * -1;
+                }
+                string resultToString = result.ToString();
+                listOfInts.Add(resultToString);
+            }
+            string resetID = listOfInts[0] + listOfInts[1];
 
-            byte[] time = BitConverter.GetBytes(expirationTime.ToBinary());
-            byte[] key = Guid.NewGuid().ToByteArray();
-
-            string token = Convert.ToBase64String(time.Concat(key).ToArray());
-
-            return token;
+            return resetID;
         }
 
-        public string createResetURL(string token)
+        public string createResetURL(string resetID)
         {
-            string resetURL = resetControllerURL + token;
+            string resetURL = resetControllerURL + resetID;
             return resetURL;
         }
 
         //Function to add the token to the database
-        public void addTokenToDB(string userName, string token)
+        public void addResetIDToDB(string userName, string resetID)
         {
-            byte[] data = Convert.FromBase64String(token);
-            DateTime expirationTime = DateTime.FromBinary(BitConverter.ToInt64(data, 0));
-            _resetRepo.addToken(userName, token, expirationTime);
+            //Gets current time, and adds the time to expire constant
+            DateTime expirationTime = DateTime.Now.AddMinutes(TimeToExpire);
+            _resetRepo.addResetID(userName, resetID, expirationTime);
             //TODO: add sql query to disable the user
         }
 
         //Read the token given from the URL
-        public bool checkTokenIsValid(string token)
+        public bool checkResetIDIsValid(string resetID)
         {
-            byte[] dataFromURL = Convert.FromBase64String(token);
-            if (_resetRepo.existingTokenGivenToken(token))
+           
+            if (_resetRepo.existingResetIDGivenResetID(resetID))
             {
-                DateTime when = _resetRepo.getExpirationTime(token);
+                DateTime when = _resetRepo.getExpirationTime(resetID);
                 //Case where token hasm't expired
                 if (!(when < DateTime.Now))
                 {
@@ -69,7 +78,7 @@ namespace ServiceLayer.Services
                 //Case where token has expired, delete token
                 else
                 {
-                    _resetRepo.deleteToken(token);
+                    _resetRepo.deleteResetID(resetID);
                     return false;
                 }
             }
@@ -79,9 +88,9 @@ namespace ServiceLayer.Services
             }
         }
 
-        public void deleteTokenFromDB(string token)
+        public void deleteResetIDFromDB(string resetID)
         {
-            _resetRepo.deleteToken(token);
+            _resetRepo.deleteResetID(resetID);
         }
 
 
