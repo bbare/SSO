@@ -13,7 +13,10 @@ namespace ManagerLayer.UserManagement
     public class UserManagementManager
     {
         private IPasswordService _passwordService;
-        private IUserService _userService;
+        //private IUserService _userService;
+        //I changed _userService to type UserService because IUserService is only CRUD operations
+        //I also implemented existingUser in UserService to make use of the method available in UserManagementRepository -Winn
+        private UserService _userService = new UserService();
 
         public UserManagementManager()
         {
@@ -139,6 +142,14 @@ namespace ManagerLayer.UserManagement
                     _db.Entry(response).State = System.Data.Entity.EntityState.Unchanged;
                     return 0;
                 }
+            }
+        }
+
+        public bool ExistingUser(string email)
+        {
+            using (var _db = CreateDbContext())
+            {
+                return _userService.ExistingUser(_db, email);
             }
         }
     }

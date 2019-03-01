@@ -27,7 +27,9 @@ namespace DataAccessLayer.Repositories
             {
                 userID = userIDToAdd,
                 resetID = resetIDToAdd,
-                expirationTime = expirationTime
+                expirationTime = expirationTime,
+                resetCount = 0,
+                lockedOut = false
             };
             ResetContext.ResetIDs.Add(IDToAdd);
         }
@@ -62,6 +64,15 @@ namespace DataAccessLayer.Repositories
             return resetIDToGet.resetID;
         }
 
+        //Function to get the resetID given email
+        public string getResetID(string email)
+        {
+            User userToCheckForResetToken = ResetContext.Users.Find(email);
+            Guid userID = userToCheckForResetToken.Id;
+            var reset = ResetContext.ResetIDs.Find(userID);
+            return reset.resetID;
+        }
+
         //Function to see if the token exists in the DB, given the token
         public bool existingResetIDGivenResetID(string resetID)
         {
@@ -91,7 +102,7 @@ namespace DataAccessLayer.Repositories
         }
 
         //Function to update the password in the DB
-        public void updatePassword(Guid userIDToChangePassword, string newPasswordHash)
+        public bool updatePassword(Guid userIDToChangePassword, string newPasswordHash)
         {
             using (ResetContext)
             {
@@ -99,11 +110,23 @@ namespace DataAccessLayer.Repositories
                 var userToUpdate = ResetContext.Users.Find(userIDToChangePassword);
                 if (userToUpdate != null)
                 {
-                    //Set that retrieved user's password hash to the new password hash
-                    userToUpdate.PasswordHash = newPasswordHash;
-                    ResetContext.SaveChanges();
+                    //Check to see if the new password is the same as the old password
+                    if(userToUpdate.PasswordHash == newPasswordHash)
+                    {
+                        return false;
+                    }
+                    else //If the new password is different, then update the password
+                    {
+                        //Set that retrieved user's password hash to the new password hash
+                        userToUpdate.PasswordHash = newPasswordHash;
+                        ResetContext.SaveChanges();
+                        return true;
+                    }
+                    
                 }
             }
+            //Default case is password isn't updated
+            return false;
         }
 
         //Function to get security questions from the DB
@@ -135,12 +158,75 @@ namespace DataAccessLayer.Repositories
 
             for(int i = 0; i < listOfSecurityAnswers.Count; i++)
             {
+                //If the answers provided don't match the answers in the DB, the number of attempts to reset the password with that resetID is incremented
                 if(listOfSecurityAnswers[i] != userSubmittedSecurityAnswers[i])
                 {
+                    var resetIDToCount = ResetContext.ResetIDs.Find(userIDToGetQuestionsFrom);
+                    if(resetIDToCount != null)
+                    {
+                        int count = resetIDToCount.resetCount;
+                        count++;
+                        resetIDToCount.resetCount = count;
+                        ResetContext.SaveChanges();
+                    }
                     return false;
                 }
             }
             return true;
         }
+
+        //Function to toggle lockout
+        public void lockOut(string resetID)
+        {
+            using (ResetContext)
+            {
+                var resetIDToLock = ResetContext.ResetIDs.Find(resetID);
+                if(resetIDToLock != null)
+                {
+                    resetIDToLock.lockedOut = true;
+                    resetIDToLock.lockoutTime = DateTime.Now.AddHours(24);
+                    ResetContext.SaveChanges();
+                }
+            }
+        }
+
+        //Function to check if locked out, returns true if still locked out, false if not locked out
+        public bool checkLockOut(string resetID)
+        {
+            using (ResetContext)
+            {
+                var resetIDToCheckForLockOut = ResetContext.ResetIDs.Find(resetID);
+                if(resetIDToCheckForLockOut != null)
+                {
+                    return resetIDToCheckForLockOut.lockoutTime > DateTime.Now;
+                }
+            }
+            return true;
+        }
+
+        //Function to get the amount of times the resetID has been used to attempt a password reset
+        public int getAttemptsPerResetID(string resetID)
+        {
+            using (ResetContext)
+            {
+                var resetIDToCount = ResetContext.ResetIDs.Find(resetID);
+                if(resetIDToCount != null)
+                {
+                    return resetIDToCount.resetCount;
+                }
+            }
+            return 3;
+        }
+
+        public int getResetIDCountPerEmail(string email)
+        {
+            User userToCheckForResetID = ResetContext.Users.Find(email);
+            Guid userIDToCheckForResetID = userToCheckForResetID.Id;
+            var count = ResetContext.ResetIDs
+                .Where(reset => reset.userID == userIDToCheckForResetID)
+                .Count();
+            return count;
+        }
+
     }
 }
