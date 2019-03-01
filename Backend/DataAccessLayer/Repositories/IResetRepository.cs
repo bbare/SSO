@@ -8,15 +8,20 @@ namespace DataAccessLayer.Repositories
 {
     interface IResetRepository
     {
-        void addResetID(string userName, string resetID, DateTime expirationTime);
-        void deleteResetID(string resetID);
-        DateTime getExpirationTime(string resetID);
-        Guid getUserID(string resetID);
-        string getResetID(Guid userID);
-        bool existingResetIDGivenResetID(string resetID);
-        bool existingResetIDGivenUsername(string resetID);
-        void updatePassword(Guid userIDToChangePassword, string newPasswordHash);
-        List<string> getSecurityQuestions(Guid userIDToGetQuestionsFrom);
-        bool checkSecurityAnswers(Guid userIDToGetQuestionsFrom, List<string> userSubmittedSecurityAnswers);
+        void AddResetID(string email, string resetID, DateTime expirationTime);
+        void DeleteResetID(string resetID);
+        DateTime GetExpirationTime(string resetID);
+        Guid GetUserID(string resetID);
+        string GetResetID(Guid userID);
+        string GetResetID(string email);
+        bool ExistingResetIDGivenResetID(string resetID);
+        bool ExistingResetIDGivenEmail(string email);
+        bool UpdatePassword(Guid userIDToChangePassword, string newPasswordHash);
+        List<string> GetSecurityQuestions(Guid userIDToGetQuestionsFrom);
+        bool CheckSecurityAnswers(Guid userIDToGetQuestionsFrom, List<string> userSubmittedSecurityAnswers);
+        void LockOut(string resetID);
+        bool CheckLockOut(string resetID);
+        int GetAttemptsPerResetID(string resetID);
+        int GetResetIDCountPerEmail(string email);
     }
 }

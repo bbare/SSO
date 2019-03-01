@@ -59,7 +59,6 @@
   <ItemGroup>
     <Compile Include="ITestingUtils.cs" />
     <Compile Include="ResetPasswordUT.cs" />
-    <Compile Include="TestingUtils.cs" />
     <Compile Include="PasswordServiceUT.cs" />
     <Compile Include="SessionServiceUT.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

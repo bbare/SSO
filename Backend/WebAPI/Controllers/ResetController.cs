@@ -17,7 +17,7 @@ namespace WebAPI.Controllers
         //After the user fills in the field with email, this action gets called
         [HttpPost]
         [ActionName("SendEmail")]
-        public void sendResetEmail(string email)
+        public void SendResetEmail(string email)
         {
             ResetService rs = new ResetService();
             UserManagementManager umm = new UserManagementManager();
@@ -25,31 +25,31 @@ namespace WebAPI.Controllers
             if (umm.ExistingUser(email))
             {
                 //Check to see if the account has a resetID already
-                if (!rs.checkUserHasResetID(email)) //Don't have a resetID
+                if (!rs.CheckUserHasResetID(email)) //Don't have a resetID
                 {
-                    string resetID = rs.createResetID();
-                    rs.addResetIDToDB(email, resetID);
-                    string resetURL = rs.createResetURL(resetID);
-                    rs.sendResetEmailUserExists(email, resetID);
+                    string resetID = rs.CreateResetID();
+                    rs.AddResetIDToDB(email, resetID);
+                    string resetURL = rs.CreateResetURL(resetID);
+                    rs.SendResetEmailUserExists(email, resetID);
                 }
                 else //Have a resetID
                 {
                     //See how many resetIDs the email has
-                    if (rs.getResetIDCount(email) < 4)
+                    if (rs.GetResetIDCount(email) < 4)
                     {
                         //Get the most recent resetID associated with the email provided
-                        string resetIDAlreadyGivenToUser = rs.getResetID(email);
-                        if (!rs.isLockedOut(resetIDAlreadyGivenToUser))//Check to see if the resetID isn't locked
+                        string resetIDAlreadyGivenToUser = rs.GetResetID(email);
+                        if (!rs.IsLockedOut(resetIDAlreadyGivenToUser))//Check to see if the resetID isn't locked
                         {
-                            if (!rs.isResetIDIsExpired(resetIDAlreadyGivenToUser)) //If the resetID given to the user is expired
+                            if (!rs.IsResetIDIsExpired(resetIDAlreadyGivenToUser)) //If the resetID given to the user is expired
                             {
                                 //Delete the resetID from the DB
-                                rs.deleteResetIDFromDB(resetIDAlreadyGivenToUser);
+                                rs.DeleteResetIDFromDB(resetIDAlreadyGivenToUser);
                                 //Give the user a new resetID
-                                string resetID = rs.createResetID();
-                                rs.addResetIDToDB(email, resetID);
-                                string resetURL = rs.createResetURL(resetID);
-                                rs.sendResetEmailUserExists(email, resetID);
+                                string resetID = rs.CreateResetID();
+                                rs.AddResetIDToDB(email, resetID);
+                                string resetURL = rs.CreateResetURL(resetID);
+                                rs.SendResetEmailUserExists(email, resetID);
                             }
                             else
                             {
@@ -81,35 +81,35 @@ namespace WebAPI.Controllers
             }
             else
             {
-                rs.sendResetEmailUserDoesNotExist(email);
+                rs.SendResetEmailUserDoesNotExist(email);
             }
         }
 
         //After the user clicks the link in the email, this action gets called
         [HttpPost]
         [ActionName("ResetPassword")]
-        public void resetPassword(string resetID)
+        public void ResetPassword(string resetID)
         {
             ResetService rs = new ResetService();
             //Check to see if the resetID has been locked out 
-            if (!rs.isLockedOut(resetID)) //ResetID is still valid
+            if (!rs.IsLockedOut(resetID)) //ResetID is still valid
             {
-                if (!rs.isResetIDIsExpired(resetID))
+                if (!rs.IsResetIDIsExpired(resetID))
                 {
                     //Check to see how many times they've attempted 
-                    if (rs.getResetCount(resetID) == 3)
+                    if (rs.GetResetCount(resetID) == 3)
                     {
-                        rs.lockResetID(resetID); //If the user has attempted to reset the password 3 times already with the same resetID, lock that resetID
+                        rs.LockResetID(resetID); //If the user has attempted to reset the password 3 times already with the same resetID, lock that resetID
                     }
                     else
                     {
                         //Get the security questions from the DB
-                        rs.getSecurityQuestionsFromDB(resetID);
+                        rs.GetSecurityQuestionsFromDB(resetID);
                     }
                 }
                 else
                 {
-                    rs.deleteResetIDFromDB(resetID);
+                    rs.DeleteResetIDFromDB(resetID);
                     //Tell the user the link has expired
                     //redirect to reset page
                 }

@@ -34,7 +34,7 @@ namespace ServiceLayer.Services
         }
 
         //Function to create token in the system
-        public string createResetID()
+        public string CreateResetID()
         {
             
             RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider();
@@ -62,28 +62,28 @@ namespace ServiceLayer.Services
             return resetID;
         }
 
-        public string createResetURL(string resetID)
+        public string CreateResetURL(string resetID)
         {
             string resetURL = resetControllerURL + resetID;
             return resetURL;
         }
 
         //Function to add the token to the database
-        public void addResetIDToDB(string userName, string resetID)
+        public void AddResetIDToDB(string userName, string resetID)
         {
             //Gets current time, and adds the time to expire constant
             DateTime expirationTime = DateTime.Now.AddMinutes(TimeToExpire);
-            _resetRepo.addResetID(userName, resetID, expirationTime);
+            _resetRepo.AddResetID(userName, resetID, expirationTime);
         }
 
         //Read the token given from the URL
-        public bool isResetIDIsExpired(string resetID)
+        public bool IsResetIDIsExpired(string resetID)
         {
             //Check to see if the ResetID exists in the DB first
-            if (_resetRepo.existingResetIDGivenResetID(resetID))
+            if (_resetRepo.ExistingResetIDGivenResetID(resetID))
             {
                 //Get the time when the resetID is to expire
-                DateTime when = _resetRepo.getExpirationTime(resetID);
+                DateTime when = _resetRepo.GetExpirationTime(resetID);
                 //Compare the expiration date to the time 
                 if (when > DateTime.Now)
                 {
@@ -102,67 +102,67 @@ namespace ServiceLayer.Services
         }
 
         //Function to check if user already has a resetID
-        public bool checkUserHasResetID(string email)
+        public bool CheckUserHasResetID(string email)
         {
-            return _resetRepo.existingResetIDGivenUsername(email);
+            return _resetRepo.ExistingResetIDGivenEmail(email);
         }
 
         //Function to get the resetID
-        public string getResetID(string email)
+        public string GetResetID(string email)
         {
-            return _resetRepo.getResetID(email);
+            return _resetRepo.GetResetID(email);
         }
 
         //Function to delete the ResetID from DB
-        public void deleteResetIDFromDB(string resetID)
+        public void DeleteResetIDFromDB(string resetID)
         {
-            _resetRepo.deleteResetID(resetID);
+            _resetRepo.DeleteResetID(resetID);
         }
 
         //Function to get the security questions of the user associated with the resetID
-        public List<string> getSecurityQuestionsFromDB(string resetID)
+        public List<string> GetSecurityQuestionsFromDB(string resetID)
         {
-            Guid userIDToGetQuestionsFor = _resetRepo.getUserID(resetID);
-            List<string> securityQuestions = _resetRepo.getSecurityQuestions(userIDToGetQuestionsFor);
+            Guid userIDToGetQuestionsFor = _resetRepo.GetUserID(resetID);
+            List<string> securityQuestions = _resetRepo.GetSecurityQuestions(userIDToGetQuestionsFor);
             return securityQuestions;
         }
 
         //Function to check the security answers of the user associated with the resetID
-        public bool checkSecurityAnswers(string resetID, List<string> userSubmittedAnswers)
+        public bool CheckSecurityAnswers(string resetID, List<string> userSubmittedAnswers)
         {
             //Get the UserID of the user whose security answers we're checking against
-            Guid userIDToCheckAnswersFor = _resetRepo.getUserID(resetID);
+            Guid userIDToCheckAnswersFor = _resetRepo.GetUserID(resetID);
             //Check the security answers
-            return _resetRepo.checkSecurityAnswers(userIDToCheckAnswersFor, userSubmittedAnswers);
+            return _resetRepo.CheckSecurityAnswers(userIDToCheckAnswersFor, userSubmittedAnswers);
         }
 
         //Function to lock the resetID for 24 hours if failed to answer security questions 3 times
-        public void lockResetID(string resetID)
+        public void LockResetID(string resetID)
         {
-            _resetRepo.lockOut(resetID);
+            _resetRepo.LockOut(resetID);
         }
 
         //Function to check if the resetID is locked out
-        public bool isLockedOut(string resetID)
+        public bool IsLockedOut(string resetID)
         {
-            return _resetRepo.checkLockOut(resetID);
+            return _resetRepo.CheckLockOut(resetID);
         }
 
         //Function to check how many times a reset has been attempted with the resetID
-        public int getResetCount(string resetID)
+        public int GetResetCount(string resetID)
         {
-            return _resetRepo.getAttemptsPerResetID(resetID);
+            return _resetRepo.GetAttemptsPerResetID(resetID);
         }
 
         //Function to see how many resetIDs are associated with the given email
-        public int getResetIDCount(string email)
+        public int GetResetIDCount(string email)
         {
-            return _resetRepo.getResetIDCountPerEmail(email);
+            return _resetRepo.GetResetIDCountPerEmail(email);
         }
         
         #region Email Functions
         //Function to create the email is user exists 
-        public void sendResetEmailUserExists(string receiverEmail, string resetURL)
+        public void SendResetEmailUserExists(string receiverEmail, string resetURL)
         {
             //Need SQL Query to get info about user from DB
             string userFirstName = "";
@@ -185,7 +185,7 @@ namespace ServiceLayer.Services
         }
 
         //Function to create the email is user doesn't exist
-        public void sendResetEmailUserDoesNotExist(string receiverEmail)
+        public void SendResetEmailUserDoesNotExist(string receiverEmail)
         {
             string userFullName = "Unknown";
             string resetPasswordUserDoesNotExistEmailBody = "Hello, \r\n" +
@@ -204,7 +204,7 @@ namespace ServiceLayer.Services
         }
 
         //Function to create the email if the password was changed
-        public void sendPasswordChange(string receiverEmail)
+        public void SendPasswordChange(string receiverEmail)
         {
             //Need SQL Query to get info about user from DB
             string userFirstName = "";

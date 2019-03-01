@@ -17,7 +17,7 @@ namespace DataAccessLayer.Repositories
         }
 
         //Function to add the token to the DB
-        public void addResetID(string userName, string resetIDToAdd, DateTime expirationTime)
+        public void AddResetID(string userName, string resetIDToAdd, DateTime expirationTime)
         {
             //Query to get the userID of the provided username
             User userToAdd = ResetContext.Users.Find(userName);
@@ -35,14 +35,14 @@ namespace DataAccessLayer.Repositories
         }
 
         //Function to delete the token from the DB
-        public void deleteResetID(string resetID)
+        public void DeleteResetID(string resetID)
         {
             Reset tokenToRemove = ResetContext.ResetIDs.Find(resetID);
             ResetContext.ResetIDs.Remove(tokenToRemove);
         }
 
         //Function to get the expiration time of the token
-        public DateTime getExpirationTime(string resetID)
+        public DateTime GetExpirationTime(string resetID)
         {
             Reset matchingToken = ResetContext.ResetIDs.Find(resetID);
             DateTime expirationTime = matchingToken.expirationTime;
@@ -50,7 +50,7 @@ namespace DataAccessLayer.Repositories
         }
 
         //Function to get the UserID associated with the reset token
-        public Guid getUserID(string resetID)
+        public Guid GetUserID(string resetID)
         {
             Reset matchingToken = ResetContext.ResetIDs.Find(resetID);
             Guid userID = matchingToken.userID;
@@ -58,14 +58,14 @@ namespace DataAccessLayer.Repositories
         }
 
         //Function to get the reset token given userID
-        public string getResetID(Guid userID)
+        public string GetResetID(Guid userID)
         {
             Reset resetIDToGet = ResetContext.ResetIDs.Find(userID);
             return resetIDToGet.resetID;
         }
 
         //Function to get the resetID given email
-        public string getResetID(string email)
+        public string GetResetID(string email)
         {
             User userToCheckForResetToken = ResetContext.Users.Find(email);
             Guid userID = userToCheckForResetToken.Id;
@@ -74,7 +74,7 @@ namespace DataAccessLayer.Repositories
         }
 
         //Function to see if the token exists in the DB, given the token
-        public bool existingResetIDGivenResetID(string resetID)
+        public bool ExistingResetIDGivenResetID(string resetID)
         {
             if(ResetContext.ResetIDs.Any(Reset => Reset.resetID == resetID))
             {
@@ -87,7 +87,7 @@ namespace DataAccessLayer.Repositories
         }
 
         //Function to see if the token exists in the DB, given the username
-        public bool existingResetIDGivenUsername(string userName)
+        public bool ExistingResetIDGivenEmail(string userName)
         {
             User userToCheckForResetToken = ResetContext.Users.Find(userName);
             Guid userIDToCheckForResetToken = userToCheckForResetToken.Id;
@@ -102,7 +102,7 @@ namespace DataAccessLayer.Repositories
         }
 
         //Function to update the password in the DB
-        public bool updatePassword(Guid userIDToChangePassword, string newPasswordHash)
+        public bool UpdatePassword(Guid userIDToChangePassword, string newPasswordHash)
         {
             using (ResetContext)
             {
@@ -130,7 +130,7 @@ namespace DataAccessLayer.Repositories
         }
 
         //Function to get security questions from the DB
-        public List<string> getSecurityQuestions(Guid userIDToGetQuestionsFrom)
+        public List<string> GetSecurityQuestions(Guid userIDToGetQuestionsFrom)
         {
             List<string> listOfSecurityQuestions = new List<string>();
             var userToGetSecurityQuestionsFor = ResetContext.Users.Find(userIDToGetQuestionsFrom);
@@ -145,7 +145,7 @@ namespace DataAccessLayer.Repositories
         }
 
         //Function to check security answers against the DB
-        public bool checkSecurityAnswers(Guid userIDToGetQuestionsFrom, List<string> userSubmittedSecurityAnswers)
+        public bool CheckSecurityAnswers(Guid userIDToGetQuestionsFrom, List<string> userSubmittedSecurityAnswers)
         {
             List<string> listOfSecurityAnswers = new List<string>();
             var userToGetSecurityQuestionsFor = ResetContext.Users.Find(userIDToGetQuestionsFrom);
@@ -176,7 +176,7 @@ namespace DataAccessLayer.Repositories
         }
 
         //Function to toggle lockout
-        public void lockOut(string resetID)
+        public void LockOut(string resetID)
         {
             using (ResetContext)
             {
@@ -191,7 +191,7 @@ namespace DataAccessLayer.Repositories
         }
 
         //Function to check if locked out, returns true if still locked out, false if not locked out
-        public bool checkLockOut(string resetID)
+        public bool CheckLockOut(string resetID)
         {
             using (ResetContext)
             {
@@ -205,7 +205,7 @@ namespace DataAccessLayer.Repositories
         }
 
         //Function to get the amount of times the resetID has been used to attempt a password reset
-        public int getAttemptsPerResetID(string resetID)
+        public int GetAttemptsPerResetID(string resetID)
         {
             using (ResetContext)
             {
@@ -218,7 +218,7 @@ namespace DataAccessLayer.Repositories
             return 3;
         }
 
-        public int getResetIDCountPerEmail(string email)
+        public int GetResetIDCountPerEmail(string email)
         {
             User userToCheckForResetID = ResetContext.Users.Find(email);
             Guid userIDToCheckForResetID = userToCheckForResetID.Id;
