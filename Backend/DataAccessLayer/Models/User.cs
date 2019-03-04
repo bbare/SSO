@@ -47,5 +47,8 @@ namespace DataAccessLayer.Models
 
         [Column(TypeName = "datetime2"), DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; }
+
+        public int numOfResetAttempts { get; set; }
+        public DateTime lockResetAttempts { get; set; }
     }
 }

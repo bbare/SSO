@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Models
 {
-    public class Reset
+    public class PasswordReset
     {
         [Required, Key] 
         public string resetID { get; set; }
@@ -25,9 +25,6 @@ namespace DataAccessLayer.Models
 
         [Required]
         //Variable to keep track of user being locked out of resetting password
-        public bool lockedOut { get; set; }
-
-        //Variable to keep track of how long the user is locked out for
-        public DateTime lockoutTime { get; set; }
+        public bool disabled { get; set; }
     }
 }

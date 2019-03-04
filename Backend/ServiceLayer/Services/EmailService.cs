@@ -6,17 +6,18 @@ using System.Threading.Tasks;
 using MimeKit;
 using MailKit;
 using MailKit.Net.Smtp;
-
+using System.Configuration;
+using System.Net.Configuration;
+using System.Web.Configuration;
 
 namespace ServiceLayer.Services
 {
     public class EmailService: IEmailService
     {
-        //Need to setup email server before populating these variables with data
-        private const string SmtpServer = "email-smtp.us-west-2.amazonaws.com";
-        private const int SmtpPort = 587;
-        private const string SmtpUsername = "AKIAIKGDZB4JHYJW4NHQ";
-        private const string SmtpPassword = "BDREGCLUMHfpqXy36czX4B9zQre6IbvCx4CausIn3pgQ";
+        private string SmtpServer = WebConfigurationManager.AppSettings["smtpServer"];
+        private int SmtpPort = Int32.Parse(WebConfigurationManager.AppSettings["smtpPort"]);
+        private string SmtpUsername = WebConfigurationManager.AppSettings["smtpUsername"];
+        private string SmtpPassword = WebConfigurationManager.AppSettings["smtpPassword"];
 
 
         //Function to send an email without formatting
@@ -27,20 +28,6 @@ namespace ServiceLayer.Services
             message.To.Add(new MailboxAddress(receiverName, receiverEmail));
             message.Subject = emailSubject;
             message.Body = new TextPart("plain")
-            {
-                Text = emailBody
-            };
-            return message;
-        }
-
-        //Function to send an email with html formatting
-        public MimeMessage createEmailHTMLBody(string receiverName, string receiverEmail, string emailSubject, string emailBody)
-        {
-            var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("Support", "support@kfcsso.com"));
-            message.To.Add(new MailboxAddress(receiverName, receiverEmail));
-            message.Subject = emailSubject;
-            message.Body = new TextPart()
             {
                 Text = emailBody
             };

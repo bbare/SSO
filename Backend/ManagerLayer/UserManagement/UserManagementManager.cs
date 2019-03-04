@@ -13,10 +13,7 @@ namespace ManagerLayer.UserManagement
     public class UserManagementManager
     {
         private IPasswordService _passwordService;
-        //private IUserService _userService;
-        //I changed _userService to type UserService because IUserService is only CRUD operations
-        //I also implemented existingUser in UserService to make use of the method available in UserManagementRepository -Winn
-        private UserService _userService = new UserService();
+        private IUserService _userService;
 
         public UserManagementManager()
         {

@@ -50,6 +50,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -64,6 +65,7 @@
     <Compile Include="Services\IDataSerializer.cs" />
     <Compile Include="Services\IEmailService.cs" />
     <Compile Include="Services\IPasswordService.cs" />
+    <Compile Include="Services\IResetService.cs" />
     <Compile Include="Services\ISessionService.cs" />
     <Compile Include="Services\IUserService.cs" />
     <Compile Include="Services\PasswordService.cs" />
