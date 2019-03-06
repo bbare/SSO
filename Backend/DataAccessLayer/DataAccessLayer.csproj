@@ -40,6 +40,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -57,10 +58,18 @@
     <Compile Include="Migrations\201812040642468_create-table-session.Designer.cs">
       <DependentUpon>201812040642468_create-table-session.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903060321294_create-tables-applications-apikeys.cs" />
+    <Compile Include="Migrations\201903060321294_create-tables-applications-apikeys.Designer.cs">
+      <DependentUpon>201903060321294_create-tables-applications-apikeys.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\ApiKey.cs" />
+    <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Session.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\ApiKeyRepository.cs" />
+    <Compile Include="Repositories\ApplicationRepository.cs" />
     <Compile Include="Repositories\SessionRepository.cs" />
     <Compile Include="Repositories\UserManagementRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
@@ -80,6 +89,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201812040642468_create-table-session.resx">
       <DependentUpon>201812040642468_create-table-session.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903060321294_create-tables-applications-apikeys.resx">
+      <DependentUpon>201903060321294_create-tables-applications-apikeys.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

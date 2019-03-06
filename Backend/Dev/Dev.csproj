@@ -70,10 +70,6 @@
       <Project>{41ade765-973a-4155-b3d6-2c24648cbc7a}</Project>
       <Name>ServiceLayer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\UnitTesting\UnitTesting.csproj">
-      <Project>{69f3e1d0-dad5-4078-b839-97c80ce94a65}</Project>
-      <Name>UnitTesting</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

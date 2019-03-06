@@ -3,6 +3,7 @@
     <span class="title">KFC SSO</span>
     <router-link to="home">Home</router-link>
     <router-link to="about">About</router-link>
+    <router-link to="app-register">Register App</router-link>
   </div>
 </template>
 
