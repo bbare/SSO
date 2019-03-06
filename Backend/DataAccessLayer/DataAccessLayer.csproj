@@ -50,16 +50,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Database\dbContext.cs" />
-    <Compile Include="Migrations\201812040636053_create-table-user.cs" />
-    <Compile Include="Migrations\201812040636053_create-table-user.Designer.cs">
-      <DependentUpon>201812040636053_create-table-user.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201812040642468_create-table-session.cs" />
-    <Compile Include="Migrations\201812040642468_create-table-session.Designer.cs">
-      <DependentUpon>201812040642468_create-table-session.cs</DependentUpon>
+    <Compile Include="Migrations\201903062125096_initial-create.cs" />
+    <Compile Include="Migrations\201903062125096_initial-create.Designer.cs">
+      <DependentUpon>201903062125096_initial-create.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\PasswordReset.cs" />
     <Compile Include="Models\Session.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -77,13 +72,9 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201812040636053_create-table-user.resx">
-      <DependentUpon>201812040636053_create-table-user.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812040642468_create-table-session.resx">
-      <DependentUpon>201812040642468_create-table-session.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201903062125096_initial-create.resx">
+      <DependentUpon>201903062125096_initial-create.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

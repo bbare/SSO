@@ -39,6 +39,10 @@ namespace DataAccessLayer.Models
         public string SecurityQ2Answer { get; set; }
         public string SecurityQ3 { get; set; }
         public string SecurityQ3Answer { get; set; }
+
+        [Required]
+        public int IncorrectPasswordCount { get; set; }
+
         [Required]
         public bool Disabled { get; set; }
 

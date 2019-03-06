@@ -80,12 +80,13 @@ namespace WebAPI.Controllers
         [Route("api/users/login")]
         public IHttpActionResult Login([FromBody] LoginRequest request)
         {
+            IUserService _userService = new UserService();
+            IPasswordService _passwordService = new PasswordService();
+
             using (var _db = new DatabaseContext())
             {
-                IUserService _userService = new UserService();
-                IPasswordService _passwordService = new PasswordService();
-
                 User user = _userService.GetUser(_db, request.email);
+                //PasswordReset ps = ps.
                 bool isPasswordMatched = _passwordService.VerifyPassword(request.password, user.PasswordHash, user.PasswordSalt);
 
                 //succesful login
@@ -97,6 +98,13 @@ namespace WebAPI.Controllers
                 //login not successful if password is incorrect //
                 else
                 {
+                    user.IncorrectPasswordCount = user.IncorrectPasswordCount + 1;
+
+                    if(user.IncorrectPasswordCount == 3)
+                    {
+                        user.Disabled = true;
+                    }
+
                     return NotFound();
                 }
             }

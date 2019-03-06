@@ -14,12 +14,10 @@ namespace DataAccessLayer.Database
     {
         public DatabaseContext()
         {
-            this.Database.Connection.ConnectionString = "Data Source=localhost;Initial Catalog=SSO;Integrated Security=True";
+            Database.Connection.ConnectionString = "Data Source=Localhost;Initial Catalog=SSO;Integrated Security=True";
         }
-
+        
         public DbSet<User> Users { get; set; }
         public DbSet<Session> Sessions { get; set; }
-
-
     }
 }

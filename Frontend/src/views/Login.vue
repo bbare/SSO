@@ -27,7 +27,7 @@
         },
         methods: {
             login() {
-               axios.post('http://localhost:50803/api/users/login').then(input => {this.input = input.data; console.log(this.input);})
+               axios.post('http://localhost:50803/api/users/login').then(input => {this.input = input.data; console.log("sent!");})
             }
         }
     }
