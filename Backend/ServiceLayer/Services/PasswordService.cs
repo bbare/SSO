@@ -59,5 +59,18 @@ namespace ServiceLayer.Services
             return (client.GetStringAsync(url + prefix).Result).Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 
         }
+
+        /// <summary>
+        /// Used to verify entered password from user INCOMPLETE
+        /// </summary>
+        /// <param name="enteredPassword"></param>
+        /// <param name="storedHash"></param>
+        /// <param name="storedSalt"></param>
+        /// <returns></returns>
+        public bool VerifyPassword(string password, string hash, byte[] salt)
+        {
+            var rfc2898DeriveBytes = new Rfc2898DeriveBytes(password, salt);
+            return Convert.ToBase64String(rfc2898DeriveBytes.GetBytes(256)) == hash;
+        }
     }
 }

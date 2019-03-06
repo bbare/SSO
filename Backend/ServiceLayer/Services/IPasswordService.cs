@@ -9,5 +9,6 @@ namespace ServiceLayer.Services
         int CheckPasswordPwned(string password);
         string HashPasswordSHA1(string password, byte[] salt);
         string[] QueryPwnedApi(string prefix, string url);
+        bool VerifyPassword(string password, string hash, byte[] salt);
     }
 }

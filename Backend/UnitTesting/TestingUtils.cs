@@ -91,6 +91,7 @@ namespace UnitTesting
             }
         }
         
+        /*
         public Service CreateServiceInDb(bool enabled)
         {
             using (var _db = new DatabaseContext())
@@ -134,6 +135,7 @@ namespace UnitTesting
                 return c;
             }
         }
+        
 
         public Client CreateClientObject() {
             Client client = new Client
@@ -176,6 +178,7 @@ namespace UnitTesting
                 return client;
             }
         }
+        */
 
         public DatabaseContext CreateDataBaseContext()
         {

@@ -20,6 +20,12 @@ namespace WebAPI.Controllers
             public DateTime dob;
         }
 
+        public class LoginRequest
+        {
+            public string email;
+            public string password;
+        }
+
         [HttpPost]
         [Route("api/users/register")]
         public string Register([FromBody] RegisterRequest request)
@@ -63,6 +69,37 @@ namespace WebAPI.Controllers
                 }
             }
             return "got to end without stuff";
+        }
+
+        /// <summary>
+        /// NOT DONE. STILL IN PROCESS
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("api/users/login")]
+        public IHttpActionResult Login([FromBody] LoginRequest request)
+        {
+            using (var _db = new DatabaseContext())
+            {
+                IUserService _userService = new UserService();
+                IPasswordService _passwordService = new PasswordService();
+
+                User user = _userService.GetUser(_db, request.email);
+                bool isPasswordMatched = _passwordService.VerifyPassword(request.password, user.PasswordHash, user.PasswordSalt);
+
+                //succesful login
+                if (isPasswordMatched == true)
+                {
+                    return Ok();
+
+                }
+                //login not successful if password is incorrect //
+                else
+                {
+                    return NotFound();
+                }
+            }
         }
 
         // GET api/<controller>
