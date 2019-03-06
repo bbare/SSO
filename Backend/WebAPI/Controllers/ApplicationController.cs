@@ -93,7 +93,7 @@ namespace WebAPI.Controllers
             // Create a new ApiKey
             ApiKey apiKey = new ApiKey
             {
-                ApplicationUrl = uriResult.ToString()
+                ApplicationId = app.Id
             };
 
             using (var _db = new DatabaseContext())
@@ -135,8 +135,10 @@ namespace WebAPI.Controllers
                 }
                 catch (Exception e)
                 {
+                    Console.WriteLine(e.StackTrace);
                     // Error response
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Unable to email API Key");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, e.StackTrace);
+                    //response = Request.CreateResponse(HttpStatusCode.BadRequest, "Unable to email API Key");
                     return response;
                 }
             }

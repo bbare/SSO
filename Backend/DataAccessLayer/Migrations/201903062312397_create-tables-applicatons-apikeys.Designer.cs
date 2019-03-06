@@ -7,13 +7,13 @@ namespace DataAccessLayer.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class createtablesapplicationsapikeys : IMigrationMetadata
+    public sealed partial class createtablesapplicatonsapikeys : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(createtablesapplicationsapikeys));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(createtablesapplicatonsapikeys));
         
         string IMigrationMetadata.Id
         {
-            get { return "201903060321294_create-tables-applications-apikeys"; }
+            get { return "201903062312397_create-tables-applicatons-apikeys"; }
         }
         
         string IMigrationMetadata.Source

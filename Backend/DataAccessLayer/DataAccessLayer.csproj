@@ -58,9 +58,9 @@
     <Compile Include="Migrations\201812040642468_create-table-session.Designer.cs">
       <DependentUpon>201812040642468_create-table-session.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201903060321294_create-tables-applications-apikeys.cs" />
-    <Compile Include="Migrations\201903060321294_create-tables-applications-apikeys.Designer.cs">
-      <DependentUpon>201903060321294_create-tables-applications-apikeys.cs</DependentUpon>
+    <Compile Include="Migrations\201903062312397_create-tables-applicatons-apikeys.cs" />
+    <Compile Include="Migrations\201903062312397_create-tables-applicatons-apikeys.Designer.cs">
+      <DependentUpon>201903062312397_create-tables-applicatons-apikeys.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApiKey.cs" />
@@ -90,8 +90,8 @@
     <EmbeddedResource Include="Migrations\201812040642468_create-table-session.resx">
       <DependentUpon>201812040642468_create-table-session.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201903060321294_create-tables-applications-apikeys.resx">
-      <DependentUpon>201903060321294_create-tables-applications-apikeys.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201903062312397_create-tables-applicatons-apikeys.resx">
+      <DependentUpon>201903062312397_create-tables-applicatons-apikeys.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

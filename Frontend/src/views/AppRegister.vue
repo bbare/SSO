@@ -33,6 +33,7 @@ export default {
   },
   methods: {
     register: function () {
+        // TODO: replace with SSO backend url
       const url = 'http://localhost:50803/api/applications/register'
       axios.post(url, {
         title: document.getElementById('title').value,
@@ -45,9 +46,9 @@ export default {
         }
       })
         .then(response => {
-            this.key = response.data;
-            this.disabled = 1;
-            this.hide = 1;
+            this.key = response.data; // Retrieve api key from response
+            this.disabled = 1; // Disable field inputs and Submit button
+            this.hide = 1; // Show 'Successful Registration' and Api Key
         })
         .catch(function (error) {
             console.log(error);

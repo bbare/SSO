@@ -10,9 +10,12 @@ namespace DataAccessLayer.Models
     {
         public Application()
         {
+            Id = Guid.NewGuid();
         }
 
         [Key]
+        public Guid Id { get; set; }
+
         [Required, DataType(DataType.Url)]
         public string Url { get; set; }
 

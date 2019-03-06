@@ -7,15 +7,18 @@ namespace DataAccessLayer.Models
     {
         public ApiKey()
         {
-            Key = "";
+            Id = Guid.NewGuid();
             IsUsed = false;
         }
 
         [Key]
+        public Guid Id { get; set; }
+
+        [Required]
         public string Key { get; set; }
 
-        [Required, DataType(DataType.Url)]
-        public string ApplicationUrl { get; set; }
+        [Required]
+        public Guid ApplicationId { get; set; }
 
         [Required]
         public bool IsUsed { get; set; }

@@ -28,9 +28,7 @@ namespace DataAccessLayer.Repositories
         /// <returns>The deleted application record</returns>
         public Application DeleteApplication(DatabaseContext _db, string url)
         {
-            var app = _db.Applications
-                .Where(c => c.Url.Equals(url))
-                .FirstOrDefault<Application>();
+            var app = GetApplication(_db, url);
             if (app == null)
             {
                 return null;
@@ -40,14 +38,28 @@ namespace DataAccessLayer.Repositories
         }
 
         /// <summary>
-        /// Retrieve an application record
+        /// Retrieve an application record by url field
         /// </summary>
         /// <param name="_db">database</param>
         /// <param name="url">application url</param>
         /// <returns>The retrieved application</returns>
         public Application GetApplication(DatabaseContext _db, string url)
         {
-            return _db.Applications.Find(url);
+            var app = _db.Applications
+                .Where(c => c.Url.Equals(url))
+                .FirstOrDefault<Application>();
+            return app;
+        }
+
+        /// <summary>
+        /// Retrieve an application record by id field
+        /// </summary>
+        /// <param name="_db">database</param>
+        /// <param name="id">application id</param>
+        /// <returns>The retrieved application</returns>
+        public Application GetApplication(DatabaseContext _db, Guid id)
+        {
+            return _db.Applications.Find(id);
         }
 
         /// <summary>
@@ -72,6 +84,24 @@ namespace DataAccessLayer.Repositories
         {
             // Retrieve the application
             var result = GetApplication(_db, app.Url);
+            if (result != null) // Application exists
+            {
+                return true;
+            }
+            // Application does not exists
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if an application record exists in the database.
+        /// </summary>
+        /// <param name="_db">database</param>
+        /// <param name="url">application url</param>
+        /// <returns>Whether the application exists</returns>
+        public bool IsExistingApplication(DatabaseContext _db, string url)
+        {
+            // Retrieve the application
+            var result = GetApplication(_db, url);
             if (result != null) // Application exists
             {
                 return true;

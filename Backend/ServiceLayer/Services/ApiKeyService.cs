@@ -59,8 +59,7 @@ namespace ServiceLayer.Services
         /// <returns>The key</returns>
         public string GenerateKey()
         {
-            // TODO: generate a more secure password.
-            return Membership.GeneratePassword(50,0);
+            return Guid.NewGuid().ToString("N").ToUpper();
         }
 
         /// <summary>
