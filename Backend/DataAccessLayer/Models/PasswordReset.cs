@@ -1,30 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccessLayer.Models
 {
     public class PasswordReset
     {
-        [Required, Key] 
-        public string resetID { get; set; }
+        public PasswordReset()
+        {
+            PasswordResetID = Guid.NewGuid();
+            ExpirationTime = DateTime.Now.AddMinutes(5);
+            ResetCount = 0;
+            Disabled = false;
+        }
 
-        [Required, ForeignKey("User")]
-        public Guid userID { get; set; }
+        [Required, Key]
+        public Guid PasswordResetID { get; set; }
 
         [Required]
-        public DateTime expirationTime { get; set; }
+        public string ResetToken { get; set; }
+
+        public User User { get; set; }
+        [Required, ForeignKey("User")]
+        public Guid UserID { get; set; }
+
+        [Required, Column(TypeName = "datetime2"), DataType(DataType.DateTime)]
+        public DateTime ExpirationTime { get; set; }
 
         [Required]
         //Variable to keep track of how many attempts were made with this reset ID
-        public int resetCount { get; set; }
+        public int ResetCount { get; set; }
 
         [Required]
         //Variable to keep track of user being locked out of resetting password
-        public bool disabled { get; set; }
+        public bool Disabled { get; set; }
     }
 }

@@ -7,7 +7,9 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccessLayer.Models;
+using ManagerLayer.AccessControl;
 using MimeKit;
+using System.Data.Entity.Validation;
 
 namespace ManagerLayer.ResetPassword
 {
@@ -20,12 +22,14 @@ namespace ManagerLayer.ResetPassword
         private IUserService _userService;
         private IPasswordService _passwordService;
         private IEmailService _emailService;
+        private AuthorizationManager _authorizationManager;
 
         public PasswordResetManager()
         {
             _resetService = new ResetService();
             _userService = new UserService();
             _emailService = new EmailService();
+            _authorizationManager = new AuthorizationManager();
         }
 
         private DatabaseContext CreateDbContext()
@@ -35,32 +39,8 @@ namespace ManagerLayer.ResetPassword
 
         public PasswordReset CreatePasswordReset(string email)
         {
-
-            #region ResetID Generation
-            RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider();
-            //List used to hold the two random numbers that will be generated
-            List<string> listOfInts = new List<string>();
-            //While loop to continue generating the numbers until satisfies length requirement
-            while (listOfInts.Count < 2)
-            {
-                byte[] randomNumber = new byte[8];
-                rngCsp.GetBytes(randomNumber);
-                int result = BitConverter.ToInt32(randomNumber, 0);
-                //If the number that was generated is negative, make it positive
-                if (result < 0)
-                {
-                    result = result * -1;
-                }
-                //Convert the number to a string
-                string resultToString = result.ToString();
-                //Add the number to the list of random numbers generated
-                listOfInts.Add(resultToString);
-            }
-            //Concatenate the two numbers generated to have a resetID that is minimum of 18 characters long
-            string generatedResetID = listOfInts[0] + listOfInts[1];
-
-            #endregion 
-
+            string generatedResetToken = _authorizationManager.GenerateToken();
+            
             //Expiration time for the resetID
             DateTime newExpirationTime = DateTime.Now.AddMinutes(TimeToExpire);
 
@@ -69,83 +49,106 @@ namespace ManagerLayer.ResetPassword
                 User associatedUser = _userService.GetUser(_db, email);
                 PasswordReset passwordReset = new PasswordReset
                 {
-                    resetID = generatedResetID,
-                    userID = associatedUser.Id,
-                    expirationTime = newExpirationTime,
-                    resetCount = 0,
-                    disabled = false
+
+                    ResetToken = generatedResetToken,
+                    UserID = associatedUser.Id
                 };
+                var response = _resetService.CreatePasswordReset(_db, passwordReset);
+                try
+                {
+                    _db.SaveChanges();
+                    return response;
+                }
+                catch (DbEntityValidationException ex)
+                {
+                    //catch error
+                    // detach session attempted to be created from the db context - rollback
+                    _db.Entry(response).State = System.Data.Entity.EntityState.Detached;
+                }
 
-                associatedUser.numOfResetAttempts = associatedUser.numOfResetAttempts + 1;
-                _userService.UpdateUser(_db, associatedUser);
-                _db.SaveChanges();
-
-                return _resetService.CreatePasswordReset(_db, passwordReset);
+                return null;
             }
         }
 
-        public PasswordReset DeletePasswordReset(string resetID)
+        public int DeletePasswordReset(string resetToken)
         {
             using (var _db = CreateDbContext())
             {
-                return _resetService.DeletePasswordReset(_db, resetID);
+                _resetService.DeletePasswordReset(_db, resetToken);
+                return _db.SaveChanges();
             }
         }
 
-        public PasswordReset GetPasswordReset(string resetID)
+        public PasswordReset GetPasswordReset(string resetToken)
         {
             using (var _db = CreateDbContext())
             {
-                return _resetService.GetPasswordReset(_db, resetID);
+                return _resetService.GetPasswordReset(_db, resetToken);
             }
         }
 
-        public PasswordReset UpdatePasswordReset(PasswordReset updatedPasswordReset)
+        public int UpdatePasswordReset(PasswordReset updatedPasswordReset)
         {
             using (var _db = CreateDbContext())
             {
-                return _resetService.UpdatePasswordReset(_db, updatedPasswordReset);
+                var response = _resetService.UpdatePasswordReset(_db, updatedPasswordReset);
+                try
+                {
+                    return _db.SaveChanges();
+                }
+                catch (DbEntityValidationException ex)
+                {
+                    // catch error
+                    // rollback changes
+                    _db.Entry(response).CurrentValues.SetValues(_db.Entry(response).OriginalValues);
+                    _db.Entry(response).State = System.Data.Entity.EntityState.Unchanged;
+                    return 0;
+                }
             }
         }
 
-        public DateTime GetPasswordResetExpiration(string resetID)
+        public DateTime GetPasswordResetExpiration(string resetToken)
         {
-            var resetIDRetrieved = GetPasswordReset(resetID);
-            return resetIDRetrieved.expirationTime;
+            var PasswordResetRetrieved = GetPasswordReset(resetToken);
+            return PasswordResetRetrieved.ExpirationTime;
         }
 
-        public bool ExistingResetID(string resetID)
+        public bool ExistingResetToken(string resetToken)
         {
             using (var _db = CreateDbContext())
             {
-                return _resetService.ExistingReset(_db, resetID);
+                return _resetService.ExistingReset(_db, resetToken);
             }
         }
 
-        public int GetAttemptsPerID(string resetID)
+        public int GetAttemptsPerID(string resetToken)
         {
-            var retrievedResetID = GetPasswordReset(resetID);
-            return retrievedResetID.resetCount;
+            var PasswordResetRetrieved = GetPasswordReset(resetToken);
+            return PasswordResetRetrieved.ResetCount;
         }
 
-        public bool GetResetIDStatus(string resetID)
+        public bool GetResetIDStatus(string resetToken)
         {
-            var retrievedResetID = GetPasswordReset(resetID);
-            return retrievedResetID.disabled;
+            var PasswordResetRetrieved = GetPasswordReset(resetToken);
+            return PasswordResetRetrieved.Disabled;
         }
 
-        public bool checkResetIDValid(string resetID)
+        public bool checkResetIDValid(string resetToken)
         {
             //See if ResetID exists 
-            if (ExistingResetID(resetID))
+            if (ExistingResetToken(resetToken))
             {
-                if (!GetResetIDStatus(resetID))
+                if (!GetResetIDStatus(resetToken))
                 {
-                    if (GetAttemptsPerID(resetID) < 4)
+                    if (GetAttemptsPerID(resetToken) < 4)
                     {
-                        if (GetPasswordResetExpiration(resetID) > DateTime.Now)
+                        if (GetPasswordResetExpiration(resetToken) > DateTime.Now)
                         {
                             return true;
+                        }
+                        else
+                        {
+                            LockPasswordReset(resetToken);
                         }
                     }
                 }
@@ -153,23 +156,23 @@ namespace ManagerLayer.ResetPassword
             return false;
         }
 
-        public string CreateResetURL(string resetID)
+        public string CreateResetURL(string baseURL, string resetToken)
         {
-            string resetControllerURL = "kfcsso.com/api/reset/resetpassword/?id=";
-            string resetURL = resetControllerURL + resetID;
+            string resetControllerURL = baseURL;
+            string resetURL = resetControllerURL + resetToken;
             return resetURL;
         }
 
-        public void LockResetID(string resetID)
+        public void LockPasswordReset(string resetToken)
         {
-            var retrievedPasswordReset = GetPasswordReset(resetID);
-            retrievedPasswordReset.disabled = true;
-            UpdatePasswordReset(retrievedPasswordReset);
+            var PasswordResetRetrieved = GetPasswordReset(resetToken);
+            PasswordResetRetrieved.Disabled = true;
+            UpdatePasswordReset(PasswordResetRetrieved);
         }
 
 
         //Needs to getUser before being able to call updatePassword
-        public bool UpdatePassword(User userToUpdate, string newPasswordHash)
+        public bool UpdatePassword(User userToUpdate, string newPasswordHash, string resetToken)
         {
             var userID = userToUpdate.Id;
 
@@ -187,8 +190,7 @@ namespace ManagerLayer.ResetPassword
                 {
                     //Set that retrieved user's password hash to the new password hash
                     storedHash = newPasswordHash;
-                    userToUpdate.numOfResetAttempts = 0;
-                    _userService.UpdateUser(_db, userToUpdate);
+                    LockPasswordReset(resetToken);
                     _db.SaveChanges();
                     return true;
                 }
@@ -200,13 +202,14 @@ namespace ManagerLayer.ResetPassword
         {
             List<string> listOfSecurityQuestions = new List<string>();
             var retrievedPasswordReset = GetPasswordReset(resetID);
-            var userID = retrievedPasswordReset.userID;
+            var userID = retrievedPasswordReset.UserID;
 
             using (var _db = CreateDbContext())
             {
-                var securityQ1 = _db.Users.Find(userID).SecurityQ1;
-                var securityQ2 = _db.Users.Find(userID).SecurityQ2;
-                var securityQ3 = _db.Users.Find(userID).SecurityQ3;
+                User retrievedUser = _userService.GetUser(_db, userID);
+                var securityQ1 = retrievedUser.SecurityQ1;
+                var securityQ2 = retrievedUser.SecurityQ2;
+                var securityQ3 = retrievedUser.SecurityQ3;
                 listOfSecurityQuestions.Add(securityQ1);
                 listOfSecurityQuestions.Add(securityQ2);
                 listOfSecurityQuestions.Add(securityQ3);
@@ -221,9 +224,9 @@ namespace ManagerLayer.ResetPassword
             {
                 List<string> listOfSecurityAnswers = new List<string>();
 
-                var securityA1 = _db.Users.Find(user.Id).SecurityQ1Answer;
-                var securityA2 = _db.Users.Find(user.Id).SecurityQ2Answer;
-                var securityA3 = _db.Users.Find(user.Id).SecurityQ3Answer;
+                var securityA1 = user.SecurityQ1Answer;
+                var securityA2 = user.SecurityQ2Answer;
+                var securityA3 = user.SecurityQ3Answer;
                 listOfSecurityAnswers.Add(securityA1);
                 listOfSecurityAnswers.Add(securityA2);
                 listOfSecurityAnswers.Add(securityA3);
@@ -232,12 +235,15 @@ namespace ManagerLayer.ResetPassword
                     //If the answers provided don't match the answers in the DB, the number of attempts to reset the password with that resetID is incremented
                     if (listOfSecurityAnswers[i] != userSubmittedSecurityAnswers[i])
                     {
+                        //Needs to be updated to get the most recent PasswordReset
                         var resetIDToCount = _db.ResetIDs.Find(user.Id);
                         if (resetIDToCount != null)
                         {
-                            int count = resetIDToCount.resetCount;
-                            count++;
-                            resetIDToCount.resetCount = count;
+                            resetIDToCount.ResetCount = resetIDToCount.ResetCount + 1;
+                            if(resetIDToCount.ResetCount > 4)
+                            {
+                                resetIDToCount.Disabled = true;
+                            }
                             _db.SaveChanges();
                         }
                         return false;

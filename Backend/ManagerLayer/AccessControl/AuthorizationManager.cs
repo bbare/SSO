@@ -26,7 +26,7 @@ namespace ManagerLayer.AccessControl
              _sessionService = new SessionService();
         }
 
-        public string GenerateSessionToken()
+        public string GenerateToken()
         {
             RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
             Byte[] b = new byte[64 / 2];
@@ -45,7 +45,7 @@ namespace ManagerLayer.AccessControl
                     return null;
                 }
                 Session session = new Session();
-                session.Token = GenerateSessionToken();
+                session.Token = GenerateToken();
                 session.User = user;
                 session.UserId = user.Id;
 

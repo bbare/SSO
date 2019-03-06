@@ -29,15 +29,15 @@ namespace ServiceLayer.Services
             return _resetRepo.CreateReset(_db, passwordReset);
         }
 
-        public PasswordReset DeletePasswordReset(DatabaseContext _db, string resetID)
+        public PasswordReset DeletePasswordReset(DatabaseContext _db, string resetToken)
         {
-            return _resetRepo.DeleteReset(_db, resetID);
+            return _resetRepo.DeleteReset(_db, resetToken);
             
         }
 
-        public PasswordReset GetPasswordReset(DatabaseContext _db, string resetID)
+        public PasswordReset GetPasswordReset(DatabaseContext _db, string resetToken)
         {
-            return _resetRepo.GetReset(_db, resetID);
+            return _resetRepo.GetReset(_db, resetToken);
         }
 
         public PasswordReset UpdatePasswordReset(DatabaseContext _db, PasswordReset passwordResetID)
@@ -45,9 +45,9 @@ namespace ServiceLayer.Services
             return _resetRepo.UpdateReset(_db, passwordResetID);
         }
 
-        public bool ExistingReset(DatabaseContext _db, string resetID)
+        public bool ExistingReset(DatabaseContext _db, string resetToken)
         {
-            return _resetRepo.ExistingReset(_db, resetID);
+            return _resetRepo.ExistingReset(_db, resetToken);
         }
     }
 }

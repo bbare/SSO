@@ -24,13 +24,7 @@ namespace WebAPI.Controllers
             //Check to see if the email provided is associated with an account
             if (umm.ExistingUser(email))
             {
-                if (umm.GetUser(email).numOfResetAttempts != 3)//Check to see if the user is unable to request new reset links
-                {
-
-                    var resetID = prm.CreatePasswordReset(email);
-                    prm.SendResetEmailUserExists(email, resetID.resetID);
-                }
-
+                
             }
             else
             {

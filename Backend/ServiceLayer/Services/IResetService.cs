@@ -11,9 +11,9 @@ namespace ServiceLayer.Services
     public interface IResetService
     {
         PasswordReset CreatePasswordReset(DatabaseContext _db, PasswordReset passwordResetID);
-        PasswordReset GetPasswordReset(DatabaseContext _db, string email);
+        PasswordReset GetPasswordReset(DatabaseContext _db, string resetToken);
         PasswordReset UpdatePasswordReset(DatabaseContext _db, PasswordReset passwordResetID);
-        PasswordReset DeletePasswordReset(DatabaseContext _db, string resetID);
-        bool ExistingReset(DatabaseContext _db, string resetID);
+        PasswordReset DeletePasswordReset(DatabaseContext _db, string resetToken);
+        bool ExistingReset(DatabaseContext _db, string resetToken);
     }
 }
