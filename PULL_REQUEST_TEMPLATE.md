@@ -1,22 +1,28 @@
+# Issue/Ticket
+
+CLOSES #XX
+PROGRESS ON #XX
+
+If you specify CLOSES, the ticket will be automatically closed and moved to 'done' when the PR is merged.
+
+If you specify PROGRESS ON, a reference will be created to that issue (in both directions), but merging the PR will not close the issue.
+
 # Description
 
 Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context. List any dependencies that are required for this change.
 
 ## Type of change
 
-Please delete options that are not relevant.
+List one of the following: Bug (Fix), Feature, Chore
 
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] This change requires a documentation update
+Label your PR accordingly.
 
 # How Has This Been Tested?
 
-Please describe the tests that you ran to verify your changes. Provide instructions so we can reproduce. Please also list any relevant details for your test configuration
+Please describe and list the tests that you wrote for each module changed. If there are any special considerations, mention them here.
 
-- [ ] Test A
-- [ ] Test B
+- Test A
+- Test B
 
 # Notes
 
