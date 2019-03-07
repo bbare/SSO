@@ -46,7 +46,7 @@ namespace DataAccessLayer.Repositories
         public Application GetApplication(DatabaseContext _db, string url)
         {
             var app = _db.Applications
-                .Where(c => c.Url.Equals(url))
+                .Where(c => c.LaunchUrl.Equals(url))
                 .FirstOrDefault<Application>();
             return app;
         }
@@ -83,7 +83,7 @@ namespace DataAccessLayer.Repositories
         public bool IsExistingApplication(DatabaseContext _db, Application app)
         {
             // Retrieve the application
-            var result = GetApplication(_db, app.Url);
+            var result = GetApplication(_db, app.LaunchUrl);
             if (result != null) // Application exists
             {
                 return true;

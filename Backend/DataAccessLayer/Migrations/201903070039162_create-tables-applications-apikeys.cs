@@ -3,7 +3,7 @@ namespace DataAccessLayer.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class createtablesapplicatonsapikeys : DbMigration
+    public partial class createtablesapplicationsapikeys : DbMigration
     {
         public override void Up()
         {
@@ -12,10 +12,10 @@ namespace DataAccessLayer.Migrations
                 c => new
                     {
                         Id = c.Guid(nullable: false),
-                        Url = c.String(nullable: false),
+                        LaunchUrl = c.String(nullable: false),
                         Title = c.String(nullable: false),
                         Email = c.String(nullable: false),
-                        Logo = c.String(),
+                        LogoUrl = c.String(),
                         Description = c.String(),
                         UserDeletionUrl = c.String(nullable: false),
                     })
@@ -32,15 +32,10 @@ namespace DataAccessLayer.Migrations
                     })
                 .PrimaryKey(t => t.Id);
             
-            AlterColumn("dbo.Users", "PasswordHash", c => c.String(nullable: false));
-            AlterColumn("dbo.Users", "PasswordSalt", c => c.Binary(nullable: false));
         }
         
         public override void Down()
         {
-            
-            AlterColumn("dbo.Users", "PasswordSalt", c => c.Binary());
-            AlterColumn("dbo.Users", "PasswordHash", c => c.String());
             DropTable("dbo.ApiKeys");
             DropTable("dbo.Applications");
         }

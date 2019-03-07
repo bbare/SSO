@@ -13,6 +13,7 @@ using DataAccessLayer.Database;
 using DataAccessLayer.Models;
 using Newtonsoft.Json;
 using ServiceLayer.Services;
+using ManagerLayer;
 
 namespace WebAPI.Controllers
 {
@@ -44,37 +45,24 @@ namespace WebAPI.Controllers
         [Route("api/applications/register")]
         public HttpResponseMessage Register([FromBody] RegisterRequest request)
         {
-            HttpResponseMessage response;
-                                   
-            try
-            {
-                // Check for a valid email.
-                var valid = new System.Net.Mail.MailAddress(request.email);
-            }
-            catch (Exception)
+            HttpResponseMessage response ;
+            ManagerLayer.ApplicationManager manager = new ManagerLayer.ApplicationManager();
+            Uri url = null;
+            Uri deleteUrl = null;
+
+            if (!manager.IsValidEmail(request.email))
             {
                 // Error response
                 response = Request.CreateResponse(HttpStatusCode.BadRequest, "Invalid Email");
                 return response;
             }
-
-            // Check for a valid application url
-            Uri uriResult;
-            bool result = Uri.TryCreate(request.url, UriKind.Absolute, out uriResult)
-                && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-
-            // Check for a valid user deletion url
-            Uri deleteUriResult;
-            bool deleteResult = Uri.TryCreate(request.deleteUrl, UriKind.Absolute, out deleteUriResult)
-                && (deleteUriResult.Scheme == Uri.UriSchemeHttp || deleteUriResult.Scheme == Uri.UriSchemeHttps);
-
-            if (!result) // Invalid application url
+            else if (!manager.IsValidUrl(request.url, url))
             {
                 // Error response
                 response = Request.CreateResponse(HttpStatusCode.BadRequest, "Invalid Application Url");
                 return response;
             }
-            else if (!deleteResult) // Invalid user deletion url
+            else if (!manager.IsValidUrl(request.deleteUrl, deleteUrl))
             {
                 // Error response
                 response = Request.CreateResponse(HttpStatusCode.BadRequest, "Invalid User Deletion Url");
@@ -85,7 +73,7 @@ namespace WebAPI.Controllers
             Application app = new Application
             {
                 Title = request.title,
-                Url = uriResult.ToString(),
+                LaunchUrl = url.ToString(),
                 Email = request.email,
                 UserDeletionUrl = request.deleteUrl
             };
@@ -98,49 +86,27 @@ namespace WebAPI.Controllers
 
             using (var _db = new DatabaseContext())
             {
-                // Aplication Service instance
-                IApplicationService _appService = new ApplicationService();
                 // Attempt to create an application record
-                var appResponse = _appService.CreateApplication(_db, app);
-                if (appResponse == null) // Application already exists
+                var appResponse = manager.CreateApplication(_db, app);
+                if (appResponse == null)
                 {
-                    // Error response
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, "Application Already Exists");
                     return response;
                 }
-
-                // ApiKey Service instance
-                IApiKeyService _keyService = new ApiKeyService();
+                
                 // Attempt to create an apiKey record
-                var keyResponse = _keyService.CreateKey(_db, apiKey);
+                var keyResponse = manager.CreateApiKey(_db, apiKey);
 
-                try
+                if(!manager.SaveChanges(_db, appResponse, keyResponse))
                 {
-                    // Save changes in the database
-                    _db.SaveChanges();
-
-                    // TODO: attempt to email api key instead of returning it to frontend
-                    //_keyService.EmailKey(app.Email, keyResponse.ToString());
-                }
-                catch (System.Data.Entity.Validation.DbEntityValidationException)
-                {
-                    // Catch error
-                    // Detach application attempted to be created from the db context - rollback
-                    _db.Entry(appResponse).State = System.Data.Entity.EntityState.Detached;
-                    _db.Entry(keyResponse).State = System.Data.Entity.EntityState.Detached;
-
                     // Error response
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, "Unable to save database changes");
                     return response;
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.StackTrace);
-                    // Error response
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, e.StackTrace);
-                    //response = Request.CreateResponse(HttpStatusCode.BadRequest, "Unable to email API Key");
-                    return response;
-                }
+
+                // Check if email was sent successfully
+                //response = Request.CreateResponse(HttpStatusCode.BadRequest, "Unable to email API Key");
+                //return response;
             }
             // Success: Return api key to frontend
             response = Request.CreateResponse(HttpStatusCode.OK, apiKey.Key);
@@ -183,7 +149,7 @@ namespace WebAPI.Controllers
                 }
                 else if (file.Headers.ContentDisposition.Name.Equals("logo"))
                 {
-                    app.Logo = await file.ReadAsStringAsync();
+                    app.LogoUrl = await file.ReadAsStringAsync();
                 }
                 else if (file.Headers.ContentDisposition.Name.Equals("key"))
                 {

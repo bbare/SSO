@@ -17,7 +17,7 @@ namespace DataAccessLayer.Models
         public Guid Id { get; set; }
 
         [Required, DataType(DataType.Url)]
-        public string Url { get; set; }
+        public string LaunchUrl { get; set; }
 
         [Required]
         public string Title { get; set; }
@@ -26,7 +26,7 @@ namespace DataAccessLayer.Models
         public string Email { get; set; }
         
         [DataType(DataType.ImageUrl)]
-        public string Logo { get; set;}
+        public string LogoUrl { get; set;}
 
         public string Description { get; set; }
 
