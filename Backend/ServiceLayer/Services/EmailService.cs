@@ -14,10 +14,10 @@ namespace ServiceLayer.Services
 {
     public class EmailService: IEmailService
     {
-        private string SmtpServer = WebConfigurationManager.AppSettings["smtpServer"];
-        private int SmtpPort = Int32.Parse(WebConfigurationManager.AppSettings["smtpPort"]);
-        private string SmtpUsername = WebConfigurationManager.AppSettings["smtpUsername"];
-        private string SmtpPassword = WebConfigurationManager.AppSettings["smtpPassword"];
+        private string SmtpServer = Environment.GetEnvironmentVariable("smtpServer");
+        private int SmtpPort = Int32.Parse(Environment.GetEnvironmentVariable("smtpPort"));
+        private string SmtpUsername = Environment.GetEnvironmentVariable("smtpUsername");
+        private string SmtpPassword = Environment.GetEnvironmentVariable("smtpPassword");
 
 
         //Function to send an email without formatting

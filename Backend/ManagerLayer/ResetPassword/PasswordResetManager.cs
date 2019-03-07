@@ -37,7 +37,7 @@ namespace ManagerLayer.ResetPassword
             return new DatabaseContext();
         }
 
-        public PasswordReset CreatePasswordReset(string email)
+        public PasswordReset CreatePasswordReset(Guid userID)
         {
             string generatedResetToken = _authorizationManager.GenerateToken();
             
@@ -46,12 +46,10 @@ namespace ManagerLayer.ResetPassword
 
             using (var _db = CreateDbContext())
             {
-                User associatedUser = _userService.GetUser(_db, email);
                 PasswordReset passwordReset = new PasswordReset
                 {
-
                     ResetToken = generatedResetToken,
-                    UserID = associatedUser.Id
+                    UserID = userID
                 };
                 var response = _resetService.CreatePasswordReset(_db, passwordReset);
                 try
@@ -133,29 +131,6 @@ namespace ManagerLayer.ResetPassword
             return PasswordResetRetrieved.Disabled;
         }
 
-        public bool checkResetIDValid(string resetToken)
-        {
-            //See if ResetID exists 
-            if (ExistingResetToken(resetToken))
-            {
-                if (!GetResetIDStatus(resetToken))
-                {
-                    if (GetAttemptsPerID(resetToken) < 4)
-                    {
-                        if (GetPasswordResetExpiration(resetToken) > DateTime.Now)
-                        {
-                            return true;
-                        }
-                        else
-                        {
-                            LockPasswordReset(resetToken);
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-
         public string CreateResetURL(string baseURL, string resetToken)
         {
             string resetControllerURL = baseURL;
@@ -170,6 +145,59 @@ namespace ManagerLayer.ResetPassword
             UpdatePasswordReset(PasswordResetRetrieved);
         }
 
+        public bool CheckResetIDValid(string resetToken)
+        {
+            //See if ResetID exists 
+            if (ExistingResetToken(resetToken))
+            {
+                if (GetPasswordResetExpiration(resetToken) > DateTime.Now)
+                {
+                    if (!GetResetIDStatus(resetToken))
+                    {
+                        if (GetAttemptsPerID(resetToken) < 4)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                else
+                {
+                    LockPasswordReset(resetToken);
+                }
+            }
+            return false;
+        }
+
+        public int CountResetLinksMade24Hours(Guid UserID)
+        {
+            int NumOfResetLinks = 3;
+            DateTime past24Hours = DateTime.Now.AddDays(-1);
+            DateTime currentTime = DateTime.Now;
+            using(var _db = CreateDbContext())
+            {
+                var listOfTokensFrom24Hours = from r in _db.ResetIDs
+                                              where r.ExpirationTime <= currentTime & r.ExpirationTime >= past24Hours & r.UserID == UserID
+                                              select r;
+                NumOfResetLinks = listOfTokensFrom24Hours.Count();
+                return NumOfResetLinks;
+            }
+        }
+
+        public void assignResetToken(string email)
+        {
+            using(var _db = CreateDbContext())
+            {
+                if(_userService.ExistingUser(_db, email))
+                {
+                    Guid userID = _userService.GetUser(_db, email).Id;
+
+                    if(CountResetLinksMade24Hours(userID) < 3)
+                    {
+                        CreatePasswordReset(userID);
+                    }
+                }
+            }
+        }
 
         //Needs to getUser before being able to call updatePassword
         public bool UpdatePassword(User userToUpdate, string newPasswordHash, string resetToken)
