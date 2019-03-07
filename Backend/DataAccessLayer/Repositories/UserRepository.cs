@@ -23,7 +23,5 @@ namespace DataAccessLayer.Repositories
                 return false;
             }
         }
-
-
     }
 }
