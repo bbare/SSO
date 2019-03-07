@@ -41,7 +41,7 @@ namespace DataAccessLayer.Models
         public string SecurityQ3Answer { get; set; }
 
         [Required]
-        public int IncorrectPasswordCount { get; set; }
+        public int IncorrectPasswordCount { get; set; } = 0;
 
         [Required]
         public bool Disabled { get; set; }

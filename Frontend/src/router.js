@@ -4,7 +4,7 @@ import VueRouter from 'vue-router'
 import Home from '@/views/Home.vue'
 import NotFound from '@/views/NotFound.vue'
 import Login from '@/views/Login.vue'
-import Portal from '@/views/Portal.vue'
+import Dashboard from '@/views/Dashboard.vue'
 
 Vue.use(VueRouter)
 
@@ -33,9 +33,9 @@ let router = new VueRouter({
       component: Login
     },
     {
-      path: '/portal',
-      name: 'portal',
-      component: Portal
+      path: '/dashboard',
+      name: 'dashboard',
+      component: Dashboard
     },
     {
       path: '*',
