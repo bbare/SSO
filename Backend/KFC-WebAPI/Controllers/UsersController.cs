@@ -1,6 +1,7 @@
 ﻿using DataAccessLayer.Database;
 using DataAccessLayer.Models;
 using ServiceLayer.Services;
+using ManagerLayer.Login;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
@@ -18,12 +19,6 @@ namespace KFC_WebAPI.Controllers
             public string email;
             public string password;
             public DateTime dob;
-        }
-
-        public class LoginRequest
-        {
-            public string email;
-            public string password;
         }
 
         [HttpPost]
@@ -79,47 +74,30 @@ namespace KFC_WebAPI.Controllers
         [HttpPost]
         [Route("api/users/login")]
         public IHttpActionResult Login([FromBody] LoginRequest request)
-        {
-            //WILL MOVE TO MANAGER LAYER SOON
-            IUserService _userService = new UserService();
-            IPasswordService _passwordService = new PasswordService();
-            ITokenService _tokenService = new TokenService();
-            ISessionService _sessionService = new SessionService();
-
-            string generateToken = _tokenService.GenerateToken();
-
-            using (var _db = new DatabaseContext())
+        {           
+            LoginManager loginM = new LoginManager();
+            if (loginM.LoginCheckUserExists(request.email) == false)
             {
-                User user = _userService.GetUser(_db, request.email);
-                bool isPasswordMatched = _passwordService.VerifyPassword(request.password, user.PasswordHash, user.PasswordSalt);
-
-                //succesful login
-                if (isPasswordMatched == true)
+                return NotFound();
+            }
+            else
+            {
+                if(loginM.LoginCheckUserDisabled())
                 {
-                    Session session = new Session
-                    {
-                        Token = generateToken,
-                        User = user
-                    };
-
-                    var response = _sessionService.CreateSession(_db,session);
-
-                    return Ok(response);
-         
+                    return Unauthorized();
                 }
-                //login not successful if password is incorrect
                 else
                 {
-                    user.IncorrectPasswordCount = user.IncorrectPasswordCount + 1;
-
-                    if(user.IncorrectPasswordCount == 3)
+                    if(loginM.LoginCheckPassword(request.password))
                     {
-                        user.Disabled = true;
+                        return Ok(loginM.LoginAuthorized());
                     }
-
-                    return NotFound();
+                    else
+                    {
+                        return Unauthorized();
+                    }
                 }
-            }
+            }            
         }
     }
 }

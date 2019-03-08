@@ -15,6 +15,7 @@ namespace ManagerLayer.AccessControl
     {
         private ISessionService _sessionService;
         private IUserService _userService;
+        private ITokenService _tokenService;
 
         private DatabaseContext CreateDbContext()
         {
@@ -26,6 +27,7 @@ namespace ManagerLayer.AccessControl
              _sessionService = new SessionService();
         }
 
+        /*
         public string GenerateSessionToken()
         {
             RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
@@ -34,6 +36,7 @@ namespace ManagerLayer.AccessControl
             string hex = BitConverter.ToString(b).Replace("-", "");
             return hex;
         }
+        */
 
         public string CreateSession(User user)
         {
@@ -45,7 +48,7 @@ namespace ManagerLayer.AccessControl
                     return null;
                 }
                 Session session = new Session();
-                session.Token = GenerateSessionToken();
+                session.Token = _tokenService.GenerateToken();
                 session.User = user;
                 session.UserId = user.Id;
 

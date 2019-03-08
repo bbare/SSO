@@ -121,6 +121,10 @@
       <Project>{F4772F25-0116-413B-BC7F-43EFF8A04F2E}</Project>
       <Name>DataAccessLayer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ManagerLayer\ManagerLayer.csproj">
+      <Project>{dd7c51a6-44cd-4a05-9809-1171fe66f434}</Project>
+      <Name>ManagerLayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ServiceLayer\ServiceLayer.csproj">
       <Project>{41ADE765-973A-4155-B3D6-2C24648CBC7A}</Project>
       <Name>ServiceLayer</Name>
