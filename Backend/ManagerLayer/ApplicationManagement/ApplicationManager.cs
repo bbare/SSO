@@ -15,7 +15,7 @@ namespace ManagerLayer.ApplicationManagement
         {
             _appService = new ApplicationService();
             _keyService = new ApiKeyService();
-            _emailService = new EmailService();
+            //_emailService = new EmailService();
         }
 
         // Application Services
@@ -103,20 +103,20 @@ namespace ManagerLayer.ApplicationManagement
                 //response = new HttpResponseContent(HttpStatusCode.BadRequest, "Unable to email API Key");
                 //return response;
             }
+            string message = apiKey.Key;
+            //string message;
 
-            string message;
-
-            // Attempt to send api key to application email
-            if(SendAppRegistrationApiKeyEmail(app.Email, apiKey.Key))
-            {
-                // Alert front end that email was sent
-                message = "Sent to " + app.Email;
-            }
-            else
-            {
-                // Email could not be sent. Send api key to frontend.
-                message = apiKey.Key;
-            }
+            //// Attempt to send api key to application email
+            //if(SendAppRegistrationApiKeyEmail(app.Email, apiKey.Key))
+            //{
+            //    // Alert front end that email was sent
+            //    message = "Sent to " + app.Email;
+            //}
+            //else
+            //{
+            //    // Email could not be sent. Send api key to frontend.
+            //    message = apiKey.Key;
+            //}
 
 
             // Return success messge
@@ -252,19 +252,20 @@ namespace ManagerLayer.ApplicationManagement
                     return response;
                 }
 
-                string message;
+                string message = apiKey.Key;
+                //string message;
 
-                // Attempt to send api key to application email
-                if (SendNewApiKeyEmail(app.Email, apiKey.Key))
-                {
-                    // Alert front end that email was sent
-                    message = "Sent to " + app.Email;
-                }
-                else
-                {
-                    // Email could not be sent. Send api key to frontend.
-                    message = apiKey.Key;
-                }
+                //// Attempt to send api key to application email
+                //if (SendNewApiKeyEmail(app.Email, apiKey.Key))
+                //{
+                //    // Alert front end that email was sent
+                //    message = "Sent to " + app.Email;
+                //}
+                //else
+                //{
+                //    // Email could not be sent. Send api key to frontend.
+                //    message = apiKey.Key;
+                //}
 
                 response = new HttpResponseContent(HttpStatusCode.OK, apiKey.Key);
                 return response;

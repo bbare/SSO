@@ -12,9 +12,13 @@ namespace ServiceLayer.Services
         // Api Key Repository instance
         private ApiKeyRepository _ApiKeyRepo;
 
+        // Token Services instance
+        private ITokenService _tokenService;
+
         public ApiKeyService()
         {
             _ApiKeyRepo = new ApiKeyRepository();
+            _tokenService = new TokenService();
         }
 
         /// <summary>
@@ -29,8 +33,8 @@ namespace ServiceLayer.Services
             bool existing = true;
             while (existing)
             {
-                // Generate a key
-                key.Key = GenerateKey();
+                // Generate a unique key
+                key.Key = _tokenService.GenerateToken();
                 // Check if the key exists in the database
                 if(!_ApiKeyRepo.IsExistingKey(_db, key))
                 {
@@ -51,15 +55,6 @@ namespace ServiceLayer.Services
         public ApiKey DeleteKey(DatabaseContext _db, Guid id)
         {
             return _ApiKeyRepo.DeleteKey(_db, id);
-        }
-
-        /// <summary>
-        /// Generate a unique key.
-        /// </summary>
-        /// <returns>The key</returns>
-        public string GenerateKey()
-        {
-            return Guid.NewGuid().ToString("N").ToUpper();
         }
 
         /// <summary>
