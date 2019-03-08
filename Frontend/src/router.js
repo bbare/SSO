@@ -27,7 +27,7 @@ let router = new VueRouter({
       component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
     },
     {
-      path: '/app-register',
+      path: '/add',
       name: 'app register',
       component: AppRegister
     },

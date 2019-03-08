@@ -40,9 +40,9 @@ namespace ServiceLayer.Services
         /// <param name="_db">database</param>
         /// <param name="url">application url</param>
         /// <returns>The deleted application</returns>
-        public Application DeleteApplication(DatabaseContext _db, string url)
+        public Application DeleteApplication(DatabaseContext _db, Guid id)
         {
-            return _ApplicationRepo.DeleteApplication(_db, url);
+            return _ApplicationRepo.DeleteApplication(_db, id);
         }
 
         /// <summary>
@@ -51,9 +51,9 @@ namespace ServiceLayer.Services
         /// <param name="_db">database</param>
         /// <param name="url">application</param>
         /// <returns>The retrieved application</returns>
-        public Application GetApplication(DatabaseContext _db, string url)
+        public Application GetApplication(DatabaseContext _db, Guid id)
         {
-            return _ApplicationRepo.GetApplication(_db, url);
+            return _ApplicationRepo.GetApplication(_db, id);
         }
 
         /// <summary>

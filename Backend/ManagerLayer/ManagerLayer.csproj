@@ -51,7 +51,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplicationManager.cs" />
+    <Compile Include="ApplicationManagement\ApplicationManager.cs" />
+    <Compile Include="ApplicationManagement\HttpResponseContent.cs" />
+    <Compile Include="ApplicationManagement\PublishRequest.cs" />
+    <Compile Include="ApplicationManagement\RegisterRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AccessControl\AuthorizationManager.cs" />
     <Compile Include="UserManagement\UserManagementManager.cs" />

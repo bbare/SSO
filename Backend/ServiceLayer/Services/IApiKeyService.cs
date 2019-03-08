@@ -8,8 +8,8 @@ namespace ServiceLayer.Services
     {
         // CRUD
         ApiKey CreateKey(DatabaseContext _db, ApiKey key);
-        ApiKey GetKey(DatabaseContext _db, string key);
-        ApiKey DeleteKey(DatabaseContext _db, string key);
+        ApiKey GetKey(DatabaseContext _db, Guid id);
+        ApiKey DeleteKey(DatabaseContext _db, Guid id);
         ApiKey UpdateKey(DatabaseContext _db, ApiKey key);
 
         /// <summary>

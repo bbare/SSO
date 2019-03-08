@@ -9,7 +9,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ManagerLayer
+namespace ManagerLayer.ApplicationManagement
 {
     public class ApplicationManager
     {
@@ -18,26 +18,73 @@ namespace ManagerLayer
 
         }
 
-        /// <summary>
-        /// Application fields received in Register POST request.
-        /// </summary>
-        public class RegisterRequest
+        public HttpResponseContent ValidateApplication(RegisterRequest request)
         {
-            public string title;
-            public string url;
-            public string email;
-            public string deleteUrl;
-        }
+            HttpResponseContent response;
+            Uri url = null;
+            Uri deleteUrl = null;
 
-        /// <summary>
-        /// Application and ApiKey fields received in Publish POST request.
-        /// </summary>
-        public class PublishRequest
-        {
-            public string key;
-            public string title;
-            public string description;
-            public string logo;
+            if (!IsValidEmail(request.Email))
+            {
+                // Error response
+                response = new HttpResponseContent(HttpStatusCode.BadRequest, "Invalid Email");
+                return response;
+            }
+            else if (!IsValidUrl(request.Url, ref url))
+            {
+                // Error response
+                response = new HttpResponseContent(HttpStatusCode.BadRequest, "Invalid Application Url");
+                return response;
+            }
+            else if (!IsValidUrl(request.DeleteUrl, ref deleteUrl))
+            {
+                // Error response
+                response = new HttpResponseContent(HttpStatusCode.BadRequest, "Invalid User Deletion Url");
+                return response;
+            }
+
+            // Create a new application
+            Application app = new Application
+            {
+                Title = request.Title,
+                LaunchUrl = url.ToString(),
+                Email = request.Email,
+                UserDeletionUrl = request.DeleteUrl
+            };
+
+            // Create a new ApiKey
+            ApiKey apiKey = new ApiKey
+            {
+                ApplicationId = app.Id
+            };
+
+            using (var _db = new DatabaseContext())
+            {
+                // Attempt to create an application record
+                var appResponse = CreateApplication(_db, app);
+                if (appResponse == null)
+                {
+                    response = new HttpResponseContent(HttpStatusCode.BadRequest, "Application Already Exists");
+                    return response;
+                }
+
+                // Attempt to create an apiKey record
+                var keyResponse = CreateApiKey(_db, apiKey);
+
+                if (!SaveChanges(_db, appResponse, keyResponse))
+                {
+                    // Error response
+                    response = new HttpResponseContent(HttpStatusCode.InternalServerError, "Unable to save database changes");
+                    return response;
+                }
+
+                // Check if email was sent successfully
+                //response = new HttpResponseContent(HttpStatusCode.BadRequest, "Unable to email API Key");
+                //return response;
+            }
+            // Success: Return api key to frontend
+            response = new HttpResponseContent(HttpStatusCode.OK, apiKey.Key);
+            return response;
         }
 
         public bool IsValidEmail(string email)
@@ -55,7 +102,7 @@ namespace ManagerLayer
             }
         }
 
-        public bool IsValidUrl(string url, Uri uriResult)
+        public bool IsValidUrl(string url, ref Uri uriResult)
         {
             bool result = Uri.TryCreate(url, UriKind.Absolute, out uriResult)
                 && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);

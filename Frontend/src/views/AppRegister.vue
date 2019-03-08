@@ -2,13 +2,13 @@
     <div class="register-wrapper">
         <form class="form-register" @submit.prevent="register">
             <h2 class="form-register-heading">Register Your Application</h2>
-            <input v-model="title" id="title" class="form-control" :disabled="disabled == 1" placeholder="Title" required autofocus>
-            <input v-model="url" id="url" class="form-control" :disabled="disabled == 1" placeholder="Url" required>
-            <input v-model="email" id="email" type="email" class="form-control" :disabled="disabled == 1" placeholder="Email" required>
-            <input v-model="deleteUrl" id="deleteUrl" class="form-control" :disabled="disabled == 1" placeholder="User Deletion Url" required>
-            <button class="button-register" type="submit" :disabled="disabled == 1">Register</button>
+            <input v-model="title" id="title" class="form-control" v-if="!key" placeholder="Title" required autofocus>
+            <input v-model="url" id="url" class="form-control" v-if="!key" placeholder="Url" required>
+            <input v-model="email" id="email" type="email" class="form-control" v-if="!key" placeholder="Email" required>
+            <input v-model="deleteUrl" id="deleteUrl" class="form-control" v-if="!key" placeholder="User Deletion Url" required>
+            <button class="button-register" type="submit" v-if="!key">Register</button>
         </form>
-        <div v-if="hide" id="hide">
+        <div v-if="key" id="hide">
             <h3>Successful Registration!</h3>
             <h3>Your API Key:</h3>
         </div>
@@ -26,15 +26,13 @@ export default {
       title: '',
       email: '',
       url: '',
-      deleteUrl: '',
-      disabled: 0,
-      hide: 0
+      deleteUrl: ''
     }
   },
   methods: {
     register: function () {
         // TODO: replace with SSO backend url
-      const url = 'http://localhost:50803/api/applications/register'
+      const url = 'http://localhost:50803/api/applications/create'
       axios.post(url, {
         title: document.getElementById('title').value,
         url: document.getElementById('url').value,

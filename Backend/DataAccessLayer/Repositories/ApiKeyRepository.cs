@@ -24,30 +24,16 @@ namespace DataAccessLayer.Repositories
         /// Delete an Api Key record
         /// </summary>
         /// <param name="_db">database</param>
-        /// <param name="key">key value of api key</param>
+        /// <param name="id">api key id</param>
         /// <returns>deleted api key</returns>
-        public ApiKey DeleteKey(DatabaseContext _db, string key)
+        public ApiKey DeleteKey(DatabaseContext _db, Guid id)
         {
-            var apiKey = GetKey(_db, key);
+            var apiKey = GetKey(_db, id);
             if(apiKey == null)
             {
                 return null;
             }
             _db.Entry(apiKey).State = EntityState.Deleted;
-            return apiKey;
-        }
-
-        /// <summary>
-        /// Retrieve an Api Key record by key field
-        /// </summary>
-        /// <param name="_db">database</param>
-        /// <param name="key">key value of api key</param>
-        /// <returns></returns>
-        public ApiKey GetKey(DatabaseContext _db, string key)
-        {
-            var apiKey = _db.Keys
-                .Where(c => c.Key.Equals(key))
-                .FirstOrDefault<ApiKey>();
             return apiKey;
         }
 
@@ -83,26 +69,8 @@ namespace DataAccessLayer.Repositories
         public bool IsExistingKey(DatabaseContext _db, ApiKey key)
         {
             // Retrieve the api key
-            var result = GetKey(_db, key.Key);
+            var result = GetKey(_db, key.Id);
             if(result != null) // The api key exists
-            {
-                return true;
-            }
-            // The api key does not exist
-            return false;
-        }
-
-        /// <summary>
-        /// Checks if an Api Key record exists in the database
-        /// </summary>
-        /// <param name="_db">database</param>
-        /// <param name="key">key value of api key</param>
-        /// <returns>Whether the Api Key exists</returns>
-        public bool IsExistingKey(DatabaseContext _db, string key)
-        {
-            // Retrieve the api key
-            var result = GetKey(_db, key);
-            if (result != null) // The api key exists
             {
                 return true;
             }

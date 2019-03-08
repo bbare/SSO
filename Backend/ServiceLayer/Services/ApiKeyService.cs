@@ -48,9 +48,9 @@ namespace ServiceLayer.Services
         /// <param name="_db">database</param>
         /// <param name="key">key value of api key</param>
         /// <returns>The deleted api key</returns>
-        public ApiKey DeleteKey(DatabaseContext _db, string key)
+        public ApiKey DeleteKey(DatabaseContext _db, Guid id)
         {
-            return _ApiKeyRepo.DeleteKey(_db, key);
+            return _ApiKeyRepo.DeleteKey(_db, id);
         }
 
         /// <summary>
@@ -66,11 +66,11 @@ namespace ServiceLayer.Services
         /// Call the Api Key repository to retrieve an api key record
         /// </summary>
         /// <param name="_db">database</param>
-        /// <param name="key">key value of api key</param>
+        /// <param name="id">api key id</param>
         /// <returns>The retrieved api key</returns>
-        public ApiKey GetKey(DatabaseContext _db, string key)
+        public ApiKey GetKey(DatabaseContext _db, Guid id)
         {
-            return _ApiKeyRepo.GetKey(_db, key);
+            return _ApiKeyRepo.GetKey(_db, id);
         }
 
         /// <summary>
