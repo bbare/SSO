@@ -62,7 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ResetPassword\PasswordResetManager.cs" />
+    <Compile Include="PasswordManagement\PasswordManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AccessControl\AuthorizationManager.cs" />
     <Compile Include="UserManagement\UserManagementManager.cs" />

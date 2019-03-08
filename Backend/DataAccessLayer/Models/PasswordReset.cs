@@ -34,5 +34,8 @@ namespace DataAccessLayer.Models
         [Required]
         //Variable to keep track of user being locked out of resetting password
         public bool Disabled { get; set; }
+
+        [Required]
+        public bool AllowPasswordReset { get; set; }
     }
 }

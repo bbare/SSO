@@ -11,9 +11,9 @@ using ManagerLayer.AccessControl;
 using MimeKit;
 using System.Data.Entity.Validation;
 
-namespace ManagerLayer.ResetPassword
+namespace ManagerLayer.PasswordManagement
 {
-    public class PasswordResetManager
+    public class PasswordManager
     {
         //Variable for how long the token is supposed to be live
         private const double TimeToExpire = 5;
@@ -22,14 +22,13 @@ namespace ManagerLayer.ResetPassword
         private IUserService _userService;
         private IPasswordService _passwordService;
         private IEmailService _emailService;
-        private AuthorizationManager _authorizationManager;
+        private ITokenService _tokenService;
 
-        public PasswordResetManager()
+        public PasswordManager()
         {
             _resetService = new ResetService();
             _userService = new UserService();
             _emailService = new EmailService();
-            _authorizationManager = new AuthorizationManager();
         }
 
         private DatabaseContext CreateDbContext()
@@ -39,7 +38,7 @@ namespace ManagerLayer.ResetPassword
 
         public PasswordReset CreatePasswordReset(Guid userID)
         {
-            string generatedResetToken = _authorizationManager.GenerateToken();
+            string generatedResetToken = _tokenService.GenerateToken();
             
             //Expiration time for the resetID
             DateTime newExpirationTime = DateTime.Now.AddMinutes(TimeToExpire);
@@ -199,10 +198,11 @@ namespace ManagerLayer.ResetPassword
             }
         }
 
-        //Needs to getUser before being able to call updatePassword
-        public bool UpdatePassword(User userToUpdate, string newPasswordHash, string resetToken)
+        //This password update function is for when the user is not logged in and has answered the security questions
+        public bool UpdatePassword(string resetToken, string newPasswordHash)
         {
-            var userID = userToUpdate.Id;
+            var retrievedPasswordReset = GetPasswordReset(resetToken);
+            var userID = retrievedPasswordReset.UserID;
 
             using (var _db = CreateDbContext())
             {
@@ -225,11 +225,41 @@ namespace ManagerLayer.ResetPassword
             }
         }
 
+        //This password update function is for when the user is already logged in and wants to update their password
+        public bool UpdatePassword(User userToUpdate, string newPasswordHash)
+        {
+            var userID = userToUpdate.Id;
+
+            using (var _db = CreateDbContext())
+            {
+                //Query the User table get the user that matches the UserID in the arguments
+                var storedHash = _db.Users.Find(userID).PasswordHash;
+
+                //Check to see if the new password is the same as the old password
+                if (storedHash == newPasswordHash)
+                {
+                    return false;
+                }
+                else //If the new password is different, then update the password
+                {
+                    //Set that retrieved user's password hash to the new password hash
+                    storedHash = newPasswordHash;
+                    _db.SaveChanges();
+                    return true;
+                }
+            }
+        }
+
+        public bool checkPassword(string newPasswordToCheck)
+        {
+            return (_passwordService.CheckPasswordPwned(newPasswordToCheck) < 3);
+        }
+
         //Function to get security questions from the DB
-        public List<string> GetSecurityQuestions(string resetID)
+        public List<string> GetSecurityQuestions(string resetToken)
         {
             List<string> listOfSecurityQuestions = new List<string>();
-            var retrievedPasswordReset = GetPasswordReset(resetID);
+            var retrievedPasswordReset = GetPasswordReset(resetToken);
             var userID = retrievedPasswordReset.UserID;
 
             using (var _db = CreateDbContext())
@@ -246,15 +276,17 @@ namespace ManagerLayer.ResetPassword
         }
 
         //Function to check security answers against the DB
-        public bool CheckSecurityAnswers(User user, List<string> userSubmittedSecurityAnswers)
+        public bool CheckSecurityAnswers(string resetToken, List<string> userSubmittedSecurityAnswers)
         {
+            List<string> listOfSecurityAnswers = new List<string>();
+            var retrievedPasswordReset = GetPasswordReset(resetToken);
+            var userID = retrievedPasswordReset.UserID;
             using (var _db = CreateDbContext())
             {
-                List<string> listOfSecurityAnswers = new List<string>();
-
-                var securityA1 = user.SecurityQ1Answer;
-                var securityA2 = user.SecurityQ2Answer;
-                var securityA3 = user.SecurityQ3Answer;
+                User retrievedUser = _userService.GetUser(_db, userID);
+                var securityA1 = retrievedUser.SecurityQ1Answer;
+                var securityA2 = retrievedUser.SecurityQ2Answer;
+                var securityA3 = retrievedUser.SecurityQ3Answer;
                 listOfSecurityAnswers.Add(securityA1);
                 listOfSecurityAnswers.Add(securityA2);
                 listOfSecurityAnswers.Add(securityA3);
@@ -264,13 +296,14 @@ namespace ManagerLayer.ResetPassword
                     if (listOfSecurityAnswers[i] != userSubmittedSecurityAnswers[i])
                     {
                         //Needs to be updated to get the most recent PasswordReset
-                        var resetIDToCount = _db.ResetIDs.Find(user.Id);
+                        var resetIDToCount = _db.ResetIDs.Find(retrievedUser.Id);
                         if (resetIDToCount != null)
                         {
                             resetIDToCount.ResetCount = resetIDToCount.ResetCount + 1;
                             if(resetIDToCount.ResetCount > 4)
                             {
                                 resetIDToCount.Disabled = true;
+                                resetIDToCount.AllowPasswordReset = true;
                             }
                             _db.SaveChanges();
                         }

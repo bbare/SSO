@@ -17,6 +17,7 @@ namespace DataAccessLayer.Migrations
                     ExpirationTime = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
                     ResetCount = c.Int(nullable: false),
                     Disabled = c.Boolean(nullable: false),
+                    AllowPasswordReset = c.Boolean(nullable: false),
                 })
                 .PrimaryKey(t => t.PasswordResetID)
                 .ForeignKey("dbo.Users", t => t.UserID, cascadeDelete: true)
