@@ -1,16 +1,13 @@
 <template>
-    <div class="register-wrapper">
-        <form class="form-register" @submit.prevent="register">
-            <h2 class="form-register-heading">Register Your Application</h2>
-            <input v-model="title" id="title" class="form-control" v-if="!key" placeholder="Title" required autofocus>
-            <input v-model="url" id="url" class="form-control" v-if="!key" placeholder="Url" required>
+    <div class="generate-wrapper">
+        <form class="form-generate" @submit.prevent="generate">
+            <h2 class="form-generate-heading">Generate a New API Key</h2>
+            <input v-model="title" id="title" class="form-control" v-if="!key" placeholder="Application Title" required autofocus>
             <input v-model="email" id="email" type="email" class="form-control" v-if="!key" placeholder="Email" required>
-            <input v-model="deleteUrl" id="deleteUrl" class="form-control" v-if="!key" placeholder="User Deletion Url" required>
-            <button class="button-register" type="submit" v-if="!key">Register</button>
+            <button class="button-generate" type="submit" v-if="!key">Generate</button>
         </form>
         <div v-if="key" id="hide">
-            <h3>Successful Registration!</h3>
-            <h3>Your API Key:</h3>
+            <h3>Your New API Key:</h3>
         </div>
         <p>{{ key }}</p>
     </div>
@@ -24,20 +21,16 @@ export default {
     return {
       key: null,
       title: '',
-      email: '',
-      url: '',
-      deleteUrl: ''
+      email: ''
     }
   },
   methods: {
-    register: function () {
+    generate: function () {
         // TODO: replace with SSO backend url
-      const url = 'http://localhost:50803/api/applications/create'
+      const url = 'http://localhost:50803/api/applications/generatekey'
       axios.post(url, {
         title: document.getElementById('title').value,
-        url: document.getElementById('url').value,
         email: document.getElementById('email').value,
-        deleteUrl: document.getElementById('deleteUrl').value,
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
@@ -56,20 +49,20 @@ export default {
 </script>
 
 <style lang="css">
-.register-wrapper {
+.generate-wrapper {
     background: #fff;
     width: 70%;
     margin: 1px auto;
     text-align: center;
 }
 
-.form-register {
+.form-generate {
     max-width: 330px;
     padding: 5% 10px;
     margin: 0 auto;
 }
 
-.form-register .form-control {
+.form-generate .form-control {
     position: relative;
     height: auto;
     -webkit-box-sizing: border-box;
@@ -78,21 +71,21 @@ export default {
     font-size: 16px;
 }
 
-.form-register .form-control:focus {
+.form-generate .form-control:focus {
     z-index: 2;
 }
 
-.form-register input {
+.form-generate input {
     margin-bottom: 10px;
     width: 100%;
 }
 
-.form-register button {
+.form-generate button {
     width: 100%;
     height: 40px;
 }
 
-.form-register h3 {
+.form-generate h3 {
     margin-top: 50px;
 }
 

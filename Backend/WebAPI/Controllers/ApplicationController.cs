@@ -14,7 +14,6 @@ using DataAccessLayer.Models;
 using Newtonsoft.Json;
 using ServiceLayer.Services;
 using ManagerLayer.ApplicationManagement;
-using HttpResponse = System.Web.HttpResponse;
 
 namespace WebAPI.Controllers
 {

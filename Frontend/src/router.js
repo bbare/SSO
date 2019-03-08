@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import Home from '@/views/Home.vue'
 import NotFound from '@/views/NotFound.vue'
 import AppRegister from '@/views/AppRegister.vue'
+import GenerateKey from '@/views/GenerateKey.vue'
 
 Vue.use(VueRouter)
 
@@ -30,6 +31,11 @@ let router = new VueRouter({
       path: '/add',
       name: 'app register',
       component: AppRegister
+    },
+    {
+      path: '/key',
+      name: 'api key',
+      component: GenerateKey
     },
     {
       path: '*',

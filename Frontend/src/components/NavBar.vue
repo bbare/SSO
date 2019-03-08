@@ -4,6 +4,7 @@
     <router-link to="home">Home</router-link>
     <router-link to="about">About</router-link>
     <router-link to="add">Register App</router-link>
+    <router-link to="key">Generate Key</router-link>
   </div>
 </template>
 
