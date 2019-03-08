@@ -80,22 +80,34 @@ namespace KFC_WebAPI.Controllers
         [Route("api/users/login")]
         public IHttpActionResult Login([FromBody] LoginRequest request)
         {
+            //WILL MOVE TO MANAGER LAYER SOON
             IUserService _userService = new UserService();
             IPasswordService _passwordService = new PasswordService();
+            ITokenService _tokenService = new TokenService();
+            ISessionService _sessionService = new SessionService();
+
+            string generateToken = _tokenService.GenerateToken();
 
             using (var _db = new DatabaseContext())
             {
                 User user = _userService.GetUser(_db, request.email);
-                //PasswordReset ps = ps.
                 bool isPasswordMatched = _passwordService.VerifyPassword(request.password, user.PasswordHash, user.PasswordSalt);
 
                 //succesful login
                 if (isPasswordMatched == true)
                 {
-                    return Ok();
+                    Session session = new Session
+                    {
+                        Token = generateToken,
+                        User = user
+                    };
 
+                    var response = _sessionService.CreateSession(_db,session);
+
+                    return Ok(response);
+         
                 }
-                //login not successful if password is incorrect //
+                //login not successful if password is incorrect
                 else
                 {
                     user.IncorrectPasswordCount = user.IncorrectPasswordCount + 1;

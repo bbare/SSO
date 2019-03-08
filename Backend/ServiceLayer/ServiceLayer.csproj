@@ -53,9 +53,11 @@
     <Compile Include="Services\IDataSerializer.cs" />
     <Compile Include="Services\IPasswordService.cs" />
     <Compile Include="Services\ISessionService.cs" />
+    <Compile Include="Services\ITokenService.cs" />
     <Compile Include="Services\IUserService.cs" />
     <Compile Include="Services\PasswordService.cs" />
     <Compile Include="Services\SessionService.cs" />
+    <Compile Include="Services\TokenService.cs" />
     <Compile Include="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
