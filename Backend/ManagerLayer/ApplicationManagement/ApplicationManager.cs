@@ -18,6 +18,11 @@ namespace ManagerLayer.ApplicationManagement
 
         }
 
+        // Application Services
+        private IApplicationService _appService = new ApplicationService();
+        // ApiKey Service instance
+        private IApiKeyService _keyService = new ApiKeyService();
+
         public HttpResponseContent ValidateRegistration(ApplicationRequest request)
         {
             HttpResponseContent response;
@@ -97,8 +102,49 @@ namespace ManagerLayer.ApplicationManagement
         public HttpResponseContent ValidateKeyGeneration(ApplicationRequest request)
         {
             HttpResponseContent response;
-            response = new HttpResponseContent(HttpStatusCode.OK, "key");
-            return response;
+
+            if (!IsValidEmail(request.Email))
+            {
+                // Error response
+                response = new HttpResponseContent(HttpStatusCode.BadRequest, "Invalid Email");
+                return response;
+            }
+
+            using (var _db = new DatabaseContext())
+            {
+                var app = GetApplication(_db, request.Title, request.Email);
+
+                if(app == null)
+                {
+                    // Error response
+                    response = new HttpResponseContent(HttpStatusCode.BadRequest, "Invalid Application");
+                    return response;
+                }
+
+                // Create a new ApiKey
+                ApiKey apiKey = new ApiKey
+                {
+                    ApplicationId = app.Id
+                };
+
+                // Attempt to create an apiKey record
+                var keyResponse = CreateApiKey(_db, apiKey);
+
+                if (!SaveChanges(_db, keyResponse))
+                {
+                    // Error response
+                    response = new HttpResponseContent(HttpStatusCode.InternalServerError, "Unable to save database changes");
+                    return response;
+                }
+
+                // Check if email was sent successfully
+                //response = new HttpResponseContent(HttpStatusCode.BadRequest, "Unable to email API Key");
+                //return response;
+
+                response = new HttpResponseContent(HttpStatusCode.OK, apiKey.Key);
+                return response;
+            }
+            
         }
 
         public bool IsValidEmail(string email)
@@ -125,21 +171,23 @@ namespace ManagerLayer.ApplicationManagement
 
         public Application CreateApplication(DatabaseContext _db, Application app)
         {
-            // Aplication Service instance
-            IApplicationService _appService = new ApplicationService();
             // Attempt to create an application record
             var appResponse = _appService.CreateApplication(_db, app);
-            if (appResponse == null) // Application already exists
+            if (appResponse == null)
             {
                 return null;
             }
             return appResponse;
         }
 
+        public Application GetApplication(DatabaseContext _db, string title, string email)
+        {
+            var appResponse = _appService.GetApplication(_db, title, email);
+            return appResponse;
+        }
+
         public ApiKey CreateApiKey(DatabaseContext _db, ApiKey apiKey)
         {
-            // ApiKey Service instance
-            IApiKeyService _keyService = new ApiKeyService();
             // Attempt to create an apiKey record
             var keyResponse = _keyService.CreateKey(_db, apiKey);
             return apiKey;
@@ -161,6 +209,28 @@ namespace ManagerLayer.ApplicationManagement
                 // Catch error
                 // Detach application attempted to be created from the db context - rollback
                 _db.Entry(appResponse).State = System.Data.Entity.EntityState.Detached;
+                _db.Entry(keyResponse).State = System.Data.Entity.EntityState.Detached;
+
+                // Error
+                return false;
+            }
+        }
+
+        public bool SaveChanges(DatabaseContext _db, ApiKey keyResponse)
+        {
+            try
+            {
+                // Save changes in the database
+                _db.SaveChanges();
+
+                // TODO: attempt to email api key instead of returning it to frontend
+                //_keyService.EmailKey(app.Email, keyResponse.ToString());
+                return true;
+            }
+            catch (System.Data.Entity.Validation.DbEntityValidationException)
+            {
+                // Catch error
+                // Detach api key attempted to be created from the db context - rollback
                 _db.Entry(keyResponse).State = System.Data.Entity.EntityState.Detached;
 
                 // Error

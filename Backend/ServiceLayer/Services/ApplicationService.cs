@@ -46,7 +46,7 @@ namespace ServiceLayer.Services
         }
 
         /// <summary>
-        /// Call the application repository to retrieve an application record
+        /// Call the application repository to retrieve an application record by id
         /// </summary>
         /// <param name="_db">database</param>
         /// <param name="url">application</param>
@@ -54,6 +54,18 @@ namespace ServiceLayer.Services
         public Application GetApplication(DatabaseContext _db, Guid id)
         {
             return _ApplicationRepo.GetApplication(_db, id);
+        }
+
+        /// <summary>
+        /// Call the application repository to retrieve an application record by title and email
+        /// </summary>
+        /// <param name="_db">database</param>
+        /// <param name="title">application title</param>
+        /// <param name="email">email</param>
+        /// <returns></returns>
+        public Application GetApplication(DatabaseContext _db, string title, string email)
+        {
+            return _ApplicationRepo.GetApplication(_db, title, email);
         }
 
         /// <summary>

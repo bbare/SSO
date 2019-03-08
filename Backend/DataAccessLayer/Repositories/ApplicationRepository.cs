@@ -49,6 +49,22 @@ namespace DataAccessLayer.Repositories
         }
 
         /// <summary>
+        /// Retrieve an application record by title and email
+        /// </summary>
+        /// <param name="_db">databasee</param>
+        /// <param name="title">application title</param>
+        /// <param name="email">application email</param>
+        /// <returns></returns>
+        public Application GetApplication(DatabaseContext _db, string title, string email)
+        {
+            var app = _db.Applications
+                .Where(a => a.Title == title && a.Email == email)
+                .FirstOrDefault<Application>();
+
+            return app;
+        }
+
+        /// <summary>
         /// Update an application record
         /// </summary>
         /// <param name="_db">database</param>
