@@ -56,7 +56,7 @@ namespace ManagerLayer.PasswordManagement
                     _db.SaveChanges();
                     return response;
                 }
-                catch (DbEntityValidationException ex)
+                catch (DbEntityValidationException)
                 {
                     //catch error
                     // detach session attempted to be created from the db context - rollback
@@ -93,7 +93,7 @@ namespace ManagerLayer.PasswordManagement
                 {
                     return _db.SaveChanges();
                 }
-                catch (DbEntityValidationException ex)
+                catch (DbEntityValidationException)
                 {
                     // catch error
                     // rollback changes

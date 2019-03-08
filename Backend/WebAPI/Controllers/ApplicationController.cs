@@ -12,7 +12,7 @@ namespace WebAPI.Controllers
         [Route("api/applications/create")]
         public HttpResponseMessage Register([FromBody] ApplicationRequest request)
         {
-            ManagerLayer.ApplicationManagement.ApplicationManager manager = new ManagerLayer.ApplicationManagement.ApplicationManager();
+            ApplicationManager manager = new ApplicationManager();
             HttpResponseContent responseContent = manager.ValidateRegistration(request);
             HttpResponseMessage response = Request.CreateResponse(responseContent.Code, responseContent.Message);
             
@@ -23,7 +23,7 @@ namespace WebAPI.Controllers
         [Route("api/applications/publish")]
         public HttpResponseMessage Publish([FromBody] ApplicationRequest request)
         {
-            ManagerLayer.ApplicationManagement.ApplicationManager manager = new ManagerLayer.ApplicationManagement.ApplicationManager();
+            ApplicationManager manager = new ApplicationManager();
             HttpResponseContent responseContent = manager.ValidatePublish(request);
             HttpResponseMessage response = Request.CreateResponse(responseContent.Code, responseContent.Message);
 
@@ -34,7 +34,7 @@ namespace WebAPI.Controllers
         [Route("api/applications/generatekey")]
         public HttpResponseMessage GenerateKey([FromBody] ApplicationRequest request)
         {
-            ManagerLayer.ApplicationManagement.ApplicationManager manager = new ManagerLayer.ApplicationManagement.ApplicationManager();
+            ApplicationManager manager = new ApplicationManager();
             HttpResponseContent responseContent = manager.ValidateKeyGeneration(request);
             HttpResponseMessage response = Request.CreateResponse(responseContent.Code, responseContent.Message);
 

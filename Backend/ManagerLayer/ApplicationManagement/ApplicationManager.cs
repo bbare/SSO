@@ -1,5 +1,6 @@
 ﻿using DataAccessLayer.Database;
 using DataAccessLayer.Models;
+using MimeKit;
 using ServiceLayer.Services;
 using System;
 using System.Drawing;
@@ -12,13 +13,17 @@ namespace ManagerLayer.ApplicationManagement
     {
         public ApplicationManager()
         {
-
+            _appService = new ApplicationService();
+            _keyService = new ApiKeyService();
+            _emailService = new EmailService();
         }
 
         // Application Services
-        private IApplicationService _appService = new ApplicationService();
+        private IApplicationService _appService;
         // ApiKey Service instance
-        private IApiKeyService _keyService = new ApiKeyService();
+        private IApiKeyService _keyService;
+        // Email Service instance
+        private IEmailService _emailService;
 
         /// <summary>
         /// Validate the app registration field values.
@@ -98,8 +103,24 @@ namespace ManagerLayer.ApplicationManagement
                 //response = new HttpResponseContent(HttpStatusCode.BadRequest, "Unable to email API Key");
                 //return response;
             }
-            // Success: Return api key to frontend
-            response = new HttpResponseContent(HttpStatusCode.OK, apiKey.Key);
+
+            string message;
+
+            // Attempt to send api key to application email
+            if(SendAppRegistrationApiKeyEmail(app.Email, apiKey.Key))
+            {
+                // Alert front end that email was sent
+                message = "Sent to " + app.Email;
+            }
+            else
+            {
+                // Email could not be sent. Send api key to frontend.
+                message = apiKey.Key;
+            }
+
+
+            // Return success messge
+            response = new HttpResponseContent(HttpStatusCode.OK, message);
             return response;
         }
 
@@ -180,7 +201,7 @@ namespace ManagerLayer.ApplicationManagement
                     return response;
                 }
 
-                response = new HttpResponseContent(HttpStatusCode.OK, "Published to SSO");
+                response = new HttpResponseContent(HttpStatusCode.OK, "Published to KFC SSO");
                 return response;
             }
             
@@ -231,9 +252,19 @@ namespace ManagerLayer.ApplicationManagement
                     return response;
                 }
 
-                // Check if email was sent successfully
-                //response = new HttpResponseContent(HttpStatusCode.BadRequest, "Unable to email API Key");
-                //return response;
+                string message;
+
+                // Attempt to send api key to application email
+                if (SendNewApiKeyEmail(app.Email, apiKey.Key))
+                {
+                    // Alert front end that email was sent
+                    message = "Sent to " + app.Email;
+                }
+                else
+                {
+                    // Email could not be sent. Send api key to frontend.
+                    message = apiKey.Key;
+                }
 
                 response = new HttpResponseContent(HttpStatusCode.OK, apiKey.Key);
                 return response;
@@ -493,6 +524,74 @@ namespace ManagerLayer.ApplicationManagement
                 // Error
                 return false;
             }
+        }
+
+
+        /// <summary>
+        /// Creates an email to send an api key to newly registered applications.
+        /// </summary>
+        /// <param name="receiverEmail"></param>
+        /// <param name="apiKey"></param>
+        /// <returns>Whether email was successfully sent</returns>
+        public bool SendAppRegistrationApiKeyEmail(string receiverEmail, string apiKey)
+        {
+            try
+            {
+                string registrationSubjectString = "KFC SSO Registration";
+                string userFullName = receiverEmail;
+                string template = "Hi, \r\n" +
+                                                 "You recently registered your application to the KFC SSO portal.\r\n" +
+                                                 "Below is a single-use API Key to publish your application into the portal.\r\n {0}" +
+                                                 "If you did not register to KFC, please contact us by responding to this email.\r\n\r\n" +
+                                                 "Thanks, KFC Team";
+                string data = apiKey;
+                string resetPasswordBodyString = string.Format(template, data);
+
+                //Create the message that will be sent
+                MimeMessage emailToSend = _emailService.createEmailPlainBody(userFullName, receiverEmail, registrationSubjectString, resetPasswordBodyString);
+                //Send the email with the message
+                _emailService.sendEmail(emailToSend);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+        }
+
+        /// <summary>
+        /// Creates an email to send new api keys to applications.
+        /// </summary>
+        /// <param name="receiverEmail"></param>
+        /// <param name="apiKey"></param>
+        /// <returns>Whether email was successfully sent.</returns>
+        public bool SendNewApiKeyEmail(string receiverEmail, string apiKey)
+        {
+            try
+            {
+                string newKeySubjectString = "KFC SSO New API Key";
+                string userFullName = receiverEmail;
+                string template = "Hi, \r\n" +
+                                                 "You recently requested a new API Key for you KFC application.\r\n" +
+                                                 "Below is a new single-use API Key to publish your application into the portal.\r\n {0}" +
+                                                 "If you did not make this request, please contact us by responding to this email.\r\n\r\n" +
+                                                 "Thanks, KFC Team";
+                string data = apiKey;
+                string resetPasswordBodyString = string.Format(template, data);
+
+                //Create the message that will be sent
+                MimeMessage emailToSend = _emailService.createEmailPlainBody(userFullName, receiverEmail, newKeySubjectString, resetPasswordBodyString);
+                //Send the email with the message
+                _emailService.sendEmail(emailToSend);
+
+                return true;
+            }
+            catch(Exception)
+            {
+                return false;
+            }
+
         }
     }
 }

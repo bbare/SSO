@@ -368,7 +368,7 @@ namespace UnitTesting
             Assert.IsNotNull(result);
             Assert.AreEqual(expectedResponse.Id, result.Id);
         }
-
+/*
         // Check that IsUserManager returns false when checking against an unassociated user
         [TestMethod]
         public void Is_User_Manager_Over_Independent()
@@ -438,5 +438,6 @@ namespace UnitTesting
                 Assert.IsTrue(us.IsManagerOver(_db, indirectManager, subject));
             }
         }
+        */
     }
 }
