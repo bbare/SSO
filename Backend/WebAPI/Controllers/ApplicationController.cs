@@ -1,18 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Net.Http;
 using System.Web;
-using System.Web.Hosting;
 using System.Web.Http;
-using DataAccessLayer.Database;
-using DataAccessLayer.Models;
-using Newtonsoft.Json;
-using ServiceLayer.Services;
 using ManagerLayer.ApplicationManagement;
 
 namespace WebAPI.Controllers

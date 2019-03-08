@@ -49,6 +49,21 @@ namespace DataAccessLayer.Repositories
         }
 
         /// <summary>
+        /// Retrieve an Api Key record by key field
+        /// </summary>
+        /// <param name="_db">database</param>
+        /// <param name="key">key value of api key</param>
+        /// <returns></returns>
+        public ApiKey GetKey(DatabaseContext _db, string key)
+        {
+            var apiKey = _db.Keys
+                .Where(k => k.Key == key)
+                .FirstOrDefault<ApiKey>();
+
+            return apiKey;
+        }
+
+        /// <summary>
         /// Update an Api Key record
         /// </summary>
         /// <param name="_db">database</param>

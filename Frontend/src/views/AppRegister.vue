@@ -3,7 +3,7 @@
         <form class="form-register" @submit.prevent="register">
             <h2 class="form-register-heading">Register Your Application</h2>
             <input v-model="title" id="title" class="form-control" v-if="!key" placeholder="Title" required autofocus>
-            <input v-model="url" id="url" class="form-control" v-if="!key" placeholder="Url" required>
+            <input v-model="launchUrl" id="launchUrl" class="form-control" v-if="!key" placeholder="Launch Url" required>
             <input v-model="email" id="email" type="email" class="form-control" v-if="!key" placeholder="Email" required>
             <input v-model="deleteUrl" id="deleteUrl" class="form-control" v-if="!key" placeholder="User Deletion Url" required>
             <button class="button-register" type="submit" v-if="!key">Register</button>
@@ -25,7 +25,7 @@ export default {
       key: null,
       title: '',
       email: '',
-      url: '',
+      launchUrl: '',
       deleteUrl: ''
     }
   },
@@ -35,7 +35,7 @@ export default {
       const url = 'http://localhost:50803/api/applications/create'
       axios.post(url, {
         title: document.getElementById('title').value,
-        url: document.getElementById('url').value,
+        launchUrl: document.getElementById('launchUrl').value,
         email: document.getElementById('email').value,
         deleteUrl: document.getElementById('deleteUrl').value,
         headers: {

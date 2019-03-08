@@ -63,7 +63,7 @@ namespace ServiceLayer.Services
         }
 
         /// <summary>
-        /// Call the Api Key repository to retrieve an api key record
+        /// Call the Api Key repository to retrieve an api key record by id field
         /// </summary>
         /// <param name="_db">database</param>
         /// <param name="id">api key id</param>
@@ -71,6 +71,17 @@ namespace ServiceLayer.Services
         public ApiKey GetKey(DatabaseContext _db, Guid id)
         {
             return _ApiKeyRepo.GetKey(_db, id);
+        }
+
+        /// <summary>
+        /// Call the Api Key repository to retriev an api key record by key field
+        /// </summary>
+        /// <param name="_db">database</param>
+        /// <param name="key">key value of api key</param>
+        /// <returns></returns>
+        public ApiKey GetKey(DatabaseContext _db, string key)
+        {
+            return _ApiKeyRepo.GetKey(_db, key);
         }
 
         /// <summary>
@@ -83,28 +94,6 @@ namespace ServiceLayer.Services
         {
             return _ApiKeyRepo.UpdateKey(_db, key);
         }
-
-        /// <summary>
-        /// Email api key to email attached to individual application
-        /// </summary>
-        /// <param name="appEmail">application email</param>
-        /// <param name="apiKey">api key</param>
-        public void EmailKey(string appEmail, string apiKey)
-        {
-            // TODO: Make this work
-            MailMessage objeto_mail = new MailMessage();
-            SmtpClient client = new SmtpClient();
-            client.Port = 25;
-            client.Host = "smtp.internal.mycompany.com";
-            client.Timeout = 10000;
-            client.DeliveryMethod = SmtpDeliveryMethod.Network;
-            client.UseDefaultCredentials = false;
-            client.Credentials = new System.Net.NetworkCredential("user", "Password");
-            objeto_mail.From = new MailAddress("from@server.com");
-            objeto_mail.To.Add(new MailAddress("to@server.com"));
-            objeto_mail.Subject = "Password Recover";
-            objeto_mail.Body = "Message";
-            client.Send(objeto_mail);
-        }
+        
     }
 }

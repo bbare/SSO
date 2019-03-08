@@ -9,6 +9,7 @@ namespace ServiceLayer.Services
         // CRUD
         ApiKey CreateKey(DatabaseContext _db, ApiKey key);
         ApiKey GetKey(DatabaseContext _db, Guid id);
+        ApiKey GetKey(DatabaseContext _db, string key);
         ApiKey DeleteKey(DatabaseContext _db, Guid id);
         ApiKey UpdateKey(DatabaseContext _db, ApiKey key);
 
@@ -17,12 +18,5 @@ namespace ServiceLayer.Services
         /// </summary>
         /// <returns>Api Key</returns>
         string GenerateKey();
-
-        /// <summary>
-        /// Email an Api Key to the email attached to the individual application
-        /// </summary>
-        /// <param name="appEmail">Application email</param>
-        /// <param name="apiKey">Api Key</param>
-        void EmailKey(string appEmail, string apiKey);
     }
 }
