@@ -22,61 +22,35 @@ namespace WebAPI.Controllers
 
         [HttpPost]
         [Route("api/applications/create")]
-        public HttpResponseMessage Register([FromBody] RegisterRequest request)
+        public HttpResponseMessage Register([FromBody] ApplicationRequest request)
         {
             ManagerLayer.ApplicationManagement.ApplicationManager manager = new ManagerLayer.ApplicationManagement.ApplicationManager();
-            HttpResponseContent responseContent = manager.ValidateApplication(request);
+            HttpResponseContent responseContent = manager.ValidateRegistration(request);
             HttpResponseMessage response = Request.CreateResponse(responseContent.Code, responseContent.Message);
             
             return  response;
         }
 
-        // UNFINISHED
-        // TODO: Convert to Register() format
         [HttpPost]
         [Route("api/applications/publish")]
-        public async Task<string> Publish()
+        public HttpResponseMessage Publish([FromBody] ApplicationRequest request)
         {
-            
-            if (!Request.Content.IsMimeMultipartContent())
-                return "No Mime Multipart Content";
+            ManagerLayer.ApplicationManagement.ApplicationManager manager = new ManagerLayer.ApplicationManagement.ApplicationManager();
+            HttpResponseContent responseContent = manager.ValidatePublish(request);
+            HttpResponseMessage response = Request.CreateResponse(responseContent.Code, responseContent.Message);
 
-            Application app = new Application();
-            string key = "";
+            return response;
+        }
 
-            var provider = new MultipartMemoryStreamProvider();
-            await Request.Content.ReadAsMultipartAsync(provider);
-            foreach (var file in provider.Contents)
-            {
-                //var contentType = file.Headers.ContentType.MediaType;
+        [HttpPost]
+        [Route("api/applications/generatekey")]
+        public HttpResponseMessage GenerateKey([FromBody] ApplicationRequest request)
+        {
+            ManagerLayer.ApplicationManagement.ApplicationManager manager = new ManagerLayer.ApplicationManagement.ApplicationManager();
+            HttpResponseContent responseContent = manager.ValidateKeyGeneration(request);
+            HttpResponseMessage response = Request.CreateResponse(responseContent.Code, responseContent.Message);
 
-                //var filename = file.Headers.ContentDisposition.FileName.Trim('\"');
-                //var buffer = await file.ReadAsByteArrayAsync();
-                //Do whatever you want with filename and its binary data.
-                //allHeaders += file.Headers.ToString();
-
-                //return await file.ReadAsStringAsync();
-
-                if (file.Headers.ContentDisposition.Name.Equals("title"))
-                {
-                    app.Title = await file.ReadAsStringAsync();
-                }
-                else if (file.Headers.ContentDisposition.Name.Equals("description"))
-                {
-                    app.Description = await file.ReadAsStringAsync();
-                }
-                else if (file.Headers.ContentDisposition.Name.Equals("logo"))
-                {
-                    app.LogoUrl = await file.ReadAsStringAsync();
-                }
-                else if (file.Headers.ContentDisposition.Name.Equals("key"))
-                {
-                    key = await file.ReadAsStringAsync();
-                }
-            }
-            
-            return "success";
-
+            return response;
         }
 
         [HttpOptions]

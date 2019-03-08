@@ -18,7 +18,7 @@ namespace ManagerLayer.ApplicationManagement
 
         }
 
-        public HttpResponseContent ValidateApplication(RegisterRequest request)
+        public HttpResponseContent ValidateRegistration(ApplicationRequest request)
         {
             HttpResponseContent response;
             Uri url = null;
@@ -30,7 +30,7 @@ namespace ManagerLayer.ApplicationManagement
                 response = new HttpResponseContent(HttpStatusCode.BadRequest, "Invalid Email");
                 return response;
             }
-            else if (!IsValidUrl(request.Url, ref url))
+            else if (!IsValidUrl(request.LaunchUrl, ref url))
             {
                 // Error response
                 response = new HttpResponseContent(HttpStatusCode.BadRequest, "Invalid Application Url");
@@ -84,6 +84,20 @@ namespace ManagerLayer.ApplicationManagement
             }
             // Success: Return api key to frontend
             response = new HttpResponseContent(HttpStatusCode.OK, apiKey.Key);
+            return response;
+        }
+
+        public HttpResponseContent ValidatePublish(ApplicationRequest request)
+        {
+            HttpResponseContent response;
+            response = new HttpResponseContent(HttpStatusCode.OK, "Published to SSO");
+            return response;
+        }
+
+        public HttpResponseContent ValidateKeyGeneration(ApplicationRequest request)
+        {
+            HttpResponseContent response;
+            response = new HttpResponseContent(HttpStatusCode.OK, "key");
             return response;
         }
 
