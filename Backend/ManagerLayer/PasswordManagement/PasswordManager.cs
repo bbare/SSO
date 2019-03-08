@@ -182,7 +182,7 @@ namespace ManagerLayer.PasswordManagement
             }
         }
 
-        public void assignResetToken(string email)
+        public void AssignResetToken(string email)
         {
             using(var _db = CreateDbContext())
             {
@@ -250,7 +250,7 @@ namespace ManagerLayer.PasswordManagement
             }
         }
 
-        public bool checkPassword(string newPasswordToCheck)
+        public bool CheckPassword(string newPasswordToCheck)
         {
             return (_passwordService.CheckPasswordPwned(newPasswordToCheck) < 3);
         }
@@ -311,6 +311,15 @@ namespace ManagerLayer.PasswordManagement
                     }
                 }
                 return true;
+            }
+        }
+
+        public bool CheckIfPasswordResetAllowed(string resetToken)
+        {
+            using(var _db = CreateDbContext())
+            {
+                var resetTokenRetrieved = _db.ResetIDs.Find(resetToken);
+                return resetTokenRetrieved.AllowPasswordReset;
             }
         }
 
