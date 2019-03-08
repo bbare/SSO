@@ -14,7 +14,7 @@ namespace DataAccessLayer.Database
     {
         public DatabaseContext()
         {
-            Database.Connection.ConnectionString = "Data Source=Localhost;Initial Catalog=SSO;Integrated Security=True";
+            this.Database.Connection.ConnectionString = "Data Source=localhost;Initial Catalog=SSO;Integrated Security=True";
         }
         
         public DbSet<User> Users { get; set; }
