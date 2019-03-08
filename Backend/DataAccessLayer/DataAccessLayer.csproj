@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -70,6 +71,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ApiKeyRepository.cs" />
     <Compile Include="Repositories\ApplicationRepository.cs" />
+    <Compile Include="Migrations\201903051936518_PasswordReset.cs" />
+    <Compile Include="Migrations\201903051936518_PasswordReset.Designer.cs">
+      <DependentUpon>201903051936518_PasswordReset.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\PasswordReset.cs" />
+    <Compile Include="Repositories\ResetRepository.cs" />
     <Compile Include="Repositories\SessionRepository.cs" />
     <Compile Include="Repositories\UserManagementRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
@@ -92,6 +100,8 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903070039162_create-tables-applications-apikeys.resx">
       <DependentUpon>201903070039162_create-tables-applications-apikeys.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201903051936518_PasswordReset.resx">
+      <DependentUpon>201903051936518_PasswordReset.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
