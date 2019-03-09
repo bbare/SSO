@@ -41,6 +41,17 @@ namespace WebAPI.Controllers
             return response;
         }
 
+        [HttpPost]
+        [Route("api/applications/delete")]
+        public HttpResponseMessage DeleteApplication([FromBody] ApplicationRequest request)
+        {
+            ApplicationManager manager = new ApplicationManager();
+            HttpResponseContent responseContent = manager.ValidateDeletion(request);
+            HttpResponseMessage response = Request.CreateResponse(responseContent.Code, responseContent.Message);
+
+            return response;
+        }
+
         [HttpOptions]
         public void Options(string locale, string deviceType)
         {

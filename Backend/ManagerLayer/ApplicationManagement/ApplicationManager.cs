@@ -273,6 +273,45 @@ namespace ManagerLayer.ApplicationManagement
             
         }
 
+        public HttpResponseContent ValidateDeletion(ApplicationRequest request)
+        {
+            // Http status code and message
+            HttpResponseContent response;
+
+            // Validate values
+            if (!IsValidEmail(request.Email))
+            {
+                // Error response
+                response = new HttpResponseContent(HttpStatusCode.BadRequest, "Invalid Email");
+                return response;
+            }
+
+            using (var _db = new DatabaseContext())
+            {
+                // Attempt to find application
+                var app = GetApplication(_db, request.Title, request.Email);
+                if (app == null)
+                {
+                    // Error response
+                    response = new HttpResponseContent(HttpStatusCode.BadRequest, "Invalid Application");
+                    return response;
+                }
+
+                // Attempt to create an apiKey record
+                var appResponse = DeleteApplication(_db, app);
+
+                if (!SaveChanges(_db, appResponse))
+                {
+                    // Error response
+                    response = new HttpResponseContent(HttpStatusCode.InternalServerError, "Unable to save database changes");
+                    return response;
+                }
+
+                response = new HttpResponseContent(HttpStatusCode.OK, "Application Deleted from KFC SSO");
+                return response;
+            }
+        }
+
         /// <summary>
         /// Validates title length
         /// </summary>
@@ -438,6 +477,18 @@ namespace ManagerLayer.ApplicationManagement
         }
 
         /// <summary>
+        /// Calls the service to delete an application
+        /// </summary>
+        /// <param name="_db">database</param>
+        /// <param name="app">application</param>
+        /// <returns>The updated application</returns>
+        public Application DeleteApplication(DatabaseContext _db, Application app)
+        {
+            var appResponse = _appService.DeleteApplication(_db, app.Id);
+            return appResponse;
+        }
+
+        /// <summary>
         /// Calls the service to create an api key
         /// </summary>
         /// <param name="_db">database</param>
@@ -521,6 +572,32 @@ namespace ManagerLayer.ApplicationManagement
                 // Catch error
                 // Detach api key attempted to be changed from the db context - rollback
                 _db.Entry(keyResponse).State = System.Data.Entity.EntityState.Detached;
+
+                // Error
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Saves the changes made to the database tables
+        /// </summary>
+        /// <param name="_db">database</param>
+        /// <param name="appResponse">Application change</param>
+        /// <returns>Whether the change was successful</returns>
+        public bool SaveChanges(DatabaseContext _db, Application appResponse)
+        {
+            try
+            {
+                // Save changes in the database
+                _db.SaveChanges();
+
+                return true;
+            }
+            catch (System.Data.Entity.Validation.DbEntityValidationException)
+            {
+                // Catch error
+                // Detach api key attempted to be changed from the db context - rollback
+                _db.Entry(appResponse).State = System.Data.Entity.EntityState.Detached;
 
                 // Error
                 return false;
