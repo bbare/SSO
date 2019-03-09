@@ -129,94 +129,86 @@ namespace UnitTesting
             return pr;
         }
 
-        /*
-        public Service CreateServiceInDb(bool enabled)
+        public Application CreateApplicationInDb()
         {
-            using (var _db = new DatabaseContext())
-            {
-                Service s = new Service
-                {
-                    ServiceName = (Guid.NewGuid()).ToString(),
-                    Disabled = !enabled,
-                    UpdatedAt = DateTime.UtcNow
-                };
-                _db.Services.Add(s);
-                _db.SaveChanges();
 
-                return s;
-            }
-        }
-
-        public Service CreateServiceObject(bool enabled)
-        {
-            Service s = new Service
-            {
-                ServiceName = (Guid.NewGuid()).ToString(),
-                Disabled = !enabled
-            };
-
-            return s;
-        }
-
-        public Claim CreateClaim(User user, Service service, User subjectUser)
-        {
-            using (var _db = new DatabaseContext())
-            {
-                Claim c = new Claim
-                {
-                    ServiceId = service.Id,
-                    UserId = user.Id
-                };
-                _db.Claims.Add(c);
-                _db.SaveChanges();
-
-                return c;
-            }
-        }
-
-        public Client CreateClientObject()
-        {
-            Client client = new Client
+            Application app = new Application
             {
                 Id = Guid.NewGuid(),
-                Disabled = false,
-                Name = Guid.NewGuid().ToString(),
-                Address = Guid.NewGuid().ToString(),
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-
-            };
-            return client;
-        }
-
-        public Client CreateClientInDb()
-        {
-
-            Client client = new Client
-            {
-                Id = Guid.NewGuid(),
-                Disabled = false,
-                Name = Guid.NewGuid().ToString(),
-                Address = Guid.NewGuid().ToString(),
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-
+                Title = "KFC App",
+                LaunchUrl = "https://kfc.com",
+                Email = "kfc@email.com",
+                UserDeletionUrl = "https://kfc.com/delete",
+                LogoUrl = "https://kfc.com/logo.png",
+                Description = "A KFC app"
             };
 
-            return CreateUserInDb(client);
+            return CreateApplicationInDb(app);
         }
 
-        public Client CreateUserInDb(Client client)
+        public Application CreateApplicationInDb(Application app)
         {
             using (var _db = new DatabaseContext())
             {
-                _db.Clients.Add(client);
+                _db.Entry(app).State = System.Data.Entity.EntityState.Added;
                 _db.SaveChanges();
 
-                return client;
+                return app;
             }
         }
-        */
+
+        public Application CreateApplicationObject()
+        {
+            Application app = new Application
+            {
+                Id = Guid.NewGuid(),
+                Title = "KFC App",
+                LaunchUrl = "https://kfc.com",
+                Email = "kfc@email.com",
+                UserDeletionUrl = "https://kfc.com/delete",
+                LogoUrl = "https://kfc.com/logo.png",
+                Description = "A KFC app"
+            };
+            return app;
+        }
+
+        public ApiKey CreateApiKeyInDb()
+        {
+            Application app = CreateApplicationObject();
+            ApiKey apiKey = new ApiKey
+            {
+                Id = Guid.NewGuid(),
+                Key = Guid.NewGuid().ToString("N"),
+                ApplicationId = app.Id,
+                IsUsed = false
+            };
+
+            return CreateApiKeyInDb(apiKey);
+        }
+
+        public ApiKey CreateApiKeyInDb(ApiKey apiKey)
+        {
+            using (var _db = new DatabaseContext())
+            {
+                _db.Entry(apiKey).State = System.Data.Entity.EntityState.Added;
+                _db.SaveChanges();
+
+                return apiKey;
+            }
+        }
+
+        public ApiKey CreateApiKeyObject()
+        {
+            Application app = CreateApplicationObject();
+            ApiKey apiKey = new ApiKey
+            {
+                Id = Guid.NewGuid(),
+                Key = Guid.NewGuid().ToString("N"),
+                ApplicationId = app.Id,
+                IsUsed = false
+            };
+            return apiKey;
+        }
 
         public DatabaseContext CreateDataBaseContext()
         {
