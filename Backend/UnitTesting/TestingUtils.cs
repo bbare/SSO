@@ -64,7 +64,7 @@ namespace UnitTesting
             };
             return user;
         }
-        
+
         public Session CreateSessionObject(User user)
         {
             Session session = new Session
@@ -90,7 +90,46 @@ namespace UnitTesting
                 return session;
             }
         }
-        
+
+        public PasswordReset CreatePasswordResetInDB()
+        {
+            PasswordReset pr = new PasswordReset
+            {
+                PasswordResetID = new Guid(),
+                ResetToken = "",
+                UserID = new Guid(),
+                ExpirationTime = DateTime.Now.AddMinutes(5),
+                ResetCount = 0,
+                Disabled = false
+            };
+            return CreatePasswordResetInDB(pr);
+        }
+
+        public PasswordReset CreatePasswordResetInDB(PasswordReset resetToken)
+        {
+            using (var _db = new DatabaseContext())
+            {
+                _db.Entry(resetToken).State = System.Data.Entity.EntityState.Added;
+                _db.SaveChanges();
+                return resetToken;
+            }
+        }
+
+        public PasswordReset CreatePasswordResetObject()
+        {
+            PasswordReset pr = new PasswordReset
+            {
+                PasswordResetID = new Guid(),
+                ResetToken = "",
+                UserID = new Guid(),
+                ExpirationTime = DateTime.Now.AddMinutes(5),
+                ResetCount = 0,
+                Disabled = false
+            };
+            return pr;
+        }
+
+        /*
         public Service CreateServiceInDb(bool enabled)
         {
             using (var _db = new DatabaseContext())
@@ -135,7 +174,8 @@ namespace UnitTesting
             }
         }
 
-        public Client CreateClientObject() {
+        public Client CreateClientObject()
+        {
             Client client = new Client
             {
                 Id = Guid.NewGuid(),
@@ -176,6 +216,7 @@ namespace UnitTesting
                 return client;
             }
         }
+        */
 
         public DatabaseContext CreateDataBaseContext()
         {
@@ -193,6 +234,7 @@ namespace UnitTesting
             }
             return true;
         }
+        
     }
 
 }
