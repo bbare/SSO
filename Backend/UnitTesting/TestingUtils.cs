@@ -67,12 +67,6 @@ namespace UnitTesting
 
         public User CreateUserObject()
         {
-            var q1 = "How are you?";
-            var a1 = "cool";
-            var q2 = "How old are you?";
-            var a2 = "22";
-            var q3 = "Are you sad?";
-            var a3 = "no";
 
             User user = new User
             {
@@ -82,12 +76,6 @@ namespace UnitTesting
                 City = "Los Angeles",
                 State = "California",
                 Country = "United States",
-                SecurityQ1 = q1,
-                SecurityQ1Answer = a1,
-                SecurityQ2 = q2,
-                SecurityQ2Answer = a2,
-                SecurityQ3 = q3,
-                SecurityQ3Answer = a3,
                 PasswordHash = (Guid.NewGuid()).ToString(),
                 PasswordSalt = GetRandomness(),
                 IncorrectPasswordCount = 0,

@@ -32,7 +32,7 @@
                {input: this.input})
                .then(input => {this.input = input.data; console.log("sent!"); this.$router.push('/dashboard')
                 })
-               .catch(e => {this.errors.push(e); console.log(e); this.$router.push('/home')
+               .catch(e => {console.log(e); this.$router.push('/home')
             })
         }
     }

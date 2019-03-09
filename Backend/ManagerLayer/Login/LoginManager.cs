@@ -70,9 +70,11 @@ namespace ManagerLayer.Login
                 else
                 {
                     user.IncorrectPasswordCount = user.IncorrectPasswordCount++;
+                    _db.SaveChanges();
                     if(user.IncorrectPasswordCount == 3)
                     {
                         user.Disabled = true;
+                        _db.SaveChanges();
                     }
                     return false;
                 }
@@ -91,6 +93,7 @@ namespace ManagerLayer.Login
                 };
 
                 var response = _sessionService.CreateSession(_db, session);
+                _db.SaveChanges();
                 return response;
             }
         }
