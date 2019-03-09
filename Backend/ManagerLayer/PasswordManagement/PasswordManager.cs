@@ -182,7 +182,7 @@ namespace ManagerLayer.PasswordManagement
             }
         }
 
-        public void AssignResetToken(string email)
+        public void AssignResetToken(string email, string url)
         {
             using(var _db = CreateDbContext())
             {
@@ -192,8 +192,15 @@ namespace ManagerLayer.PasswordManagement
 
                     if(CountResetLinksMade24Hours(userID) < 3)
                     {
-                        CreatePasswordReset(userID);
+                        PasswordReset newlyCreatedPasswordReset = CreatePasswordReset(userID);
+                        string resetToken = newlyCreatedPasswordReset.ResetToken;
+                        string resetLink = CreateResetURL(url, resetToken);
+                        SendResetEmailUserExists(email, resetLink);
                     }
+                }
+                else
+                {
+                    SendResetEmailUserDoesNotExist(email);
                 }
             }
         }
