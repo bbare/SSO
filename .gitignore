@@ -1,40 +1,5 @@
-*.swp
-*.*~
-project.lock.json
-.DS_Store
-*.pyc
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
 
-# Visual Studio Code
-.vscode
-
-# User-specific files
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
-.vs/
-
-# Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-build/
-bld/
-[Bb]in/
-[Oo]bj/
-msbuild.log
-msbuild.err
-msbuild.wrn
-
-*/bin/*
-*/*/bin/*
-*/obj/*
-*/*/obj/*
-
-Backend/packages/
-
-# Visual Studio 2015
-.vs
+/Backend/MigrationBackup/f2c24cec/UnitTesting

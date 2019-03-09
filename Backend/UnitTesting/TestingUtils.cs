@@ -90,7 +90,7 @@ namespace UnitTesting
                 return session;
             }
         }
-
+        
         public PasswordReset CreatePasswordResetInDB()
         {
             PasswordReset pr = new PasswordReset
@@ -129,95 +129,6 @@ namespace UnitTesting
             return pr;
         }
 
-        /*
-        public Service CreateServiceInDb(bool enabled)
-        {
-            using (var _db = new DatabaseContext())
-            {
-                Service s = new Service
-                {
-                    ServiceName = (Guid.NewGuid()).ToString(),
-                    Disabled = !enabled,
-                    UpdatedAt = DateTime.UtcNow
-                };
-                _db.Services.Add(s);
-                _db.SaveChanges();
-
-                return s;
-            }
-        }
-
-        public Service CreateServiceObject(bool enabled)
-        {
-            Service s = new Service
-            {
-                ServiceName = (Guid.NewGuid()).ToString(),
-                Disabled = !enabled
-            };
-
-            return s;
-        }
-
-        public Claim CreateClaim(User user, Service service, User subjectUser)
-        {
-            using (var _db = new DatabaseContext())
-            {
-                Claim c = new Claim
-                {
-                    ServiceId = service.Id,
-                    UserId = user.Id
-                };
-                _db.Claims.Add(c);
-                _db.SaveChanges();
-
-                return c;
-            }
-        }
-
-        public Client CreateClientObject()
-        {
-            Client client = new Client
-            {
-                Id = Guid.NewGuid(),
-                Disabled = false,
-                Name = Guid.NewGuid().ToString(),
-                Address = Guid.NewGuid().ToString(),
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-
-            };
-            return client;
-        }
-
-        public Client CreateClientInDb()
-        {
-
-            Client client = new Client
-            {
-                Id = Guid.NewGuid(),
-                Disabled = false,
-                Name = Guid.NewGuid().ToString(),
-                Address = Guid.NewGuid().ToString(),
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-
-            };
-
-            return CreateUserInDb(client);
-        }
-
-        public Client CreateUserInDb(Client client)
-        {
-            using (var _db = new DatabaseContext())
-            {
-                _db.Clients.Add(client);
-                _db.SaveChanges();
-
-                return client;
-            }
-        }
-        */
-
         public DatabaseContext CreateDataBaseContext()
         {
             return new DatabaseContext();
@@ -234,7 +145,6 @@ namespace UnitTesting
             }
             return true;
         }
-        
-    }
 
+    }
 }
