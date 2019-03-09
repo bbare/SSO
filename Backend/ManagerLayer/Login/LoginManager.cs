@@ -1,4 +1,5 @@
 ﻿using DataAccessLayer.Models;
+using DataAccessLayer.Repositories;
 using ServiceLayer.Services;
 using DataAccessLayer.Database;
 using System.Net.Http;
@@ -17,6 +18,7 @@ namespace ManagerLayer.Login
         IPasswordService _passwordService = new PasswordService();
         ITokenService _tokenService = new TokenService();
         ISessionService _sessionService = new SessionService();
+        UserRepository userRepo = new UserRepository();
         private User user;
 
         public LoginManager()
@@ -60,7 +62,8 @@ namespace ManagerLayer.Login
         {
             using (var _db = new DatabaseContext())
             {
-                if(_passwordService.VerifyPassword(password, user.PasswordHash, user.PasswordSalt))
+                string hashedPassword = _passwordService.HashPassword(password, user.PasswordSalt);
+                if (userRepo.ValidatePassword(user, hashedPassword))
                 {
                     return true;
                 }
