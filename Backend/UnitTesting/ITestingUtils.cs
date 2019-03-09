@@ -12,6 +12,7 @@ namespace UnitTesting
     {
         User createUser();
         Session createSession(User user);
-        //bool isEqual(string[] arr1, string[] arr2);
+        bool isEqual(string[] arr1, string[] arr2);
+
     }
 }
