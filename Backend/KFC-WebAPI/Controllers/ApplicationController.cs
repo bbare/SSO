@@ -1,10 +1,12 @@
 ﻿using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using ManagerLayer.ApplicationManagement;
 
-namespace WebAPI.Controllers
+namespace KFC_WebAPI.Controllers
 {
+    [EnableCors("*", "*", "*")]
     public class ApplicationController : ApiController
     {
 
@@ -15,6 +17,7 @@ namespace WebAPI.Controllers
             ApplicationManager manager = new ApplicationManager();
             HttpResponseContent responseContent = manager.ValidateRegistration(request);
             HttpResponseMessage response = Request.CreateResponse(responseContent.Code, responseContent.Message);
+            
             
             return  response;
         }

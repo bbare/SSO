@@ -27,7 +27,7 @@ export default {
   methods: {
     generate: function () {
         // TODO: replace with SSO backend url
-      const url = 'http://localhost:50803/api/applications/generatekey'
+      const url = 'http://localhost:60461/api/applications/generatekey'
       axios.post(url, {
         title: document.getElementById('title').value,
         email: document.getElementById('email').value,

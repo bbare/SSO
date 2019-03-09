@@ -85,7 +85,7 @@ namespace DataAccessLayer.Repositories
         public bool IsExistingApplication(DatabaseContext _db, Application app)
         {
             // Retrieve the application
-            var result = GetApplication(_db, app.Id);
+            var result = GetApplication(_db, app.Title, app.Email);
             if (result != null) // Application exists
             {
                 return true;

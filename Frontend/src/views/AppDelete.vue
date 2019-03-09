@@ -27,7 +27,7 @@ export default {
   methods: {
     deleteApp: function () {
         // TODO: replace with SSO backend url
-      const url = 'http://localhost:50803/api/applications/delete'
+      const url = 'http://localhost:60461/api/applications/delete'
       axios.post(url, {
         title: document.getElementById('title').value,
         email: document.getElementById('email').value,

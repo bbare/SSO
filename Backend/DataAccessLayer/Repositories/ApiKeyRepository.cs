@@ -84,7 +84,7 @@ namespace DataAccessLayer.Repositories
         public bool IsExistingKey(DatabaseContext _db, ApiKey key)
         {
             // Retrieve the api key
-            var result = GetKey(_db, key.Id);
+            var result = GetKey(_db, key.Key);
             if(result != null) // The api key exists
             {
                 return true;
