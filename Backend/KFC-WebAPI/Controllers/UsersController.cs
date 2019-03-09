@@ -1,4 +1,5 @@
 ﻿using DataAccessLayer.Database;
+using DataAccessLayer.DTOs;
 using DataAccessLayer.Models;
 using ServiceLayer.Services;
 using System;
@@ -8,9 +9,11 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace KFC_WebAPI.Controllers
 {
+    [EnableCors(origins: "http://localhost:8080", headers: "*", methods: "*")]
     public class UsersController : ApiController
     {
         public class RegisterRequest
@@ -18,12 +21,6 @@ namespace KFC_WebAPI.Controllers
             public string email;
             public string password;
             public DateTime dob;
-        }
-
-        public class LoginRequest
-        {
-            public string email;
-            public string password;
         }
 
         [HttpPost]
@@ -121,5 +118,6 @@ namespace KFC_WebAPI.Controllers
                 }
             }
         }
+
     }
 }
