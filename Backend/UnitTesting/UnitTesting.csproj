@@ -89,10 +89,6 @@
       <Project>{F4772F25-0116-413B-BC7F-43EFF8A04F2E}</Project>
       <Name>DataAccessLayer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WebAPI\WebAPI.csproj">
-      <Project>{b007c778-cc70-490b-8a1a-02d96e67ddad}</Project>
-      <Name>WebAPI</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

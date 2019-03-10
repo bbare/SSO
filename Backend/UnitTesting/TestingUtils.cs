@@ -129,44 +129,6 @@ namespace UnitTesting
             return pr;
         }
 
-        public PasswordReset CreatePasswordResetInDB()
-        {
-            PasswordReset pr = new PasswordReset
-            {
-                PasswordResetID = new Guid(),
-                ResetToken = "",
-                UserID = new Guid(),
-                ExpirationTime = DateTime.Now.AddMinutes(5),
-                ResetCount = 0,
-                Disabled = false
-            };
-            return CreatePasswordResetInDB(pr);
-        }
-
-        public PasswordReset CreatePasswordResetInDB(PasswordReset resetToken)
-        {
-            using (var _db = new DatabaseContext())
-            {
-                _db.Entry(resetToken).State = System.Data.Entity.EntityState.Added;
-                _db.SaveChanges();
-                return resetToken;
-            }
-        }
-
-        public PasswordReset CreatePasswordResetObject()
-        {
-            PasswordReset pr = new PasswordReset
-            {
-                PasswordResetID = new Guid(),
-                ResetToken = "",
-                UserID = new Guid(),
-                ExpirationTime = DateTime.Now.AddMinutes(5),
-                ResetCount = 0,
-                Disabled = false
-            };
-            return pr;
-        }
-
         public Application CreateApplicationInDb()
         {
 
