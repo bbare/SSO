@@ -124,7 +124,7 @@
       <Name>DataAccessLayer</Name>
     </ProjectReference>
     <ProjectReference Include="..\ManagerLayer\ManagerLayer.csproj">
-      <Project>{dd7c51a6-44cd-4a05-9809-1171fe66f434}</Project>
+      <Project>{DD7C51A6-44CD-4A05-9809-1171FE66F434}</Project>
       <Name>ManagerLayer</Name>
     </ProjectReference>
     <ProjectReference Include="..\ServiceLayer\ServiceLayer.csproj">

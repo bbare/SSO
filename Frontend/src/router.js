@@ -6,6 +6,8 @@ import NotFound from '@/views/NotFound.vue'
 import AppRegister from '@/views/AppRegister.vue'
 import GenerateKey from '@/views/GenerateKey.vue'
 import AppDelete from '@/views/AppDelete.vue'
+import Login from '@/views/Login.vue'
+import Dashboard from '@/views/Dashboard.vue'
 
 Vue.use(VueRouter)
 
@@ -42,6 +44,16 @@ let router = new VueRouter({
       path: '/delete',
       name: 'app delete',
       component: AppDelete
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: Dashboard
     },
     {
       path: '*',
