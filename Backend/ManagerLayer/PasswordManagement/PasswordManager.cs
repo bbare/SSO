@@ -56,7 +56,7 @@ namespace ManagerLayer.PasswordManagement
                     _db.SaveChanges();
                     return response;
                 }
-                catch (DbEntityValidationException)
+                catch (DbEntityValidationException ex)
                 {
                     //catch error
                     // detach session attempted to be created from the db context - rollback
@@ -93,7 +93,7 @@ namespace ManagerLayer.PasswordManagement
                 {
                     return _db.SaveChanges();
                 }
-                catch (DbEntityValidationException)
+                catch (DbEntityValidationException ex)
                 {
                     // catch error
                     // rollback changes
@@ -182,7 +182,7 @@ namespace ManagerLayer.PasswordManagement
             }
         }
 
-        public void AssignResetToken(string email)
+        public void AssignResetToken(string email, string url)
         {
             using(var _db = CreateDbContext())
             {
@@ -192,8 +192,15 @@ namespace ManagerLayer.PasswordManagement
 
                     if(CountResetLinksMade24Hours(userID) < 3)
                     {
-                        CreatePasswordReset(userID);
+                        PasswordReset newlyCreatedPasswordReset = CreatePasswordReset(userID);
+                        string resetToken = newlyCreatedPasswordReset.ResetToken;
+                        string resetLink = CreateResetURL(url, resetToken);
+                        SendResetEmailUserExists(email, resetLink);
                     }
+                }
+                else
+                {
+                    SendResetEmailUserDoesNotExist(email);
                 }
             }
         }

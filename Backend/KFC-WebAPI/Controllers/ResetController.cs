@@ -30,7 +30,9 @@ namespace WebAPI.Controllers
             if (email != null)
             {
                 PasswordManager pm = new PasswordManager();
-                pm.AssignResetToken(email);
+                string url = Request.RequestUri.ToString();
+
+                pm.AssignResetToken(email, url);
                 var response = new HttpResponseMessage(HttpStatusCode.Created)
                 {
                     Content = new StringContent("Email received")
