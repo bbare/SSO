@@ -31,7 +31,7 @@
                   'Access-Control-Allow-Origin': '*',
                   'Access-Control-Allow-Credentials': true
                 })
-               .then(input => {this.input = input.data; console.log("Login Succesful"); this.$router.push('/dashboard')
+               .then(i => {this.input = i.data; alert("Login Succesful"); console.log("Login Succesful"); this.$router.push('/dashboard')
                 })
                .catch(e => {console.log(e);
                     alert(e.response.status)
