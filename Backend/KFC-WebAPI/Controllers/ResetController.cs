@@ -1,8 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using ServiceLayer.Services;
+using DataAccessLayer.Models;
 using ManagerLayer.PasswordManagement;
+using ManagerLayer.UserManagement;
 using Newtonsoft.Json;
 
 namespace WebAPI.Controllers
