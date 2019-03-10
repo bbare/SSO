@@ -1,7 +1,6 @@
 ﻿using DataAccessLayer.Database;
 using DataAccessLayer.Models;
 using ServiceLayer.Services;
-using ManagerLayer.Login;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
@@ -9,11 +8,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.Http.Cors;
 
 namespace KFC_WebAPI.Controllers
 {
-    [EnableCors(origins: "http://localhost:8080", headers: "*", methods: "*")]
     public class UsersController : ApiController
     {
         public class RegisterRequest
@@ -66,43 +63,6 @@ namespace KFC_WebAPI.Controllers
                 }
             }
             return "got to end without stuff";
-        }
-
-        /// <summary>
-        /// NOT DONE. STILL IN PROCESS
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [Route("api/users/login")]
-        public IHttpActionResult Login([FromBody] LoginRequest request)
-        {           
-            LoginManager loginM = new LoginManager();
-            if (loginM.LoginCheckUserExists(request.email) == false)
-            {
-                return Content(HttpStatusCode.NotFound, "Invalid Username");
-                //return NotFound();
-            }
-            else
-            {
-                if(loginM.LoginCheckUserDisabled())
-                {
-                    return Content(HttpStatusCode.Unauthorized, "User is Disabled");
-                    //return Unauthorized();
-                }
-                else
-                {
-                    if(loginM.LoginCheckPassword(request.password))
-                    {
-                        return Ok(loginM.LoginAuthorized());
-                    }
-                    else
-                    {
-                        return Content(HttpStatusCode.Unauthorized, "Invalid Password");
-                        //return Unauthorized();
-                    }
-                }
-            }            
         }
     }
 }

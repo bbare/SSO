@@ -59,6 +59,5 @@ namespace ServiceLayer.Services
             return (client.GetStringAsync(url + prefix).Result).Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 
         }
-
     }
 }

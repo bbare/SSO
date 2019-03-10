@@ -27,17 +27,6 @@ namespace ManagerLayer.AccessControl
              _sessionService = new SessionService();
         }
 
-        /*
-        public string GenerateSessionToken()
-        {
-            RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
-            Byte[] b = new byte[64 / 2];
-            provider.GetBytes(b);
-            string hex = BitConverter.ToString(b).Replace("-", "");
-            return hex;
-        }
-        */
-
         public string CreateSession(User user)
         {
             using (var _db = CreateDbContext())
