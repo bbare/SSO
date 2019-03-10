@@ -26,8 +26,7 @@
         methods: {
             login() {
                axios.post('http://localhost:50803/api/users/login',
-               {input: this.input},{ 'Access-Control-Allow-Origin': '*',
-                                     'Access-Control-Allow-Credentials': true})
+               {input: this.input})
                .then(input => {this.input = input.data; console.log("Login Succesful"); this.$router.push('/dashboard')
                 })
                .catch(e => {console.log(e);
