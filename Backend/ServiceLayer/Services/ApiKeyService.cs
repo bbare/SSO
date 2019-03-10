@@ -35,15 +35,17 @@ namespace ServiceLayer.Services
             {
                 // Generate a unique key
                 key.Key = _tokenService.GenerateToken();
-                // Check if the key exists in the database
-                if(!_ApiKeyRepo.IsExistingKey(_db, key))
+                
+                // Create a new api key
+                // TODO: Encrypt the ApiKey.key before storing
+                var result = _ApiKeyRepo.CreateNewKey(_db, key);
+                if (result != null) // Check if the key exists in the database
                 {
-                    existing = false;
+                    return result;
                 }
             }
-            // Create a new api key
-            // TODO: Encrypt the ApiKey.key before storing
-            return _ApiKeyRepo.CreateNewKey(_db, key);
+            
+            return null;
         }
 
         /// <summary>

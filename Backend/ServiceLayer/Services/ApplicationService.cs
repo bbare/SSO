@@ -24,13 +24,6 @@ namespace ServiceLayer.Services
         /// <returns>The application created</returns>
         public Application CreateApplication(DatabaseContext _db, Application app)
         {
-            // The application already exists in the database
-            if (_ApplicationRepo.IsExistingApplication(_db, app))
-            {
-                return null;
-            }
-
-            // Create a new application.
             return _ApplicationRepo.CreateNewApplication(_db, app);
         }
 

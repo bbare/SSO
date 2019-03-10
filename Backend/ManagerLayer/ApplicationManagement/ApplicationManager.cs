@@ -177,7 +177,7 @@ namespace ManagerLayer.ApplicationManagement
                 // Attempt to get application based on ApplicationId from api key
                 var app = GetApplication(_db, apiKey.ApplicationId);
                 // Published application title is used to authenticate the app.
-                if (!request.Title.Equals(app.Title))
+                if (app == null || !request.Title.Equals(app.Title))
                 {
                     // Error response
                     response = new HttpResponseContent(HttpStatusCode.BadRequest, "Invalid Key");

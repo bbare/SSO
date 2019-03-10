@@ -16,6 +16,11 @@ namespace DataAccessLayer.Repositories
         /// <returns>Created application</returns>
         public Application CreateNewApplication(DatabaseContext _db, Application app)
         {
+            var result = GetApplication(_db, app.Title, app.Email);
+            if (result != null)
+            {
+                return null;
+            }
             _db.Entry(app).State = EntityState.Added;
             return app;
         }
@@ -72,26 +77,13 @@ namespace DataAccessLayer.Repositories
         /// <returns>The updated application</returns>
         public Application UpdateApplication(DatabaseContext _db, Application app)
         {
-            _db.Entry(app).State = EntityState.Modified;
-            return app;
-        }
-
-        /// <summary>
-        /// Checks if an application record exists in the database.
-        /// </summary>
-        /// <param name="_db">database</param>
-        /// <param name="app">application</param>
-        /// <returns>Whether the application exists</returns>
-        public bool IsExistingApplication(DatabaseContext _db, Application app)
-        {
-            // Retrieve the application
-            var result = GetApplication(_db, app.Title, app.Email);
-            if (result != null) // Application exists
+            var result = GetApplication(_db, app.Id);
+            if (app == null)
             {
-                return true;
+                return null;
             }
-            // Application does not exists
-            return false;
+            _db.Entry(app).State = EntityState.Modified;
+            return result;
         }
 
     }
