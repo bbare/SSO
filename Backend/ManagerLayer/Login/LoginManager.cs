@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DataAccessLayer.DTOs;
 
 namespace ManagerLayer.Login
 {
@@ -81,7 +80,7 @@ namespace ManagerLayer.Login
             }
         }
 
-        public Session LoginAuthorized()
+        public string LoginAuthorized()
         {
             using (var _db = new DatabaseContext())
             {
@@ -94,7 +93,7 @@ namespace ManagerLayer.Login
 
                 var response = _sessionService.CreateSession(_db, session);
                 _db.SaveChanges();
-                return response;
+                return session.Token;
             }
         }
     }
