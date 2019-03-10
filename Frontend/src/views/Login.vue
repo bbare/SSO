@@ -20,17 +20,27 @@
                 input: {
                     username: "",
                     password: ""
-                },
-                pageError: ''
+                }
             }
         },
         methods: {
             login() {
                axios.post('http://localhost:50803/api/users/login',
-               {input: this.input})
-               .then(input => {this.input = input.data; console.log("sent!"); this.$router.push('/dashboard')
+               {input: this.input},{ 'Access-Control-Allow-Origin': '*',
+                                     'Access-Control-Allow-Credentials': true})
+               .then(input => {this.input = input.data; console.log("Login Succesful"); this.$router.push('/dashboard')
                 })
-               .catch(e => {console.log(e); this.$router.push('/home')
+               .catch(e => {console.log(e);
+                    alert(e.response.status)
+                    if(e.response.status === 404){
+                        alert("Username not found")
+                    }
+                    else if(e.response.status === 401){
+                        alert("Invalid Password")
+                    }
+                    else{
+                        alert("Bad Reqiest or Conflict")
+                    }
             })
         }
     }
