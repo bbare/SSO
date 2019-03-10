@@ -62,7 +62,12 @@
     <Compile Include="Migrations\201903051936518_PasswordReset.Designer.cs">
       <DependentUpon>201903051936518_PasswordReset.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903100743056_create-attribute-incorrectPasswordCount.cs" />
+    <Compile Include="Migrations\201903100743056_create-attribute-incorrectPasswordCount.Designer.cs">
+      <DependentUpon>201903100743056_create-attribute-incorrectPasswordCount.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\LoginRequest.cs" />
     <Compile Include="Models\PasswordReset.cs" />
     <Compile Include="Models\Session.cs" />
     <Compile Include="Models\User.cs" />
@@ -90,6 +95,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903051936518_PasswordReset.resx">
       <DependentUpon>201903051936518_PasswordReset.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903100743056_create-attribute-incorrectPasswordCount.resx">
+      <DependentUpon>201903100743056_create-attribute-incorrectPasswordCount.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
