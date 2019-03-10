@@ -18,12 +18,11 @@ namespace ManagerLayer.ApplicationManagement
             //_emailService = new EmailService();
         }
 
-        // Application Services
+        // Services
         private IApplicationService _appService;
-        // ApiKey Service instance
         private IApiKeyService _keyService;
-        // Email Service instance
         private IEmailService _emailService;
+        private ITokenService _tokenService;
 
         /// <summary>
         /// Validate the app registration field values.
@@ -75,13 +74,14 @@ namespace ManagerLayer.ApplicationManagement
             // Create a new ApiKey
             ApiKey apiKey = new ApiKey
             {
+                Key = _tokenService.GenerateToken(),
                 ApplicationId = app.Id
             };
 
             using (var _db = new DatabaseContext())
             {
                 // Attempt to create an application record
-                var appResponse = CreateApplication(_db, app);
+                var appResponse = _appService.CreateApplication(_db, app);
                 if (appResponse == null)
                 {
                     // Error response
@@ -90,7 +90,7 @@ namespace ManagerLayer.ApplicationManagement
                 }
 
                 // Attempt to create an apiKey record
-                var keyResponse = CreateApiKey(_db, apiKey);
+                var keyResponse = _keyService.CreateKey(_db, apiKey);
 
                 if (!SaveChanges(_db, appResponse, keyResponse))
                 {
@@ -164,7 +164,7 @@ namespace ManagerLayer.ApplicationManagement
             using (var _db = new DatabaseContext())
             {
                 // Attempt to find api key
-                var apiKey = GetApiKey(_db, request.Key);
+                var apiKey = _keyService.GetKey(_db, request.Key);
 
                 // Key must exist and be unused.
                 if(apiKey == null || apiKey.IsUsed == true)
@@ -175,7 +175,7 @@ namespace ManagerLayer.ApplicationManagement
                 }
 
                 // Attempt to get application based on ApplicationId from api key
-                var app = GetApplication(_db, apiKey.ApplicationId);
+                var app = _appService.GetApplication(_db, apiKey.ApplicationId);
                 // Published application title is used to authenticate the app.
                 if (app == null || !request.Title.Equals(app.Title))
                 {
@@ -187,11 +187,11 @@ namespace ManagerLayer.ApplicationManagement
                 // Update values of application record
                 app.Description = request.Description;
                 app.LogoUrl = request.LogoUrl;
-                var appResponse = UpdateApplication(_db, app);
+                var appResponse = _appService.UpdateApplication(_db, app);
 
                 // Update values of api key record
                 apiKey.IsUsed = true;
-                var keyResponse = UpdateApiKey(_db, apiKey);
+                var keyResponse = _keyService.UpdateKey(_db, apiKey);
                 
                 // Attempt to save database changes
                 if (!SaveChanges(_db, appResponse, keyResponse))
@@ -228,7 +228,7 @@ namespace ManagerLayer.ApplicationManagement
             using (var _db = new DatabaseContext())
             {
                 // Attempt to find application
-                var app = GetApplication(_db, request.Title, request.Email);
+                var app = _appService.GetApplication(_db, request.Title, request.Email);
                 if(app == null)
                 {
                     // Error response
@@ -239,11 +239,12 @@ namespace ManagerLayer.ApplicationManagement
                 // Create a new ApiKey
                 ApiKey apiKey = new ApiKey
                 {
+                    Key = _tokenService.GenerateToken(),
                     ApplicationId = app.Id
                 };
 
                 // Attempt to create an apiKey record
-                var keyResponse = CreateApiKey(_db, apiKey);
+                var keyResponse = _keyService.CreateKey(_db, apiKey);
 
                 if (!SaveChanges(_db, keyResponse))
                 {
@@ -289,7 +290,7 @@ namespace ManagerLayer.ApplicationManagement
             using (var _db = new DatabaseContext())
             {
                 // Attempt to find application
-                var app = GetApplication(_db, request.Title, request.Email);
+                var app = _appService.GetApplication(_db, request.Title, request.Email);
                 if (app == null)
                 {
                     // Error response
@@ -298,7 +299,7 @@ namespace ManagerLayer.ApplicationManagement
                 }
 
                 // Attempt to create an apiKey record
-                var appResponse = DeleteApplication(_db, app);
+                var appResponse = _appService.DeleteApplication(_db, app.Id);
 
                 if (!SaveChanges(_db, appResponse))
                 {
@@ -420,108 +421,6 @@ namespace ManagerLayer.ApplicationManagement
                 return false;
             }
             return true;
-        }
-
-        /// <summary>
-        /// Calls the service to create an application
-        /// </summary>
-        /// <param name="_db">database</param>
-        /// <param name="app">application</param>
-        /// <returns>created application</returns>
-        public Application CreateApplication(DatabaseContext _db, Application app)
-        {
-            // Attempt to create an application record
-            var appResponse = _appService.CreateApplication(_db, app);
-            if (appResponse == null)
-            {
-                return null;
-            }
-            return appResponse;
-        }
-
-        /// <summary>
-        /// Calls the service to retrieve an application by id
-        /// </summary>
-        /// <param name="_db">database</param>
-        /// <param name="id"></param>
-        /// <returns>The retrieved application</returns>
-        public Application GetApplication(DatabaseContext _db, Guid id)
-        {
-            var appResponse = _appService.GetApplication(_db, id);
-            return appResponse;
-        }
-
-        /// <summary>
-        /// Calls the service to retrieve an application by title and email
-        /// </summary>
-        /// <param name="_db"></param>
-        /// <param name="title"></param>
-        /// <param name="email"></param>
-        /// <returns></returns>
-        public Application GetApplication(DatabaseContext _db, string title, string email)
-        {
-            var appResponse = _appService.GetApplication(_db, title, email);
-            return appResponse;
-        }
-
-        /// <summary>
-        /// Calls the service to update an application
-        /// </summary>
-        /// <param name="_db">database</param>
-        /// <param name="app">application</param>
-        /// <returns>The updated application</returns>
-        public Application UpdateApplication(DatabaseContext _db, Application app)
-        {
-            var appResponse = _appService.UpdateApplication(_db, app);
-            return appResponse;
-        }
-
-        /// <summary>
-        /// Calls the service to delete an application
-        /// </summary>
-        /// <param name="_db">database</param>
-        /// <param name="app">application</param>
-        /// <returns>The updated application</returns>
-        public Application DeleteApplication(DatabaseContext _db, Application app)
-        {
-            var appResponse = _appService.DeleteApplication(_db, app.Id);
-            return appResponse;
-        }
-
-        /// <summary>
-        /// Calls the service to create an api key
-        /// </summary>
-        /// <param name="_db">database</param>
-        /// <param name="apiKey"></param>
-        /// <returns>the created api key</returns>
-        public ApiKey CreateApiKey(DatabaseContext _db, ApiKey apiKey)
-        {
-            var keyResponse = _keyService.CreateKey(_db, apiKey);
-            return apiKey;
-        }
-
-        /// <summary>
-        /// Calls the service to retrieve an api key
-        /// </summary>
-        /// <param name="_db">database</param>
-        /// <param name="key">key value of api key</param>
-        /// <returns>The retrieved api key</returns>
-        public ApiKey GetApiKey(DatabaseContext _db, string key)
-        {
-            var keyResponse = _keyService.GetKey(_db, key);
-            return keyResponse;
-        }
-
-        /// <summary>
-        /// Calls the service to update an api key
-        /// </summary>
-        /// <param name="_db">database</param>
-        /// <param name="key">key value of api key</param>
-        /// <returns>The updated api key</returns>
-        public ApiKey UpdateApiKey(DatabaseContext _db, ApiKey key)
-        {
-            var keyResponse = _keyService.UpdateKey(_db, key);
-            return keyResponse;
         }
 
         /// <summary>

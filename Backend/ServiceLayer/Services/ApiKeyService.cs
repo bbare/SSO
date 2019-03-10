@@ -29,22 +29,7 @@ namespace ServiceLayer.Services
         /// <returns>The created api key</returns>
         public ApiKey CreateKey(DatabaseContext _db, ApiKey key)
         {
-            // Keep generating a key until it is unique
-            bool existing = true;
-            while (existing)
-            {
-                // Generate a unique key
-                key.Key = _tokenService.GenerateToken();
-                
-                // Create a new api key
-                var result = _ApiKeyRepo.CreateNewKey(_db, key);
-                if (result != null) // Check if the key exists in the database
-                {
-                    return result;
-                }
-            }
-            
-            return null;
+            return _ApiKeyRepo.CreateNewKey(_db, key);
         }
 
         /// <summary>
