@@ -64,6 +64,9 @@ namespace UnitTesting
                 // Assert
                 Assert.IsNotNull(response);
                 Assert.AreEqual(response.Id, expected.Id);
+
+                aps.DeleteApplication(_db, response.Id);
+                _db.SaveChanges();
             }
         }
 
@@ -169,6 +172,9 @@ namespace UnitTesting
                 Assert.IsNotNull(result);
                 Assert.AreEqual(result.Id, newApp.Id);
                 Assert.AreNotEqual(expected, result.Title);
+
+                aps.DeleteApplication(_db, newApp.Id);
+                _db.SaveChanges();
             }
         }
 
@@ -198,7 +204,7 @@ namespace UnitTesting
                 var result = _db.Applications.Find(expected.Id);
 
                 // Assert
-                Assert.IsNotNull(response);
+                Assert.IsNull(response);
                 Assert.IsNull(result);
             }
         }
@@ -220,6 +226,9 @@ namespace UnitTesting
                 // Assert
                 Assert.IsNotNull(result);
                 Assert.AreEqual(expected.Id, result.Id);
+
+                aps.DeleteApplication(_db, newApp.Id);
+                _db.SaveChanges();
             }
         }
 
@@ -259,6 +268,9 @@ namespace UnitTesting
                 Assert.IsNotNull(result);
                 Assert.AreEqual(expected.Title, result.Title);
                 Assert.AreEqual(expected.Email, result.Email);
+
+                aps.DeleteApplication(_db, newApp.Id);
+                _db.SaveChanges();
             }
         }
 

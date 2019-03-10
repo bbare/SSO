@@ -64,6 +64,9 @@ namespace UnitTesting
                 // Assert
                 Assert.IsNotNull(response);
                 Assert.AreEqual(response.Id, expected.Id);
+
+                ks.DeleteKey(_db, newKey.Id);
+                _db.SaveChanges();
             }
         }
 
@@ -137,6 +140,9 @@ namespace UnitTesting
                 Assert.IsNotNull(result);
                 Assert.AreEqual(result.Id, newKey.Id);
                 Assert.AreNotEqual(expected, result.Key);
+
+                ks.DeleteKey(_db, newKey.Id);
+                _db.SaveChanges();
             }
         }
 
@@ -166,7 +172,7 @@ namespace UnitTesting
                 var result = _db.Keys.Find(expected.Id);
 
                 // Assert
-                Assert.IsNotNull(response);
+                Assert.IsNull(response);
                 Assert.IsNull(result);
             }
         }
@@ -188,6 +194,9 @@ namespace UnitTesting
                 // Assert
                 Assert.IsNotNull(result);
                 Assert.AreEqual(expected.Id, result.Id);
+
+                ks.DeleteKey(_db, newKey.Id);
+                _db.SaveChanges();
             }
         }
 
@@ -226,6 +235,9 @@ namespace UnitTesting
                 // Assert
                 Assert.IsNotNull(result);
                 Assert.AreEqual(expected.Key, result.Key);
+
+                ks.DeleteKey(_db, newKey.Id);
+                _db.SaveChanges();
             }
         }
 
