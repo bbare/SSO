@@ -141,5 +141,13 @@ namespace ManagerLayer.UserManagement
                 }
             }
         }
+
+        public bool ExistingUser(string email)
+        {
+            using (var _db = CreateDbContext())
+            {
+                return _userService.ExistingUser(_db, email);
+            }
+        }
     }
 }

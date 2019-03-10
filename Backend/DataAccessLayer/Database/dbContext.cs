@@ -19,6 +19,7 @@ namespace DataAccessLayer.Database
 
         public DbSet<User> Users { get; set; }
         public DbSet<Session> Sessions { get; set; }
+        public DbSet<PasswordReset> ResetIDs { get; set; }
 
 
     }
