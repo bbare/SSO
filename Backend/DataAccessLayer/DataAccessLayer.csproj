@@ -50,7 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Database\dbContext.cs" />
-    <Compile Include="DTOs\LoginRequest.cs" />
+    <Compile Include="Models\LoginRequest.cs" />
     <Compile Include="Migrations\201903062125096_initial-create.cs" />
     <Compile Include="Migrations\201903062125096_initial-create.Designer.cs">
       <DependentUpon>201903062125096_initial-create.cs</DependentUpon>
@@ -76,6 +76,9 @@
     <EmbeddedResource Include="Migrations\201903062125096_initial-create.resx">
       <DependentUpon>201903062125096_initial-create.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DTOs\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

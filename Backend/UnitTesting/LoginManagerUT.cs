@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Text;
-using System.Collections.Generic;
+using DataAccessLayer.Database;
+using ManagerLayer.UserManagement;
 using ManagerLayer.Login;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -11,10 +11,15 @@ namespace UnitTesting
     {
 
         LoginManager lm;
+        TestingUtils tu;
+        DatabaseContext _db;
+
+        
 
         public LoginManagerUT()
         {
             lm = new LoginManager();
+            tu = new TestingUtils();
         }
 
         //LoginCheckUserExists()
@@ -22,7 +27,13 @@ namespace UnitTesting
         [TestMethod]
         public void LoginCheckUserExists_Success_ReturnTrue()
         {
-            
+            String testEmail = "cf2080@gmail.com";
+            UserManagementManager um = new UserManagementManager();
+            um.CreateUser(testEmail, "password", new DateTime(1996, 12, 15));
+
+            bool actual = lm.LoginCheckUserExists(testEmail);
+
+            Assert.AreEqual(actual, true);
         }
 
         [TestMethod]
