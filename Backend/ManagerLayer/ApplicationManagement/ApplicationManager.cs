@@ -16,6 +16,7 @@ namespace ManagerLayer.ApplicationManagement
             _appService = new ApplicationService();
             _keyService = new ApiKeyService();
             //_emailService = new EmailService();
+            _tokenService = new TokenService();
         }
 
         // Services
