@@ -37,7 +37,6 @@ namespace ServiceLayer.Services
                 key.Key = _tokenService.GenerateToken();
                 
                 // Create a new api key
-                // TODO: Encrypt the ApiKey.key before storing
                 var result = _ApiKeyRepo.CreateNewKey(_db, key);
                 if (result != null) // Check if the key exists in the database
                 {
