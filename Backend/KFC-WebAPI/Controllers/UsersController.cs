@@ -80,13 +80,15 @@ namespace KFC_WebAPI.Controllers
             LoginManager loginM = new LoginManager();
             if (loginM.LoginCheckUserExists(request.email) == false)
             {
-                return NotFound();
+                return Content(HttpStatusCode.NotFound, "Invalid Username");
+                //return NotFound();
             }
             else
             {
                 if(loginM.LoginCheckUserDisabled())
                 {
-                    return Unauthorized();
+                    return Content(HttpStatusCode.Unauthorized, "User is Disabled");
+                    //return Unauthorized();
                 }
                 else
                 {
@@ -96,7 +98,8 @@ namespace KFC_WebAPI.Controllers
                     }
                     else
                     {
-                        return Unauthorized();
+                        return Content(HttpStatusCode.Unauthorized, "Invalid Password");
+                        //return Unauthorized();
                     }
                 }
             }            
