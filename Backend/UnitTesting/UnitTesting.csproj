@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ITestingUtils.cs" />
+    <Compile Include="LoginManagerUT.cs" />
     <Compile Include="TestingUtils.cs" />
     <Compile Include="PasswordServiceUT.cs" />
     <Compile Include="SessionServiceUT.cs" />

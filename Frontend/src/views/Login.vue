@@ -20,11 +20,9 @@
                 input: {
                     username: "",
                     password: ""
-                }
+                },
+                pageError: ''
             }
-        },
-        mounted(){
-
         },
         methods: {
             login() {

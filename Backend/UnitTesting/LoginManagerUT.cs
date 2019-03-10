@@ -1,20 +1,24 @@
-﻿using System;
+﻿﻿using System;
 using System.Text;
 using System.Collections.Generic;
 using ManagerLayer.Login;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ManagerLayer.UserManagement;
 
 namespace UnitTesting
 {
+
     [TestClass]
     public class LoginManagerUT
     {
 
         LoginManager lm;
+        UserManagementManager um;
 
         public LoginManagerUT()
         {
             lm = new LoginManager();
+            um = new UserManagementManager();
         }
 
         //LoginCheckUserExists()
@@ -22,7 +26,9 @@ namespace UnitTesting
         [TestMethod]
         public void LoginCheckUserExists_Success_ReturnTrue()
         {
-            
+            um.CreateUser("cf2080@gmail.com", "qwerty12345", new DateTime(1996, 12, 15));
+            bool result = lm.LoginCheckUserExists("cf2080@gmail.com");
+            Assert.AreEqual(true, result);
         }
 
         [TestMethod]
