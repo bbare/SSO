@@ -60,11 +60,13 @@
   <ItemGroup>
     <Compile Include="EmailServiceUT.cs" />
     <Compile Include="ITestingUtils.cs" />
+    <Compile Include="LoginManagerUT.cs" />
     <Compile Include="ResetPasswordUT.cs" />
     <Compile Include="PasswordServiceUT.cs" />
     <Compile Include="SessionServiceUT.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestingUtils.cs" />
+    <Compile Include="UsersControllerUT.cs" />
     <Compile Include="UserServiceUT.cs" />
   </ItemGroup>
   <ItemGroup>

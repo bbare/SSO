@@ -67,6 +67,7 @@
       <DependentUpon>201903100743056_create-attribute-incorrectPasswordCount.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\LoginRequest.cs" />
     <Compile Include="Models\PasswordReset.cs" />
     <Compile Include="Models\Session.cs" />
     <Compile Include="Models\User.cs" />
