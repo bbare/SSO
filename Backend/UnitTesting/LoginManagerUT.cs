@@ -1,6 +1,6 @@
-﻿﻿using System;
-using System.Text;
-using System.Collections.Generic;
+﻿using System;
+using DataAccessLayer.Database;
+using ManagerLayer.UserManagement;
 using ManagerLayer.Login;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ManagerLayer.UserManagement;
@@ -13,7 +13,7 @@ namespace UnitTesting
     {
 
         LoginManager lm;
-        UserManagementManager um;
+        TestingUtils tu;
 
         public LoginManagerUT()
         {
