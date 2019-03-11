@@ -58,7 +58,7 @@ namespace KFC_WebAPI.Controllers
                     _db.SaveChanges();
                     return "woo it succeeded!";
                 }
-                catch (DbEntityValidationException)
+                catch (DbEntityValidationException ex)
                 {
                     //catch error
                     // detach user attempted to be created from the db context - rollback
