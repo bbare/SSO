@@ -20,10 +20,9 @@ namespace ServiceLayer.Services
 
         public User CreateUser(DatabaseContext _db, User user)
         {
-            if (_UserManagementRepo.ExistingUser(_db, user))
+            if (_UserManagementRepo.ExistingUser(_db, user.Email))
             {
-                Console.WriteLine("User exists");
-                return null;
+                throw new ArgumentException("A user with that email address already exists");
             }
             return _UserManagementRepo.CreateNewUser(_db, user);
         }
