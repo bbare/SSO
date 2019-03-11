@@ -56,7 +56,7 @@ namespace ManagerLayer.UserManagement
                     _db.SaveChanges();
                     return user;
                 }
-                catch (DbEntityValidationException ex)
+                catch (DbEntityValidationException)
                 {
                     //catch error
                     // detach user attempted to be created from the db context - rollback
@@ -131,7 +131,7 @@ namespace ManagerLayer.UserManagement
                 {
                     return _db.SaveChanges();
                 }
-                catch (DbEntityValidationException ex)
+                catch (DbEntityValidationException)
                 {
                     // catch error
                     // rollback changes

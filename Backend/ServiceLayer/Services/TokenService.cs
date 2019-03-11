@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ServiceLayer.Services
 {
-    class TokenService: ITokenService
+    public class TokenService: ITokenService
     {
         public string GenerateToken()
         {

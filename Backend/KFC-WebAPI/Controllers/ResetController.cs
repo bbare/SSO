@@ -30,7 +30,6 @@ namespace WebAPI.Controllers
             if (email != null)
             {
                 PasswordManager pm = new PasswordManager();
-
                 string url = Request.RequestUri.ToString();
 
                 pm.AssignResetToken(email, url);

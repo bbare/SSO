@@ -129,6 +129,87 @@ namespace UnitTesting
             return pr;
         }
 
+        public Application CreateApplicationInDb()
+        {
+
+            Application app = new Application
+            {
+                Id = Guid.NewGuid(),
+                Title = "KFC App",
+                LaunchUrl = "https://kfc.com",
+                Email = "kfc@email.com",
+                UserDeletionUrl = "https://kfc.com/delete",
+                LogoUrl = "https://kfc.com/logo.png",
+                Description = "A KFC app"
+            };
+
+            return CreateApplicationInDb(app);
+        }
+
+        public Application CreateApplicationInDb(Application app)
+        {
+            using (var _db = new DatabaseContext())
+            {
+                _db.Entry(app).State = System.Data.Entity.EntityState.Added;
+                _db.SaveChanges();
+
+                return app;
+            }
+        }
+
+        public Application CreateApplicationObject()
+        {
+            Application app = new Application
+            {
+                Id = Guid.NewGuid(),
+                Title = "KFC App",
+                LaunchUrl = "https://kfc.com",
+                Email = "kfc@email.com",
+                UserDeletionUrl = "https://kfc.com/delete",
+                LogoUrl = "https://kfc.com/logo.png",
+                Description = "A KFC app"
+            };
+            return app;
+        }
+
+        public ApiKey CreateApiKeyInDb()
+        {
+            Application app = CreateApplicationObject();
+            ApiKey apiKey = new ApiKey
+            {
+                Id = Guid.NewGuid(),
+                Key = Guid.NewGuid().ToString("N"),
+                ApplicationId = app.Id,
+                IsUsed = false
+            };
+
+            return CreateApiKeyInDb(apiKey);
+        }
+
+        public ApiKey CreateApiKeyInDb(ApiKey apiKey)
+        {
+            using (var _db = new DatabaseContext())
+            {
+                _db.Entry(apiKey).State = System.Data.Entity.EntityState.Added;
+                _db.SaveChanges();
+
+                return apiKey;
+            }
+        }
+
+        public ApiKey CreateApiKeyObject()
+        {
+            Application app = CreateApplicationObject();
+            ApiKey apiKey = new ApiKey
+            {
+                Id = Guid.NewGuid(),
+                Key = Guid.NewGuid().ToString("N"),
+                ApplicationId = app.Id,
+                IsUsed = false
+            };
+            return apiKey;
+        }
+
         public DatabaseContext CreateDataBaseContext()
         {
             return new DatabaseContext();

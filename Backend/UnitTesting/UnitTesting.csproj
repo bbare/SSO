@@ -64,6 +64,7 @@
     <Reference Include="System.Security" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationServiceUT.cs" />
     <Compile Include="EmailServiceUT.cs" />
     <Compile Include="ITestingUtils.cs" />
     <Compile Include="LoginManagerUT.cs" />
@@ -72,6 +73,8 @@
     <Compile Include="SessionServiceUT.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestingUtils.cs" />
+    <Compile Include="ApiKeyServiceUT.cs" />
+    <Compile Include="ApplicationManagerUT.cs" />
     <Compile Include="UsersControllerUT.cs" />
     <Compile Include="UserServiceUT.cs" />
   </ItemGroup>
@@ -91,10 +94,6 @@
     <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj">
       <Project>{F4772F25-0116-413B-BC7F-43EFF8A04F2E}</Project>
       <Name>DataAccessLayer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WebAPI\WebAPI.csproj">
-      <Project>{b007c778-cc70-490b-8a1a-02d96e67ddad}</Project>
-      <Name>WebAPI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

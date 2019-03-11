@@ -368,6 +368,5 @@ namespace UnitTesting
             Assert.IsNotNull(result);
             Assert.AreEqual(expectedResponse.Id, result.Id);
         }
-
     }
 }
