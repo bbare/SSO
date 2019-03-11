@@ -16,18 +16,21 @@ namespace DataAccessLayer.Repositories
         /// <returns>created api key</returns>
         public ApiKey CreateNewKey(DatabaseContext _db, ApiKey key)
         {
-            if(key == null || _db == null)
+            try
+            {
+                var apiKey = GetKey(_db, key.Key);
+                if (apiKey != null)
+                {
+                    return null;
+                }
+                _db.Entry(key).State = EntityState.Added;
+                return key;
+            }
+            catch (Exception)
             {
                 return null;
             }
-
-            var apiKey = GetKey(_db, key.Key);
-            if (apiKey != null)
-            {
-                return null;
-            }
-            _db.Entry(key).State = EntityState.Added;
-            return key;
+            
         }
 
         /// <summary>
@@ -38,18 +41,21 @@ namespace DataAccessLayer.Repositories
         /// <returns>deleted api key</returns>
         public ApiKey DeleteKey(DatabaseContext _db, Guid id)
         {
-            if(_db == null)
-            {
-                return null;
-            }
 
-            var apiKey = GetKey(_db, id);
-            if(apiKey == null)
+            try
+            {
+                var apiKey = GetKey(_db, id);
+                if (apiKey == null)
+                {
+                    return null;
+                }
+                _db.Entry(apiKey).State = EntityState.Deleted;
+                return apiKey;
+            }
+            catch (Exception)
             {
                 return null;
             }
-            _db.Entry(apiKey).State = EntityState.Deleted;
-            return apiKey;
         }
 
         /// <summary>
@@ -60,11 +66,15 @@ namespace DataAccessLayer.Repositories
         /// <returns>The retrieved api key</returns>
         public ApiKey GetKey(DatabaseContext _db, Guid id)
         {
-            if(_db == null)
+            try
+            {
+                var response = _db.Keys.Find(id);
+                return response;
+            }
+            catch (Exception)
             {
                 return null;
             }
-            return _db.Keys.Find(id);
         }
 
         /// <summary>
@@ -75,16 +85,18 @@ namespace DataAccessLayer.Repositories
         /// <returns></returns>
         public ApiKey GetKey(DatabaseContext _db, string key)
         {
-            if(_db == null)
+
+            try
+            {
+                var apiKey = _db.Keys
+                .Where(k => k.Key == key)
+                .FirstOrDefault<ApiKey>();
+                return apiKey;
+            }
+            catch (Exception)
             {
                 return null;
             }
-
-            var apiKey = _db.Keys
-                .Where(k => k.Key == key)
-                .FirstOrDefault<ApiKey>();
-
-            return apiKey;
         }
 
         /// <summary>
@@ -95,18 +107,21 @@ namespace DataAccessLayer.Repositories
         /// <returns></returns>
         public ApiKey UpdateKey(DatabaseContext _db, ApiKey key)
         {
-            if(key == null || _db == null)
-            {
-                return null;
-            }
 
-            var result = GetKey(_db, key.Id);
-            if (result == null)
+            try
+            {
+                var result = GetKey(_db, key.Id);
+                if (result == null)
+                {
+                    return null;
+                }
+                _db.Entry(key).State = EntityState.Modified;
+                return result;
+            }
+            catch (Exception)
             {
                 return null;
             }
-            _db.Entry(key).State = EntityState.Modified;
-            return result;
         }
 
     }
