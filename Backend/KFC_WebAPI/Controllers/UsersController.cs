@@ -46,9 +46,9 @@ namespace KFC_WebAPI.Controllers
     {
         [HttpPost]
         [Route("api/users/register")]
-        public IHttpActionResult Register([FromBody]UserRegistrationRequest request)
+        public IHttpActionResult Register([FromBody, Required]UserRegistrationRequest request)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || request == null)
             {
                 return BadRequest(ModelState);
             }
