@@ -16,7 +16,7 @@ namespace DataAccessLayer.Repositories
         /// <returns>created api key</returns>
         public ApiKey CreateNewKey(DatabaseContext _db, ApiKey key)
         {
-            if(key == null)
+            if(key == null || _db == null)
             {
                 return null;
             }
@@ -38,6 +38,11 @@ namespace DataAccessLayer.Repositories
         /// <returns>deleted api key</returns>
         public ApiKey DeleteKey(DatabaseContext _db, Guid id)
         {
+            if(_db == null)
+            {
+                return null;
+            }
+
             var apiKey = GetKey(_db, id);
             if(apiKey == null)
             {
@@ -55,6 +60,10 @@ namespace DataAccessLayer.Repositories
         /// <returns>The retrieved api key</returns>
         public ApiKey GetKey(DatabaseContext _db, Guid id)
         {
+            if(_db == null)
+            {
+                return null;
+            }
             return _db.Keys.Find(id);
         }
 
@@ -66,6 +75,11 @@ namespace DataAccessLayer.Repositories
         /// <returns></returns>
         public ApiKey GetKey(DatabaseContext _db, string key)
         {
+            if(_db == null)
+            {
+                return null;
+            }
+
             var apiKey = _db.Keys
                 .Where(k => k.Key == key)
                 .FirstOrDefault<ApiKey>();
@@ -81,7 +95,7 @@ namespace DataAccessLayer.Repositories
         /// <returns></returns>
         public ApiKey UpdateKey(DatabaseContext _db, ApiKey key)
         {
-            if(key == null)
+            if(key == null || _db == null)
             {
                 return null;
             }

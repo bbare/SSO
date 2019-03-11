@@ -442,13 +442,13 @@ namespace ManagerLayer.ApplicationManagement
         /// </summary>
         /// <param name="logoUrl"></param>
         /// <returns></returns>
-        public bool IsValidImageExtension(Uri logoUrl)
+        public bool IsValidImageExtension(Uri imageUrl)
         {
-            if(logoUrl == null)
+            if(imageUrl == null)
             {
                 return false;
             }
-            string extension = Path.GetExtension("@" + logoUrl.ToString());
+            string extension = Path.GetExtension("@" + imageUrl.ToString());
 
             // Logo can only be of .PNG image file type.
             if (!extension.ToUpper().Equals(".PNG"))
