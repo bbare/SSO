@@ -45,6 +45,16 @@ namespace UnitTesting
         }
 
         [TestMethod]
+        public void IsValidTitle_Fail_NullValueReturnsFalse()
+        {
+            // Act
+            var actual = am.IsValidTitle(null);
+
+            // Assert
+            Assert.IsFalse(actual);
+        }
+
+        [TestMethod]
         public void IsValidEmail_Pass_ReturnTrue()
         {
             // Arrange
@@ -65,6 +75,16 @@ namespace UnitTesting
 
             // Act
             var actual = am.IsValidEmail(email);
+
+            // Assert
+            Assert.IsFalse(actual);
+        }
+
+        [TestMethod]
+        public void IsValidEmail_Fail_NullValuesReturnFalse()
+        {
+            // Act
+            var actual = am.IsValidEmail(null);
 
             // Assert
             Assert.IsFalse(actual);
@@ -101,6 +121,18 @@ namespace UnitTesting
         }
 
         [TestMethod]
+        public void IsValidUrl_Fail_NullValuesReturnFalse()
+        {
+            Uri url = null;
+
+            // Act
+            var actual = am.IsValidUrl(null, ref url);
+
+            // Assert
+            Assert.IsFalse(actual);
+        }
+
+        [TestMethod]
         public void IsValidDescription_Pass_ReturnTrue()
         {
             // Arrange
@@ -124,7 +156,17 @@ namespace UnitTesting
             }
 
             // Act
-            var actual = am.IsValidTitle(description);
+            var actual = am.IsValidDescription(description);
+
+            // Assert
+            Assert.IsFalse(actual);
+        }
+
+        [TestMethod]
+        public void IsValidDescription_Fail_NullValuesReturnFalse()
+        {
+            // Act
+            var actual = am.IsValidDescription(null);
 
             // Assert
             Assert.IsFalse(actual);
@@ -157,6 +199,16 @@ namespace UnitTesting
         }
 
         [TestMethod]
+        public void IsValidImageExtension_Fail_NullValuesReturnFalse()
+        {
+            // Act
+            var actual = am.IsValidImageExtension(null);
+
+            // Assert
+            Assert.IsFalse(actual);
+        }
+
+        [TestMethod]
         public void IsValidDimensions_Pass_ReturnTrue()
         {
             // Arrange
@@ -177,6 +229,16 @@ namespace UnitTesting
 
             // Act
             var actual = am.IsValidDimensions(image);
+
+            // Assert
+            Assert.IsFalse(actual);
+        }
+
+        [TestMethod]
+        public void IsValidDimensions_Fail_NullValuesReturnFalse()
+        {
+            // Act
+            var actual = am.IsValidDimensions(null);
 
             // Assert
             Assert.IsFalse(actual);

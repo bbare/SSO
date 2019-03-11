@@ -71,6 +71,43 @@ namespace UnitTesting
         }
 
         [TestMethod]
+        public void CreateKey_Fail_ExistingKeyShouldReturnNull()
+        {
+            // Arrange
+            newKey = tu.CreateApiKeyObject();
+            var expected = newKey;
+
+            using (_db = tu.CreateDataBaseContext())
+            {
+                // Act
+                var response = ks.CreateKey(_db, newKey);
+                _db.SaveChanges();
+
+                var actual = ks.CreateKey(_db, newKey);
+
+                // Assert
+                Assert.IsNull(actual);
+                Assert.AreNotEqual(expected, actual);
+
+                ks.DeleteKey(_db, newKey.Id);
+                _db.SaveChanges();
+            }
+        }
+
+        [TestMethod]
+        public void CreateKey_Fail_NullValuesShouldReturnNull()
+        {
+            using (_db = tu.CreateDataBaseContext())
+            {
+                // Act
+                var result = ks.CreateKey(_db, null);
+
+                // Assert
+                Assert.IsNull(result);
+            }
+        }
+
+        [TestMethod]
         public void DeleteKey_Pass_ReturnKey()
         {
             // Arrange
@@ -178,6 +215,19 @@ namespace UnitTesting
         }
 
         [TestMethod]
+        public void UpdateKey_Fail_NullValuesShouldReturnNull()
+        {
+            using (_db = tu.CreateDataBaseContext())
+            {
+                // Act
+                var result = ks.UpdateKey(_db, null);
+
+                // Assert
+                Assert.IsNull(result);
+            }
+        }
+
+        [TestMethod]
         public void GetKeyById_Pass_ReturnKey()
         {
             // Arrange
@@ -256,6 +306,19 @@ namespace UnitTesting
                 // Assert
                 Assert.IsNull(result);
                 Assert.AreEqual(expected, result);
+            }
+        }
+
+        [TestMethod]
+        public void GetApiKeyByKey_Fail_NullValuesShouldReturnNull()
+        {
+            using (_db = tu.CreateDataBaseContext())
+            {
+                // Act
+                var result = ks.GetKey(_db, null);
+
+                // Assert
+                Assert.IsNull(result);
             }
         }
     }

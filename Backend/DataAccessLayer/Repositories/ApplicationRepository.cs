@@ -16,6 +16,11 @@ namespace DataAccessLayer.Repositories
         /// <returns>Created application</returns>
         public Application CreateNewApplication(DatabaseContext _db, Application app)
         {
+            if(app == null)
+            {
+                return null;
+            }
+
             var result = GetApplication(_db, app.Title, app.Email);
             if (result != null)
             {
@@ -77,8 +82,13 @@ namespace DataAccessLayer.Repositories
         /// <returns>The updated application</returns>
         public Application UpdateApplication(DatabaseContext _db, Application app)
         {
+            if(app == null)
+            {
+                return null;
+            }
+
             var result = GetApplication(_db, app.Id);
-            if (app == null)
+            if (result == null)
             {
                 return null;
             }

@@ -16,6 +16,11 @@ namespace DataAccessLayer.Repositories
         /// <returns>created api key</returns>
         public ApiKey CreateNewKey(DatabaseContext _db, ApiKey key)
         {
+            if(key == null)
+            {
+                return null;
+            }
+
             var apiKey = GetKey(_db, key.Key);
             if (apiKey != null)
             {
@@ -76,6 +81,11 @@ namespace DataAccessLayer.Repositories
         /// <returns></returns>
         public ApiKey UpdateKey(DatabaseContext _db, ApiKey key)
         {
+            if(key == null)
+            {
+                return null;
+            }
+
             var result = GetKey(_db, key.Id);
             if (result == null)
             {

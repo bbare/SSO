@@ -71,6 +71,30 @@ namespace UnitTesting
         }
 
         [TestMethod]
+        public void CreateApplication_Fail_ExistingAppShouldReturnNull()
+        {
+            // Arrange
+            newApp = tu.CreateApplicationObject();
+            var expected = newApp;
+
+            using (_db = tu.CreateDataBaseContext())
+            {
+                // Act
+                var response = aps.CreateApplication(_db, newApp);
+                _db.SaveChanges();
+
+                var actual = aps.CreateApplication(_db, newApp);
+
+                // Assert
+                Assert.IsNull(actual);
+                Assert.AreNotEqual(expected, actual);
+
+                aps.DeleteApplication(_db, response.Id);
+                _db.SaveChanges();
+            }
+        }
+
+        [TestMethod]
         public void CreateApplication_Fail_MissingFieldsShouldThrowException()
         {
             // Arrange
@@ -99,6 +123,19 @@ namespace UnitTesting
                 Assert.IsNotNull(response);
                 Assert.AreEqual(expected, response);
                 Assert.AreNotEqual(expected, result);
+            }
+        }
+
+        [TestMethod]
+        public void CreateApplication_Fail_NullValuesReturnNull()
+        {
+            using (_db = tu.CreateDataBaseContext())
+            {
+                // Act
+                var result = aps.CreateApplication(_db, null);
+
+                // Assert
+                Assert.IsNull(result);
             }
         }
 
@@ -210,6 +247,19 @@ namespace UnitTesting
         }
 
         [TestMethod]
+        public void UpdateApplication_Fail_NullValuesReturnNull()
+        {
+            using (_db = tu.CreateDataBaseContext())
+            {
+                // Act
+                var result = aps.UpdateApplication(_db, null);
+
+                // Assert
+                Assert.IsNull(result);
+            }
+        }
+
+        [TestMethod]
         public void GetApplicationById_Pass_ReturnApp()
         {
             // Arrange
@@ -290,6 +340,19 @@ namespace UnitTesting
                 // Assert
                 Assert.IsNull(result);
                 Assert.AreEqual(expected, result);
+            }
+        }
+
+        [TestMethod]
+        public void GetApplicationByTitleEmail_Fail_NullValuesReturnNull()
+        {
+            using (_db = tu.CreateDataBaseContext())
+            {
+                // Act
+                var result = aps.GetApplication(_db, null, null);
+
+                // Assert
+                Assert.IsNull(result);
             }
         }
     }
