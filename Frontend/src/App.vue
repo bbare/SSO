@@ -1,8 +1,11 @@
 <template>
-  <div id="app">
+  <v-app>
     <nav-bar />
-    <router-view />
-  </div>
+
+    <v-content>
+      <router-view />
+    </v-content>
+  </v-app>
 </template>
 
 <script>
@@ -15,17 +18,3 @@ export default {
   }
 }
 </script>
-
-<style>
-/* Do not put component-specific styles here */
-body {
-  margin: 0;
-  padding: 0;
-}
-
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-</style>

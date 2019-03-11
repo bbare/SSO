@@ -1,14 +1,18 @@
 <template>
-  <div class="nav-container">
-    <span class="title">KFC SSO</span>
-    <router-link to="home">Home</router-link>
-    <router-link to="register">Register</router-link>
-    <router-link to="about">About</router-link>
-    <router-link to="add">Register App</router-link>
-    <router-link to="key">Generate Key</router-link>
-    <router-link to="delete">Delete App</router-link>
-    <router-link to="login">Login</router-link>
-  </div>
+  <v-toolbar app>
+    <v-toolbar-title class="headline text-uppercase">
+      <span>KFC SSO</span>
+    </v-toolbar-title>
+    <v-spacer></v-spacer>
+
+    <v-btn to="home" flat>Home</v-btn>
+    <v-btn to="register" flat>Register</v-btn>
+    <v-btn to="about" flat>About</v-btn>
+    <v-btn to="add" flat>Register</v-btn>
+    <v-btn to="key" flat>Generate</v-btn>
+    <v-btn to="delete" flat>Delete</v-btn>
+    <v-btn to="login" flat>Login</v-btn>
+  </v-toolbar>
 </template>
 
 <script>
@@ -17,28 +21,3 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-  .nav-container {
-    width: 100%;
-    background-color: rgb(34,34,34);
-    height: 50px;
-    line-height: 50px;
-    color: white;
-  }
-  .nav-container > .title {
-    margin-left: 1rem;
-    margin-right: 1rem;
-  }
-  .nav-container > a {
-    display: inline-block;
-    color: whitesmoke;
-    text-decoration: none;
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  .nav-container > a.router-link-active {
-    background-color: rgb(9,9,9);
-    color: white;
-  }
-</style>
