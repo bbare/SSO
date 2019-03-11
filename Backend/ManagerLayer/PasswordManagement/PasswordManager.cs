@@ -7,7 +7,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccessLayer.Models;
-using ManagerLayer.AccessControl;
 using MimeKit;
 using System.Data.Entity.Validation;
 
