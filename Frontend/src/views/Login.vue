@@ -12,6 +12,7 @@
 
 <script>
     import axios from "axios"
+    import dev_const from '../const.js'
     
     export default {
         name: 'login',
@@ -25,7 +26,7 @@
         },
         methods: {
             login() {
-               axios.post('http://localhost:60461/api/users/login',
+               axios.post(`${dev_const.DEV_ROUTE}/users/login`,
                {input: this.input})
                .then(i => {this.input = i.data; alert("Login Succesful"); console.log("Login Succesful"); this.$router.push('/dashboard')
                 })

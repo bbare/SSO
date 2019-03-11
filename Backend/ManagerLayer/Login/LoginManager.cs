@@ -83,6 +83,7 @@ namespace ManagerLayer.Login
 
         public string LoginAuthorized()
         {
+            _tokenService = new TokenService();
             using (var _db = new DatabaseContext())
             {
                 string generateToken = _tokenService.GenerateToken();

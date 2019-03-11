@@ -29,6 +29,8 @@ namespace ManagerLayer.AccessControl
 
         public string CreateSession(User user)
         {
+            _userService = new UserService();
+            _tokenService = new TokenService();
             using (var _db = CreateDbContext())
             {
                 var userResponse = _userService.GetUser(_db, user.Email);

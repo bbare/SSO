@@ -6,7 +6,6 @@ using ManagerLayer.ApplicationManagement;
 
 namespace KFC_WebAPI.Controllers
 {
-    [EnableCors("*", "*", "*")]
     public class ApplicationController : ApiController
     {
 

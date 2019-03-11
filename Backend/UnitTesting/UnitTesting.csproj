@@ -79,9 +79,9 @@
     <Compile Include="UserServiceUT.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\KFC-WebAPI\KFC-WebAPI.csproj">
-      <Project>{2d93c703-02fc-497e-881a-8ef37334d04a}</Project>
-      <Name>KFC-WebAPI</Name>
+    <ProjectReference Include="..\KFC_WebAPI\KFC_WebAPI.csproj">
+      <Project>{235AF58A-9018-40B2-B3A0-BEC8219C6E69}</Project>
+      <Name>KFC_WebAPI</Name>
     </ProjectReference>
     <ProjectReference Include="..\ManagerLayer\ManagerLayer.csproj">
       <Project>{DD7C51A6-44CD-4A05-9809-1171FE66F434}</Project>
