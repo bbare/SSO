@@ -26,16 +26,21 @@
         },
         methods: {
             login() {
-               axios.post(`${dev_const.DEV_ROUTE}/users/login`,
-               {input: this.input})
+               axios.post('http://localhost:60461/api/users/login',
+               {
+                    email: this.input.username,
+                    password: this.input.password
+               })
                .then(i => {this.input = i.data; alert("Login Succesful"); console.log("Login Succesful"); this.$router.push('/dashboard')
                 })
                .catch(e => {console.log(e);
-                    alert(e.response.status)
                     if(e.response.status === 404){
                         alert("User Not Found")
                     }
                     else if(e.response.status === 401){
+                        alert("User is Disabled")
+                    }
+                    else if(e.response.status === 400){ 
                         alert("Invalid Password")
                     }
                     else{
