@@ -122,9 +122,6 @@ export default {
   data: () => {
     return {
       menu: false,
-      errors: {
-        validatePassword: ""
-      },
       error: "",
 
       email: '',
