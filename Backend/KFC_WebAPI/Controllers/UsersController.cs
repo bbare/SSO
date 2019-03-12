@@ -1,13 +1,10 @@
 ﻿using DataAccessLayer.Database;
 using DataAccessLayer.Models;
 using ManagerLayer.Login;
-using ServiceLayer.Services;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Net;
 using System.Web.Http;
-using System.Web.Http.Cors;
 using ManagerLayer;
 using ServiceLayer.Exceptions;
 using System.ComponentModel.DataAnnotations;
@@ -50,7 +47,7 @@ namespace KFC_WebAPI.Controllers
         {
             if (!ModelState.IsValid || request == null)
             {
-                return BadRequest(ModelState);
+                return Content((HttpStatusCode)412, ModelState);
             }
 
             using (var _db = new DatabaseContext())
@@ -78,7 +75,7 @@ namespace KFC_WebAPI.Controllers
                     return Conflict();
                 } catch (FormatException ex)
                 {
-                    return BadRequest("Invalid email address.");
+                    return Content((HttpStatusCode)406, "Invalid email address.");
                 } catch (PasswordPwnedException ex)
                 {
                     return Unauthorized();
