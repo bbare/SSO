@@ -1,20 +1,13 @@
 ﻿using DataAccessLayer.Database;
 using DataAccessLayer.Models;
 using ManagerLayer.Login;
-using ServiceLayer.Services;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Validation;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
-using System.Web.Http.Cors;
-using DataAccessLayer.Database;
-using DataAccessLayer.Models;
 using ManagerLayer;
 using ServiceLayer.Exceptions;
+using System.ComponentModel.DataAnnotations;
 
 namespace KFC_WebAPI.Controllers
 {
@@ -46,16 +39,15 @@ namespace KFC_WebAPI.Controllers
         public string securityQ3Answer { get; set; }
     }
 
-    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class UsersController : ApiController
     {
         [HttpPost]
         [Route("api/users/register")]
-        public IHttpActionResult Register([FromBody]UserRegistrationRequest request)
+        public IHttpActionResult Register([FromBody, Required]UserRegistrationRequest request)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || request == null)
             {
-                return BadRequest(ModelState);
+                return Content((HttpStatusCode)412, ModelState);
             }
 
             using (var _db = new DatabaseContext())
@@ -83,7 +75,7 @@ namespace KFC_WebAPI.Controllers
                     return Conflict();
                 } catch (FormatException ex)
                 {
-                    return BadRequest("Invalid email address.");
+                    return Content((HttpStatusCode)406, "Invalid email address.");
                 } catch (PasswordPwnedException ex)
                 {
                     return Unauthorized();
@@ -91,11 +83,11 @@ namespace KFC_WebAPI.Controllers
 
                 AuthorizationManager authorizationManager = new AuthorizationManager();
                 Session session = authorizationManager.CreateSession(_db, user);
-
                 try
                 {
                     _db.SaveChanges();
-                } catch (DbEntityValidationException ex)
+                }
+                catch (DbEntityValidationException ex)
                 {
                     _db.Entry(user).State = System.Data.Entity.EntityState.Detached;
                     _db.Entry(session).State = System.Data.Entity.EntityState.Detached;
@@ -106,7 +98,7 @@ namespace KFC_WebAPI.Controllers
                 {
                     data = new
                     {
-                        token = session.Token
+                        token = user.Id
                     }
                 });
             }
@@ -119,6 +111,7 @@ namespace KFC_WebAPI.Controllers
             LoginManager loginM = new LoginManager();
             if (loginM.LoginCheckUserExists(request.email) == false)
             {
+                //404
                 return Content(HttpStatusCode.NotFound, "Invalid Username");
                 //return NotFound();
             }
@@ -126,6 +119,7 @@ namespace KFC_WebAPI.Controllers
             {
                 if (loginM.LoginCheckUserDisabled())
                 {
+                    //401
                     return Content(HttpStatusCode.Unauthorized, "User is Disabled");
                     //return Unauthorized();
                 }
@@ -137,8 +131,8 @@ namespace KFC_WebAPI.Controllers
                     }
                     else
                     {
-                        return Content(HttpStatusCode.Unauthorized, "Invalid Password");
-                        //return Unauthorized();
+                        //400
+                        return Content(HttpStatusCode.BadRequest, "Invalid Password");
                     }
                 }
             }

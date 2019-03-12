@@ -12,6 +12,7 @@
 
 <script>
     import axios from "axios"
+    import dev_const from '../const.js'
     
     export default {
         name: 'login',
@@ -26,15 +27,20 @@
         methods: {
             login() {
                axios.post('http://localhost:60461/api/users/login',
-               {input: this.input})
+               {
+                    email: this.input.username,
+                    password: this.input.password
+               })
                .then(i => {this.input = i.data; alert("Login Succesful"); console.log("Login Succesful"); this.$router.push('/dashboard')
                 })
                .catch(e => {console.log(e);
-                    alert(e.response.status)
                     if(e.response.status === 404){
                         alert("User Not Found")
                     }
                     else if(e.response.status === 401){
+                        alert("User is Disabled")
+                    }
+                    else if(e.response.status === 400){ 
                         alert("Invalid Password")
                     }
                     else{

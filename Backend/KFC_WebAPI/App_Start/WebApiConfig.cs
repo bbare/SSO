@@ -12,12 +12,11 @@ namespace KFC_WebAPI
         public static void Register(HttpConfiguration config)
         {
             // Enable CORS globaly across all controllers
-            var cors = new EnableCorsAttribute(origins: " * ", headers: " * ", methods: "*");
+            var cors = new EnableCorsAttribute(origins: "*", headers: "*", methods: "*");
 
             // Web API configuration and services
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
             config.EnableCors(cors);
-
 
             // Web API routes
             config.MapHttpAttributeRoutes();

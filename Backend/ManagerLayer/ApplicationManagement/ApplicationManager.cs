@@ -527,6 +527,7 @@ namespace ManagerLayer.ApplicationManagement
         /// <returns>Whether email was successfully sent</returns>
         public bool SendAppRegistrationApiKeyEmail(string receiverEmail, string apiKey)
         {
+            _emailService = new EmailService();
             try
             {
                 string registrationSubjectString = "KFC SSO Registration";
