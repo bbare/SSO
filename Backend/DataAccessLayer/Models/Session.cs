@@ -29,6 +29,7 @@ namespace DataAccessLayer.Models
         public DateTime CreatedAt { get; set; }
 
         [Required, ForeignKey("User")]
+        [Index(IsUnique = false)]
         public Guid UserId { get; set; }
         public User User { get; set; }
     }

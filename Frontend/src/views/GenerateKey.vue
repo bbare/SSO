@@ -15,6 +15,7 @@
 
 <script>
 import axios from 'axios'
+import dev_const from '../const.js'
 
 export default {
   data () {
@@ -27,7 +28,7 @@ export default {
   methods: {
     generate: function () {
         // TODO: replace with SSO backend url
-      const url = 'http://localhost:60461/api/applications/generatekey'
+      const url = `${dev_const.DEV_ROUTE}/applications/generatekey`
       axios.post(url, {
         title: document.getElementById('title').value,
         email: document.getElementById('email').value,

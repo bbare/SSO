@@ -13,10 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTesting", "UnitTesting\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dev", "Dev\Dev.csproj", "{1057EA55-30CA-4B6D-83B5-232F2791456B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KFC-WebAPI", "KFC-WebAPI\KFC-WebAPI.csproj", "{2D93C703-02FC-497E-881A-8EF37334D04A}"
-	ProjectSection(ProjectDependencies) = postProject
-		{DD7C51A6-44CD-4A05-9809-1171FE66F434} = {DD7C51A6-44CD-4A05-9809-1171FE66F434}
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KFC_WebAPI", "KFC_WebAPI\KFC_WebAPI.csproj", "{235AF58A-9018-40B2-B3A0-BEC8219C6E69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,10 +41,10 @@ Global
 		{1057EA55-30CA-4B6D-83B5-232F2791456B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1057EA55-30CA-4B6D-83B5-232F2791456B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1057EA55-30CA-4B6D-83B5-232F2791456B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2D93C703-02FC-497E-881A-8EF37334D04A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2D93C703-02FC-497E-881A-8EF37334D04A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2D93C703-02FC-497E-881A-8EF37334D04A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2D93C703-02FC-497E-881A-8EF37334D04A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{235AF58A-9018-40B2-B3A0-BEC8219C6E69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{235AF58A-9018-40B2-B3A0-BEC8219C6E69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{235AF58A-9018-40B2-B3A0-BEC8219C6E69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{235AF58A-9018-40B2-B3A0-BEC8219C6E69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
