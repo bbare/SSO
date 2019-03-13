@@ -6,7 +6,7 @@ using System.Data.Entity;
 
 namespace DataAccessLayer.Repositories
 {
-    public class ApiKeyRepository
+    public static class ApiKeyRepository
     {
         /// <summary>
         /// Create a new Api Key record
