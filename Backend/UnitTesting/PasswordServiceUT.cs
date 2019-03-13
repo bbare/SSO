@@ -85,6 +85,28 @@ namespace UnitTesting
 
         }
 
-       
+        [TestMethod]
+        public void CheckPasswordLength_ShortAcceptable()
+        {
+            Assert.AreEqual(true, ps.CheckPasswordLength(new string('a', 12)));
+        }
+
+        [TestMethod]
+        public void CheckPasswordLength_LongAcceptable()
+        {
+            Assert.AreEqual(true, ps.CheckPasswordLength(new string('a', 2000)));
+        }
+
+        [TestMethod]
+        public void CheckPasswordLength_TooShort()
+        {
+            Assert.AreEqual(false, ps.CheckPasswordLength(new string('a', 11)));
+        }
+
+        [TestMethod]
+        public void CheckPasswordLength_TooLong()
+        {
+            Assert.AreNotEqual(0, ps.CheckPasswordLength(new string('a', 2001)));
+        }
     }
 }

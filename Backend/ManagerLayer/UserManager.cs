@@ -27,7 +27,18 @@ namespace ManagerLayer
         {
             new System.Net.Mail.MailAddress(email);
 
+            DateTime today18YearsAgo = DateTime.Now.AddYears(-18);
+            if (dob > today18YearsAgo)
+            {
+                throw new InvalidDobException("Date of birth less than 18 years ago");
+            }
+
             IPasswordService _passwordService = new PasswordService();
+
+            if (!_passwordService.CheckPasswordLength(password))
+            {
+                throw new PasswordInvalidException("Password is too short");
+            }
 
             int pwnedCount = _passwordService.CheckPasswordPwned(password);
 

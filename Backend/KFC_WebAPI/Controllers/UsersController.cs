@@ -70,15 +70,24 @@ namespace KFC_WebAPI.Controllers
                         request.securityQ2Answer,
                         request.securityQ3,
                         request.securityQ3Answer);
-                } catch (ArgumentException ex)
+                } catch (ArgumentException)
                 {
                     return Conflict();
-                } catch (FormatException ex)
+                } catch (FormatException)
                 {
                     return Content((HttpStatusCode)406, "Invalid email address.");
-                } catch (PasswordPwnedException ex)
+                }
+                catch (PasswordInvalidException)
                 {
-                    return Unauthorized();
+                    return Content((HttpStatusCode)401, "That password is too short. Password must be between 12 and 2000 characters.");
+                }
+                catch (PasswordPwnedException)
+                {
+                    return Content((HttpStatusCode)401, "That password has been hacked before. Please choose a more secure password.");
+                }
+                catch (InvalidDobException)
+                {
+                    return Content((HttpStatusCode)401, "This software is intended for persons over 18 years of age.");
                 }
 
                 AuthorizationManager authorizationManager = new AuthorizationManager();
@@ -87,7 +96,7 @@ namespace KFC_WebAPI.Controllers
                 {
                     _db.SaveChanges();
                 }
-                catch (DbEntityValidationException ex)
+                catch (DbEntityValidationException)
                 {
                     _db.Entry(user).State = System.Data.Entity.EntityState.Detached;
                     _db.Entry(session).State = System.Data.Entity.EntityState.Detached;
@@ -96,10 +105,7 @@ namespace KFC_WebAPI.Controllers
 
                 return Ok(new
                 {
-                    data = new
-                    {
-                        token = user.Id
-                    }
+                    token = user.Id
                 });
             }
         }
