@@ -19,12 +19,19 @@ namespace ManagerLayer.ApplicationManagement
             _tokenService = new TokenService();
         }
 
+        // Business Rules
+        private const int titleLength = 100;
+        private const int descriptionLength = 2000;
+        private const int xDimension = 55;
+        private const int yDimension = 55;
+        private const string imageType = ".PNG";
+
         // Services
         private IEmailService _emailService;
         private ITokenService _tokenService;
 
         /// <summary>
-        /// Validate the app registration field values, and call services
+        /// Validate the app registration field values, and call registration services
         /// </summary>
         /// <param name="request">Values from POST request</param>
         /// <returns>Http status code and message</returns>
@@ -43,7 +50,7 @@ namespace ManagerLayer.ApplicationManagement
             Uri deleteUrl = null;
 
             // Validate request values
-            if (request.Title == null || !IsValidTitle(request.Title))
+            if (request.Title == null || !IsValidStringLength(request.Title, titleLength))
             {
                 response = new HttpResponseContent(HttpStatusCode.BadRequest, "Invalid Title: Cannot be more than 100 characters in length.");
                 return response;
@@ -133,7 +140,7 @@ namespace ManagerLayer.ApplicationManagement
         }
 
         /// <summary>
-        /// Validate the app publish field values.
+        /// Validate the app publish field values, and call publish services
         /// </summary>
         /// <param name="request">Values from POST request</param>
         /// <returns>Http status code and message</returns>
@@ -156,7 +163,7 @@ namespace ManagerLayer.ApplicationManagement
                 response = new HttpResponseContent(HttpStatusCode.BadRequest, "Invalid Title.");
                 return response;
             }
-            else if (request.Description == null || !IsValidDescription(request.Description))
+            else if (request.Description == null || !IsValidStringLength(request.Description, descriptionLength))
             {
                 response = new HttpResponseContent(HttpStatusCode.BadRequest, "Invalid Description: Cannot be more than 2000 characters in length.");
                 return response;
@@ -166,12 +173,12 @@ namespace ManagerLayer.ApplicationManagement
                 response = new HttpResponseContent(HttpStatusCode.BadRequest, "Invalid Logo Url.");
                 return response;
             }
-            else if (!IsValidImageExtension(logoUrl))
+            else if (!IsValidImageExtension(logoUrl, imageType))
             {
                 response = new HttpResponseContent(HttpStatusCode.BadRequest, "Invalid Logo Image Extension: Can only be .PNG");
                 return response;
             }
-            else if (!IsValidDimensions(logoUrl))
+            else if (!IsValidDimensions(logoUrl,xDimension,yDimension))
             {
                 response = new HttpResponseContent(HttpStatusCode.BadRequest, "Invalid Logo Dimensions: Can be no more than 55x55 pixels.");
                 return response;
@@ -228,7 +235,7 @@ namespace ManagerLayer.ApplicationManagement
         }
 
         /// <summary>
-        /// Validate the key generation field values.
+        /// Validate the key generation field values, and call key generation services
         /// </summary>
         /// <param name="request">Values from POST request</param>
         /// <returns>Http status code and message</returns>
@@ -324,7 +331,7 @@ namespace ManagerLayer.ApplicationManagement
         }
 
         /// <summary>
-        /// Validate the App Deletion field values
+        /// Validate the App Deletion field values, and call deletion services
         /// </summary>
         /// <param name="request">Values from POST request</param>
         /// <returns>Http status code and message</returns>
@@ -380,14 +387,13 @@ namespace ManagerLayer.ApplicationManagement
         }
 
         /// <summary>
-        /// Validates title length
+        /// Validates a string length
         /// </summary>
-        /// <param name="title"></param>
+        /// <param name="length">string</param>
         /// <returns></returns>
-        public bool IsValidTitle(string title)
+        public bool IsValidStringLength(string s, int length)
         {
-            // Application title cannot be more than 100 characters.
-            if (title == null || title.Length > 100)
+            if (s == null || s.Length > length)
             {
                 return false;
             }
@@ -429,27 +435,12 @@ namespace ManagerLayer.ApplicationManagement
         }
 
         /// <summary>
-        /// Validates description length
+        /// Validates image file type
         /// </summary>
-        /// <param name="description"></param>
+        /// <param name="imageUrl">image url</param>
+        /// <param name="ex">file type</param>
         /// <returns></returns>
-        public bool IsValidDescription(string description)
-        {
-            // Application description cannot be more than 2000 characters.
-            if (description == null || description.Length > 2000)
-            {
-                return false;
-            }
-            
-            return true;
-        }
-
-        /// <summary>
-        /// Validates image file type.
-        /// </summary>
-        /// <param name="logoUrl"></param>
-        /// <returns></returns>
-        public bool IsValidImageExtension(Uri imageUrl)
+        public bool IsValidImageExtension(Uri imageUrl, string type)
         {
             if(imageUrl == null)
             {
@@ -458,7 +449,7 @@ namespace ManagerLayer.ApplicationManagement
             string extension = Path.GetExtension("@" + imageUrl.ToString());
 
             // Logo can only be of .PNG image file type.
-            if (!extension.ToUpper().Equals(".PNG"))
+            if (!extension.ToUpper().Equals(type))
             {
                 return false;
             }
@@ -468,9 +459,11 @@ namespace ManagerLayer.ApplicationManagement
         /// <summary>
         /// Validates image dimensions
         /// </summary>
-        /// <param name="logoUrl"></param>
+        /// <param name="imgUrl">image url</param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
         /// <returns></returns>
-        public bool IsValidDimensions(Uri imgUrl)
+        public bool IsValidDimensions(Uri imgUrl, int width, int height)
         {
             if(imgUrl == null)
             {
@@ -487,9 +480,8 @@ namespace ManagerLayer.ApplicationManagement
             int x, y;
             x = img.Width;
             y = img.Height;
-
-            // Logo dimensions can be no more than 55x55 pixels
-            if(x > 55 || y > 55)
+            
+            if(x > width || y > height)
             {
                 return false;
             }

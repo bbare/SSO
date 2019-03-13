@@ -15,40 +15,42 @@ namespace UnitTesting
         }
 
         [TestMethod]
-        public void IsValidTitle_Pass_ReturnTrue()
+        public void IsValidStringLength_Pass_ReturnTrue()
         {
             // Arrange
             string title = "Good Title";
+            int length = 100;
 
             // Act
-            var actual = am.IsValidTitle(title);
+            var actual = am.IsValidStringLength(title, length);
 
             // Assert
             Assert.IsTrue(actual);
         }
 
         [TestMethod]
-        public void IsValidTitle_Fail_ReturnFalse()
+        public void IsValidStringLength_Fail_ReturnFalse()
         {
             // Arrange
             string title = "";
+            int length = 100;
             for(int i = 0; i < 102; i++)
             {
                 title += "a";
             }
 
             // Act
-            var actual = am.IsValidTitle(title);
+            var actual = am.IsValidStringLength(title, 100);
 
             // Assert
             Assert.IsFalse(actual);
         }
 
         [TestMethod]
-        public void IsValidTitle_Fail_NullValueReturnsFalse()
+        public void IsValidStringLength_Fail_NullValueReturnsFalse()
         {
             // Act
-            var actual = am.IsValidTitle(null);
+            var actual = am.IsValidStringLength(null, 0);
 
             // Assert
             Assert.IsFalse(actual);
@@ -133,53 +135,14 @@ namespace UnitTesting
         }
 
         [TestMethod]
-        public void IsValidDescription_Pass_ReturnTrue()
-        {
-            // Arrange
-            string description = "description";
-
-            // Act
-            var actual = am.IsValidDescription(description);
-
-            // Assert
-            Assert.IsTrue(actual);
-        }
-
-        [TestMethod]
-        public void IsValidDescription_Fail_ReturnFalse()
-        {
-            // Arrange
-            string description = "";
-            for (int i = 0; i < 2002; i++)
-            {
-                description += "a";
-            }
-
-            // Act
-            var actual = am.IsValidDescription(description);
-
-            // Assert
-            Assert.IsFalse(actual);
-        }
-
-        [TestMethod]
-        public void IsValidDescription_Fail_NullValuesReturnFalse()
-        {
-            // Act
-            var actual = am.IsValidDescription(null);
-
-            // Assert
-            Assert.IsFalse(actual);
-        }
-
-        [TestMethod]
         public void IsValidImageExtension_Pass_ReturnTrue()
         {
             // Arrange
             Uri image = new Uri("https://example.com/image.png");
+            string ex = ".PNG";
 
             // Act
-            var actual = am.IsValidImageExtension(image);
+            var actual = am.IsValidImageExtension(image,ex);
 
             // Assert
             Assert.IsTrue(actual);
@@ -190,9 +153,10 @@ namespace UnitTesting
         {
             // Arrange
             Uri image = new Uri("https://example.com/image.jpg");
+            string ex = ".PNG";
 
             // Act
-            var actual = am.IsValidImageExtension(image);
+            var actual = am.IsValidImageExtension(image,ex);
 
             // Assert
             Assert.IsFalse(actual);
@@ -202,7 +166,7 @@ namespace UnitTesting
         public void IsValidImageExtension_Fail_NullValuesReturnFalse()
         {
             // Act
-            var actual = am.IsValidImageExtension(null);
+            var actual = am.IsValidImageExtension(null, null);
 
             // Assert
             Assert.IsFalse(actual);
@@ -213,9 +177,10 @@ namespace UnitTesting
         {
             // Arrange
             Uri image = new Uri("http://icons.iconarchive.com/icons/treetog/i/48/Image-File-icon.png");
+            int dim = 55;
 
             // Act
-            var actual = am.IsValidDimensions(image);
+            var actual = am.IsValidDimensions(image, dim, dim);
 
             // Assert
             Assert.IsTrue(actual);
@@ -226,9 +191,10 @@ namespace UnitTesting
         {
             // Arrange
             Uri image = new Uri("https://www.color-hex.com/palettes/16812.png");
+            int dim = 55;
 
             // Act
-            var actual = am.IsValidDimensions(image);
+            var actual = am.IsValidDimensions(image, dim, dim);
 
             // Assert
             Assert.IsFalse(actual);
@@ -238,7 +204,7 @@ namespace UnitTesting
         public void IsValidDimensions_Fail_NullValuesReturnFalse()
         {
             // Act
-            var actual = am.IsValidDimensions(null);
+            var actual = am.IsValidDimensions(null, 0, 0);
 
             // Assert
             Assert.IsFalse(actual);
