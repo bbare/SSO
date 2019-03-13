@@ -271,6 +271,14 @@ namespace ManagerLayer.ApplicationManagement
                     ApplicationId = app.Id
                 };
 
+                // Invalidate old unused api key
+                var keyOld = ApiKeyService.GetKey(_db, app.Id, false);
+                if(keyOld != null)
+                {
+                    keyOld.IsUsed = true;
+                    keyOld = ApiKeyService.UpdateKey(_db, keyOld);
+                }
+
                 // Attempt to create an apiKey record
                 var keyResponse = ApiKeyService.CreateKey(_db, apiKey);
 
@@ -283,6 +291,7 @@ namespace ManagerLayer.ApplicationManagement
 
                 List<object> responses = new List<object>();
                 responses.Add(keyResponse);
+                responses.Add(keyOld);
 
                 // Save database changes
                 if (!SaveChanges(_db, responses))

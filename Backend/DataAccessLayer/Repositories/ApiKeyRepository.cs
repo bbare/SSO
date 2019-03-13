@@ -78,6 +78,29 @@ namespace DataAccessLayer.Repositories
         }
 
         /// <summary>
+        /// Retrieve an Api Key record by application id and isUsed
+        /// </summary>
+        /// <param name="_db">database</param>
+        /// <param name="appId">application id</param>
+        /// <param name="isUsed">whether the key has been used or not</param>
+        /// <returns></returns>
+        public static ApiKey GetKey(DatabaseContext _db, Guid applicationId, bool isUsed)
+        {
+
+            try
+            {
+                var apiKey = _db.Keys
+                .Where(k => k.ApplicationId == applicationId && k.IsUsed == false)
+                .FirstOrDefault<ApiKey>();
+                return apiKey;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Retrieve an Api Key record by key field
         /// </summary>
         /// <param name="_db">database</param>

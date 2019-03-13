@@ -44,6 +44,18 @@ namespace ServiceLayer.Services
         }
 
         /// <summary>
+        /// Call the Api Key repository to retrieve an api key record by application id and isUsed
+        /// </summary>
+        /// <param name="_db">database</param>
+        /// <param name="applicationId"></param>
+        /// <param name="isUsed">whether the key has been used</param>
+        /// <returns></returns>
+        public static ApiKey GetKey(DatabaseContext _db, Guid applicationId, bool isUsed)
+        {
+            return ApiKeyRepository.GetKey(_db, applicationId, isUsed);
+        }
+
+        /// <summary>
         /// Call the Api Key repository to retriev an api key record by key field
         /// </summary>
         /// <param name="_db">database</param>

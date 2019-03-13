@@ -319,5 +319,46 @@ namespace UnitTesting
                 Assert.IsNull(result);
             }
         }
+
+        [TestMethod]
+        public void GetApiKeyByAppIdIsUsed_Pass_ReturnKey()
+        {
+            // Arrange
+            newKey = tu.CreateApiKeyObject();
+            var expected = newKey;
+
+            // Act
+            using (_db = tu.CreateDataBaseContext())
+            {
+                newKey = ApiKeyService.CreateKey(_db, newKey);
+                _db.SaveChanges();
+                var result = ApiKeyService.GetKey(_db, newKey.ApplicationId, false);
+
+                // Assert
+                Assert.IsNotNull(result);
+                Assert.AreEqual(expected.Key, result.Key);
+
+                ApiKeyService.DeleteKey(_db, newKey.Id);
+                _db.SaveChanges();
+            }
+        }
+
+        [TestMethod]
+        public void GetApiKeyByAppIdIsUsed_Fail_NonExistingKeyShouldReturnNull()
+        {
+            // Arrange
+            Guid id = Guid.NewGuid();
+            ApiKey expected = null;
+
+            // Act
+            using (_db = tu.CreateDataBaseContext())
+            {
+                var result = ApiKeyService.GetKey(_db, id, false);
+
+                // Assert
+                Assert.IsNull(result);
+                Assert.AreEqual(expected, result);
+            }
+        }
     }
 }
