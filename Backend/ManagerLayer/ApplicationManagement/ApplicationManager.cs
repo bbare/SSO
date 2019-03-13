@@ -14,15 +14,11 @@ namespace ManagerLayer.ApplicationManagement
     {
         public ApplicationManager()
         {
-            _appService = new ApplicationService();
-            _keyService = new ApiKeyService();
             //_emailService = new EmailService();
             _tokenService = new TokenService();
         }
 
         // Services
-        private IApplicationService _appService;
-        private IApiKeyService _keyService;
         private IEmailService _emailService;
         private ITokenService _tokenService;
 
@@ -87,7 +83,7 @@ namespace ManagerLayer.ApplicationManagement
             using (var _db = new DatabaseContext())
             {
                 // Attempt to create an Application record
-                var appResponse = _appService.CreateApplication(_db, app);
+                var appResponse = ApplicationService.CreateApplication(_db, app);
                 if (appResponse == null)
                 {
                     response = new HttpResponseContent(HttpStatusCode.BadRequest, "Application Already Exists");
@@ -95,12 +91,12 @@ namespace ManagerLayer.ApplicationManagement
                 }
 
                 // Attempt to create an ApiKey record
-                var keyResponse = _keyService.CreateKey(_db, apiKey);
+                var keyResponse = ApiKeyService.CreateKey(_db, apiKey);
                 // Keep generating a new key until a unique one is made.
                 while (keyResponse == null)
                 {
                     apiKey.Key = _tokenService.GenerateToken();
-                    keyResponse = _keyService.CreateKey(_db, apiKey);
+                    keyResponse = ApiKeyService.CreateKey(_db, apiKey);
                 }
 
                 List<object> responses = new List<object>();
@@ -183,7 +179,7 @@ namespace ManagerLayer.ApplicationManagement
             using (var _db = new DatabaseContext())
             {
                 // Attempt to find api key
-                var apiKey = _keyService.GetKey(_db, request.Key);
+                var apiKey = ApiKeyService.GetKey(_db, request.Key);
 
                 // Key must exist and be unused.
                 if (apiKey == null || apiKey.IsUsed == true)
@@ -193,7 +189,7 @@ namespace ManagerLayer.ApplicationManagement
                 }
 
                 // Attempt to get application based on ApplicationId from api key
-                var app = _appService.GetApplication(_db, apiKey.ApplicationId);
+                var app = ApplicationService.GetApplication(_db, apiKey.ApplicationId);
 
                 // Published application title is used to authenticate the app.
                 if (app == null || !request.Title.Equals(app.Title))
@@ -205,11 +201,11 @@ namespace ManagerLayer.ApplicationManagement
                 // Update values of application record
                 app.Description = request.Description;
                 app.LogoUrl = request.LogoUrl;
-                var appResponse = _appService.UpdateApplication(_db, app);
+                var appResponse = ApplicationService.UpdateApplication(_db, app);
 
                 // Update values of api key record
                 apiKey.IsUsed = true;
-                var keyResponse = _keyService.UpdateKey(_db, apiKey);
+                var keyResponse = ApiKeyService.UpdateKey(_db, apiKey);
 
                 List<object> responses = new List<object>();
                 responses.Add(appResponse);
@@ -261,7 +257,7 @@ namespace ManagerLayer.ApplicationManagement
             using (var _db = new DatabaseContext())
             {
                 // Attempt to find application
-                var app = _appService.GetApplication(_db, request.Title, request.Email);
+                var app = ApplicationService.GetApplication(_db, request.Title, request.Email);
                 if (app == null)
                 {
                     response = new HttpResponseContent(HttpStatusCode.BadRequest, "Invalid Application");
@@ -276,13 +272,13 @@ namespace ManagerLayer.ApplicationManagement
                 };
 
                 // Attempt to create an apiKey record
-                var keyResponse = _keyService.CreateKey(_db, apiKey);
+                var keyResponse = ApiKeyService.CreateKey(_db, apiKey);
 
                 // Keep generating a new key until a unique one is made.
                 while (keyResponse == null)
                 {
                     apiKey.Key = _tokenService.GenerateToken();
-                    keyResponse = _keyService.CreateKey(_db, apiKey);
+                    keyResponse = ApiKeyService.CreateKey(_db, apiKey);
                 }
 
                 List<object> responses = new List<object>();
@@ -341,7 +337,7 @@ namespace ManagerLayer.ApplicationManagement
             using (var _db = new DatabaseContext())
             {
                 // Attempt to find application
-                var app = _appService.GetApplication(_db, request.Title, request.Email);
+                var app = ApplicationService.GetApplication(_db, request.Title, request.Email);
                 if (app == null)
                 {
                     response = new HttpResponseContent(HttpStatusCode.BadRequest, "Invalid Application");
@@ -349,7 +345,7 @@ namespace ManagerLayer.ApplicationManagement
                 }
 
                 // Attempt to create an apiKey record
-                var appResponse = _appService.DeleteApplication(_db, app.Id);
+                var appResponse = ApplicationService.DeleteApplication(_db, app.Id);
                 if (appResponse == null)
                 {
                     response = new HttpResponseContent(HttpStatusCode.InternalServerError, "Unable to delete application.");

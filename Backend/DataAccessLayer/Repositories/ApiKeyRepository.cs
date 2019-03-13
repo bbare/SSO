@@ -14,7 +14,7 @@ namespace DataAccessLayer.Repositories
         /// <param name="_db">database</param>
         /// <param name="key">api key</param>
         /// <returns>created api key</returns>
-        public ApiKey CreateNewKey(DatabaseContext _db, ApiKey key)
+        public static ApiKey CreateNewKey(DatabaseContext _db, ApiKey key)
         {
             try
             {
@@ -39,7 +39,7 @@ namespace DataAccessLayer.Repositories
         /// <param name="_db">database</param>
         /// <param name="id">api key id</param>
         /// <returns>deleted api key</returns>
-        public ApiKey DeleteKey(DatabaseContext _db, Guid id)
+        public static ApiKey DeleteKey(DatabaseContext _db, Guid id)
         {
 
             try
@@ -64,7 +64,7 @@ namespace DataAccessLayer.Repositories
         /// <param name="_db">database</param>
         /// <param name="id">api key id</param>
         /// <returns>The retrieved api key</returns>
-        public ApiKey GetKey(DatabaseContext _db, Guid id)
+        public static ApiKey GetKey(DatabaseContext _db, Guid id)
         {
             try
             {
@@ -83,7 +83,7 @@ namespace DataAccessLayer.Repositories
         /// <param name="_db">database</param>
         /// <param name="key">key value of api key</param>
         /// <returns></returns>
-        public ApiKey GetKey(DatabaseContext _db, string key)
+        public static ApiKey GetKey(DatabaseContext _db, string key)
         {
 
             try
@@ -105,7 +105,7 @@ namespace DataAccessLayer.Repositories
         /// <param name="_db">database</param>
         /// <param name="key">api key</param>
         /// <returns></returns>
-        public ApiKey UpdateKey(DatabaseContext _db, ApiKey key)
+        public static ApiKey UpdateKey(DatabaseContext _db, ApiKey key)
         {
 
             try

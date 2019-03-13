@@ -6,7 +6,7 @@ using System.Data.Entity;
 
 namespace DataAccessLayer.Repositories
 {
-    public class ApplicationRepository
+    public static class ApplicationRepository
     {
         /// <summary>
         /// Create a new application record
@@ -14,7 +14,7 @@ namespace DataAccessLayer.Repositories
         /// <param name="_db">database</param>
         /// <param name="app">application</param>
         /// <returns>Created application</returns>
-        public Application CreateNewApplication(DatabaseContext _db, Application app)
+        public static Application CreateNewApplication(DatabaseContext _db, Application app)
         {
             try
             {
@@ -39,7 +39,7 @@ namespace DataAccessLayer.Repositories
         /// <param name="_db">database</param>
         /// <param name="id">application id</param>
         /// <returns>The deleted application record</returns>
-        public Application DeleteApplication(DatabaseContext _db, Guid id)
+        public static Application DeleteApplication(DatabaseContext _db, Guid id)
         {
             try
             {
@@ -64,7 +64,7 @@ namespace DataAccessLayer.Repositories
         /// <param name="_db">database</param>
         /// <param name="id">application id</param>
         /// <returns>The retrieved application</returns>
-        public Application GetApplication(DatabaseContext _db, Guid id)
+        public static Application GetApplication(DatabaseContext _db, Guid id)
         {
             try
             {
@@ -84,7 +84,7 @@ namespace DataAccessLayer.Repositories
         /// <param name="title">application title</param>
         /// <param name="email">application email</param>
         /// <returns></returns>
-        public Application GetApplication(DatabaseContext _db, string title, string email)
+        public static Application GetApplication(DatabaseContext _db, string title, string email)
         {
             try
             {
@@ -106,7 +106,7 @@ namespace DataAccessLayer.Repositories
         /// <param name="_db">database</param>
         /// <param name="app">application</param>
         /// <returns>The updated application</returns>
-        public Application UpdateApplication(DatabaseContext _db, Application app)
+        public static Application UpdateApplication(DatabaseContext _db, Application app)
         {
 
             try
