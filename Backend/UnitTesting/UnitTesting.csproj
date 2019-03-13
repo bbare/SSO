@@ -68,6 +68,7 @@
     <Compile Include="EmailServiceUT.cs" />
     <Compile Include="ITestingUtils.cs" />
     <Compile Include="LoginManagerUT.cs" />
+    <Compile Include="PasswordManagerUT.cs" />
     <Compile Include="ResetPasswordUT.cs" />
     <Compile Include="PasswordServiceUT.cs" />
     <Compile Include="SessionServiceUT.cs" />

@@ -1,99 +1,118 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using ManagerLayer.PasswordManagement;
 using Newtonsoft.Json;
 
 namespace WebAPI.Controllers
 {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class ResetController : ApiController
     {
-        public class SecurityAnswerRequest
+        public class EmailPost
         {
-            public string securityA1;
-            public string securityA2;
-            public string securityA3;
+            [JsonProperty("email")]
+            public string Email { get; set; }
         }
 
-        //IHttpActionResult
+        public class SecurityAnswerPost
+        {
+            [JsonProperty("securityA1")]
+            public string SecurityA1 { get; set; }
+            [JsonProperty("securityA2")]
+            public string SecurityA2 { get; set; }
+            [JsonProperty("securityA3")]
+            public string SecurityA3 { get; set; }
+        }
+
+        public class NewPasswordPost
+        {
+            [JsonProperty("NewPassword")]
+            public string NewPassword { get; set; }
+        }
+
         //After the user fills in the field with email, this action gets called
         [HttpPost]
         [Route("api/reset/send")]
-        public HttpResponseMessage SendResetEmail([FromBody]string email)
+        public HttpResponseMessage SendResetEmail([FromBody] EmailPost emailFromBody)
         {
+            string email = emailFromBody.Email;
             if (email != null)
             {
                 PasswordManager pm = new PasswordManager();
-                string url = Request.RequestUri.ToString();
-
-                pm.AssignResetToken(email, url);
-                var response = new HttpResponseMessage(HttpStatusCode.Created)
+                string url = "localhost:8080/#/resetpassword/";
+                pm.SendResetToken(email, url);
+                var response = new HttpResponseMessage(HttpStatusCode.OK)
                 {
-                    Content = new StringContent("Email received")
+                    Content = new StringContent("Email Sent")
                 };
                 return response;
             }
-            else
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
-            }
-
+            return Request.CreateResponse(HttpStatusCode.BadRequest);
         }
 
         //After the user clicks the link in the email, this action gets called and takes the resetToken that's appended to the URL that was sent to the user
         [HttpGet]
         [Route("api/reset/{resetToken}")]
-        public string Get(string resetToken)
+        public HttpResponseMessage Get(string resetToken)
         {
             PasswordManager pm = new PasswordManager();
-            if (pm.CheckResetIDValid(resetToken))
+            if (pm.CheckPasswordResetValid(resetToken))
             {
-                return JsonConvert.SerializeObject(pm.GetSecurityQuestions(resetToken));
-            }else
-            {
-                return null;
+                return Request.CreateResponse(HttpStatusCode.OK, pm.GetSecurityQuestions(resetToken));
             }
+            return Request.CreateResponse(HttpStatusCode.Unauthorized, "Reset link is no longer valid");
         }
 
         [HttpPost]
         [Route("api/reset/{resetToken}/checkanswers")]
-        public bool CheckAnswers(string resetToken, [FromBody] SecurityAnswerRequest request)
+        public HttpResponseMessage CheckAnswers(string resetToken, [FromBody] SecurityAnswerPost postedAnswers)
         {
             PasswordManager pm = new PasswordManager();
-            if (pm.CheckResetIDValid(resetToken))
+            if (pm.CheckPasswordResetValid(resetToken))
             {
-                List<string> userSubmittedSecurityAnswer = new List<string>();
-                userSubmittedSecurityAnswer.Add(request.securityA1);
-                userSubmittedSecurityAnswer.Add(request.securityA2);
-                userSubmittedSecurityAnswer.Add(request.securityA3);
+                List<string> userSubmittedSecurityAnswer = new List<string>
+                {
+                    postedAnswers.SecurityA1,
+                    postedAnswers.SecurityA2,
+                    postedAnswers.SecurityA3
+                };
                 if (pm.CheckSecurityAnswers(resetToken, userSubmittedSecurityAnswer))
                 {
-                    return true;
+                    return Request.CreateResponse(HttpStatusCode.OK, true);
                 }
-                else
-                {
-                    return false;
-                }
+                return Request.CreateResponse(HttpStatusCode.Unauthorized, false);
             }
-            return false;
+            return Request.CreateResponse(HttpStatusCode.Unauthorized, "Reset link is no longer valid");
         }
 
         [HttpPost]
         [Route("api/reset/{resetToken}/resetpassword")]
-        public bool ResetPassword(string resetToken, [FromBody] string newPasswordHash)
+        public HttpResponseMessage ResetPassword(string resetToken, [FromBody] NewPasswordPost passwordFromBody)
         {
-            PasswordManager pm = new PasswordManager();
-            if (pm.CheckResetIDValid(resetToken))
+            string submittedPassword = passwordFromBody.NewPassword;
+            if (submittedPassword != null && submittedPassword.Length < 2001 && submittedPassword.Length > 11)
             {
-                if (pm.CheckIfPasswordResetAllowed(resetToken))
+                PasswordManager pm = new PasswordManager();
+                if (pm.CheckPasswordResetValid(resetToken))
                 {
-                    return pm.UpdatePassword(resetToken, newPasswordHash);
+                    if (pm.CheckIfPasswordResetAllowed(resetToken))
+                    {
+                        if (!pm.CheckIsPasswordPwned(submittedPassword))
+                        {
+                            string newPasswordHashed = pm.SaltAndHashPassword(submittedPassword);
+                            pm.UpdatePassword(resetToken, newPasswordHashed);
+                            return Request.CreateResponse(HttpStatusCode.OK, "Password has been reset");
+                        }
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Password has been pwned, please use a different password");
+                    }
+                    return Request.CreateResponse(HttpStatusCode.Unauthorized, "Reset password not allowed");
                 }
+                return Request.CreateResponse(HttpStatusCode.Unauthorized, "Reset link is no longer valid");
             }
-            return false;
+            return Request.CreateResponse(HttpStatusCode.BadRequest, "Submitted password does not meet minimum requirements");
         }
     }
 }

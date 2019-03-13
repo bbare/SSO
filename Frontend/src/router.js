@@ -8,6 +8,9 @@ import GenerateKey from '@/views/GenerateKey.vue'
 import AppDelete from '@/views/AppDelete.vue'
 import Login from '@/views/Login.vue'
 import Dashboard from '@/views/Dashboard.vue'
+import SendResetLink from '@/views/SendResetLink'
+import ResetPassword from '@/views/ResetPassword'
+import UpdatePassword from '@/views/UpdatePassword'
 
 Vue.use(VueRouter)
 
@@ -60,6 +63,21 @@ let router = new VueRouter({
       name: 'dashboard',
       component: Dashboard
     },
+    {
+      path: '/sendresetlink',
+      name: 'SendResetLink',
+      component: SendResetLink
+    },
+    {
+      path: '/resetpassword/:id',
+      name: 'ResetPassword',
+      component: ResetPassword
+    },
+    {
+      path: '/updatepassword',
+      name: 'UpdatePassword',
+      component: UpdatePassword
+    }
     {
       path: '*',
       component: NotFound
