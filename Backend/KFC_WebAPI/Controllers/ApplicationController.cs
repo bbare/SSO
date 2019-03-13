@@ -54,16 +54,5 @@ namespace KFC_WebAPI.Controllers
             return response;
         }
 
-        [HttpOptions]
-        public void Options(string locale, string deviceType)
-        {
-            // Add CORS headers to Options response
-            string origin = HttpContext.Current.Request.Headers.Get("Origin") ?? "";
-            HttpContext.Current.Response.AppendHeader("Access-Control-Allow-Origin", origin);
-            HttpContext.Current.Response.AppendHeader("Access-Control-Allow-Methods", HttpContext.Current.Request.Headers["Access-Control-Request-Methods"]);
-            HttpContext.Current.Response.AppendHeader("Access-Control-Allow-Headers", HttpContext.Current.Request.Headers["Access-Control-Request-Headers"]);
-            HttpContext.Current.Response.End();
-        }
-
     }
 }
