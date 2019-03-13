@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ManagerLayer.ApplicationManagement
 {
-    public class HttpResponseContent
+    public struct HttpResponseContent
     {
         public HttpResponseContent(HttpStatusCode code, string message)
         {

@@ -14,6 +14,7 @@ namespace ManagerLayer.ApplicationManagement
     {
         public ApplicationManager()
         {
+            // TODO: set up email server to implement email services
             //_emailService = new EmailService();
             _tokenService = new TokenService();
         }
@@ -23,7 +24,7 @@ namespace ManagerLayer.ApplicationManagement
         private ITokenService _tokenService;
 
         /// <summary>
-        /// Validate the app registration field values.
+        /// Validate the app registration field values, and call services
         /// </summary>
         /// <param name="request">Values from POST request</param>
         /// <returns>Http status code and message</returns>
@@ -301,6 +302,7 @@ namespace ManagerLayer.ApplicationManagement
                 }
 
                 string message = apiKey.Key;
+                // TODO: Set up email server to implement email services
                 //string message;
 
                 //// Attempt to send api key to application email
