@@ -77,5 +77,11 @@ namespace ManagerLayer
             //PasswordService _passwordService = new PasswordService();
             //var user = _userService.Login(email, password);
         }
+
+        public User GetUser(DatabaseContext _db, Guid userId)
+        {
+            IUserService _userService = new UserService();
+            return _userService.GetUser(_db, userId);
+        }
     }
 }

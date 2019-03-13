@@ -31,6 +31,12 @@ namespace UnitTesting
                 City = "Los Angeles",
                 State = "California",
                 Country = "United States",
+                SecurityQ1 = "MySecurityQ1",
+                SecurityQ1Answer = "MySecurityAnswerQ1",
+                SecurityQ2 = "MySecurityQ2",
+                SecurityQ2Answer = "MySecurityAnswerQ2",
+                SecurityQ3 = "MySecurityQ3",
+                SecurityQ3Answer = "MySecurityAnswerQ3",
                 PasswordHash = (Guid.NewGuid()).ToString(),
                 PasswordSalt = GetRandomness()
             };
@@ -59,6 +65,12 @@ namespace UnitTesting
                 City = "Los Angeles",
                 State = "California",
                 Country = "United States",
+                SecurityQ1 = "MySecurityQ1",
+                SecurityQ1Answer = "MySecurityAnswerQ1",
+                SecurityQ2 = "MySecurityQ2",
+                SecurityQ2Answer = "MySecurityAnswerQ2",
+                SecurityQ3 = "MySecurityQ3",
+                SecurityQ3Answer = "MySecurityAnswerQ3",
                 PasswordHash = (Guid.NewGuid()).ToString(),
                 PasswordSalt = GetRandomness()
             };
