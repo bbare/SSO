@@ -53,6 +53,11 @@ namespace ServiceLayer.Services
             return 0;
         }
 
+        public bool CheckPasswordLength(string password)
+        {
+            return password.Length >= 12 && password.Length <= 2000;
+        }
+
         public string[] QueryPwnedApi(string prefix,string url)
         {
             HttpClient client = new HttpClient();

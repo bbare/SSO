@@ -1,4 +1,9 @@
-﻿using DataAccessLayer.Database;
+﻿// --------------------
+// THIS MANAGER IS BEING DEPRECATED. PLEASE DO NOT ADD ANY NEW METHODS OR USE THE METHODS WITHIN.
+// PLEASE USE USERMANAGER.CS
+// --------------------
+
+using DataAccessLayer.Database;
 using DataAccessLayer.Models;
 using ServiceLayer.Services;
 using System;
@@ -23,47 +28,6 @@ namespace ManagerLayer.UserManagement
         private DatabaseContext CreateDbContext()
         {
             return new DatabaseContext();
-        }
-
-        public User CreateUser(string email, string password, DateTime dob)
-        {
-            try
-            {
-                var valid = new System.Net.Mail.MailAddress(email);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-            _passwordService = new PasswordService();
-            DateTime timestamp = DateTime.UtcNow;
-            byte[] salt = _passwordService.GenerateSalt();
-            string hash = _passwordService.HashPassword(password, salt);
-            User user = new User
-            {
-                Email = email,
-                PasswordHash = hash,
-                PasswordSalt = salt,
-                DateOfBirth = dob,
-                UpdatedAt = timestamp
-            };
-
-            using (var _db = CreateDbContext())
-            {
-                var response = _userService.CreateUser(_db, user);
-                try
-                {
-                    _db.SaveChanges();
-                    return user;
-                }
-                catch (DbEntityValidationException)
-                {
-                    //catch error
-                    // detach user attempted to be created from the db context - rollback
-                    _db.Entry(response).State = System.Data.Entity.EntityState.Detached;
-                }
-            }
-            return null;
         }
 
         public int DeleteUser(User user)

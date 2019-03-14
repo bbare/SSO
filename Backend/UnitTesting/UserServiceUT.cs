@@ -104,39 +104,6 @@ namespace UnitTesting
         }
 
         [TestMethod]
-        public void Create_User_Using_Manager()
-        {
-            // Arrange
-            string email = Guid.NewGuid() + "@" + Guid.NewGuid() + ".com";
-            string password = (Guid.NewGuid()).ToString();
-            DateTime dob = DateTime.UtcNow;
-
-            // Act
-            var response =_umm.CreateUser(email, password, dob);
-            var result = _umm.GetUser(response.Id);
-
-            // Assert 
-            Assert.IsNotNull(response);
-            Assert.IsNotNull(result);
-            Assert.AreEqual(email, result.Email);
-        }
-
-        [TestMethod]
-        public void Create_User_Using_Manager_NotRealEmail()
-        {
-            // Arrange
-            string email = Guid.NewGuid() + ".com";
-            string password = (Guid.NewGuid()).ToString();
-            DateTime dob = DateTime.UtcNow;
-
-            // Act
-            var response = _umm.CreateUser(email, password, dob);
-
-            // Assert 
-            Assert.IsNull(response);
-        }
-
-        [TestMethod]
         public void Delete_User_Success()
         {
             // Arrange
