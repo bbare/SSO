@@ -11,7 +11,7 @@ let token = localStorage.getItem('token');
 const register = registrationData => {
   return axios.post(`${apiURL}/users/register`, registrationData)
     .then(response => {
-      token = response.data.data.token;
+      token = response.data.token;
       localStorage.setItem('token', token);
       return response;
     })

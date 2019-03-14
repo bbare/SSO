@@ -197,7 +197,6 @@ export default {
           this.$router.push('dashboard');
         }
       }).catch(err => {
-        console.log(Object.keys(err), Object.keys(err.response), err.response)
         switch(err.response.status) {
           case 401:
             this.error = err.response.data;
