@@ -26,11 +26,11 @@ namespace ManagerLayer.Login
             _tokenService = new TokenService();
         }
 
-        public bool LoginCheckUserExists(string email)
+        public bool LoginCheckUserExists(LoginRequest request)
         {
             using (var _db = new DatabaseContext())
             {
-                user = _userService.GetUser(_db, email);
+                user = _userService.GetUser(_db, request.email);
                 if (user != null)
                 {
                     return true;
@@ -43,10 +43,11 @@ namespace ManagerLayer.Login
             }
         }
 
-        public bool LoginCheckUserDisabled()
+        public bool LoginCheckUserDisabled(LoginRequest request)
         {
             using (var _db = new DatabaseContext())
             {
+                user = _userService.GetUser(_db, request.email);
                 if (user.Disabled)
                 {
                     return true;
@@ -58,13 +59,17 @@ namespace ManagerLayer.Login
             }
         }
 
-        public bool LoginCheckPassword(string password)
+        public bool LoginCheckPassword(LoginRequest request)
         {
             using (var _db = new DatabaseContext())
             {
-                string hashedPassword = _passwordService.HashPassword(password, user.PasswordSalt);
+                user = _userService.GetUser(_db, request.email);
+                string hashedPassword = _passwordService.HashPassword(request.password, user.PasswordSalt);
                 if (userRepo.ValidatePassword(user, hashedPassword))
                 {
+                    user.IncorrectPasswordCount = 0;
+                    _userService.UpdateUser(_db, user);
+                    _db.SaveChanges();
                     return true;
                 }
                 else
@@ -83,11 +88,12 @@ namespace ManagerLayer.Login
             }
         }
 
-        public string LoginAuthorized()
+        public string LoginAuthorized(LoginRequest request)
         {
             _tokenService = new TokenService();
             using (var _db = new DatabaseContext())
             {
+                user = _userService.GetUser(_db, request.email);
                 string generateToken = _tokenService.GenerateToken();
                 Session session = new Session
                 {
