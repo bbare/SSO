@@ -75,6 +75,10 @@
     <Compile Include="Migrations\201903111003125_upate-sessions-userNotUnique.Designer.cs">
       <DependentUpon>201903111003125_upate-sessions-userNotUnique.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903122358472_pending-migration.cs" />
+    <Compile Include="Migrations\201903122358472_pending-migration.Designer.cs">
+      <DependentUpon>201903122358472_pending-migration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApiKey.cs" />
     <Compile Include="Models\Application.cs" />
@@ -124,6 +128,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903111003125_upate-sessions-userNotUnique.resx">
       <DependentUpon>201903111003125_upate-sessions-userNotUnique.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903122358472_pending-migration.resx">
+      <DependentUpon>201903122358472_pending-migration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

@@ -12,6 +12,8 @@
     <v-btn to="key" flat>Generate</v-btn>
     <v-btn to="delete" flat>Delete</v-btn>
     <v-btn to="login" flat>Login</v-btn>
+    <v-btn to="updatepassword" flat>Update Password</v-btn>
+    <v-btn to="sendresetlink" flat>Reset Password</v-btn>
   </v-toolbar>
 </template>
 

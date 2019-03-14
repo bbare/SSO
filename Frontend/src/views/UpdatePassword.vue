@@ -42,7 +42,7 @@ export default {
     }
   },
   methods: {
-    submitNewPasswords: function (e) {
+    submitNewPasswords: function () {
       if (this.newPassword.length < 12 || this.oldPassword.length < 12) {
         this.errors.push('Password does not meet minimum length of 12')
       } else if (this.newPassword.length > 2000 || this.oldPassword.length > 2000) {
@@ -56,6 +56,8 @@ export default {
           method: 'POST',
           url: 'api.kfcsso.com/api/user/updatpPassword',
           data: {
+            email: this.$store.getEmail,
+            sessionToken: this.$store.getToken,
             oldPassword: this.$data.oldPassword,
             newPassword: this.$data.confirmNewPassword,
             confirmNewPassword: this.$data.confirmNewPassword

@@ -61,7 +61,6 @@ export default {
     }
   },
   created () {
-    console.log('asdfasdfsafdasdfasdf')
     axios({
       method: 'GET',
       url: 'http://localhost:61348/api/reset/' + this.resetToken,
@@ -75,7 +74,7 @@ export default {
       .catch(e => { this.errors.push(e) })
   },
   methods: {
-    submitAnswers: function (e) {
+    submitAnswers: function () {
       axios({
         method: 'POST',
         url: 'http://localhost:61348/api/reset/' + this.resetToken + '/checkanswers',
@@ -90,7 +89,7 @@ export default {
         .then(response => (this.showPasswordResetField = response.data))
         .catch(e => { this.errors.push(e) })
     },
-    submitNewPassword: function (e) {
+    submitNewPassword: function () {
       axios({
         method: 'POST',
         url: 'http://localhost:61348/api/reset/' + this.resetToken + '/resetpassword',

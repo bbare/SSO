@@ -2,9 +2,9 @@
     <div id="login">
         <h1>Login</h1>
         <br/>
-        <input type="text" name="username" v-model="input.username" placeholder="Username" />
+        <input type="text" name="email" v-model="email" placeholder="Email" />
         <br/><br/>
-        <input type="password" name="password" v-model="input.password" placeholder="Password" />
+        <input type="password" name="password" v-model="password" placeholder="Password" />
         <br/><br/>
         <button type="button" v-on:click="login()">Login</button>
     </div>
@@ -12,26 +12,30 @@
 
 <script>
     import axios from "axios"
-    import dev_const from '../const.js'
+    //import dev_const from '../const.js'
     
     export default {
         name: 'login',
         data() {
             return {
-                input: {
-                    username: "",
-                    password: ""
-                }
+                email: "",
+                password: ""
             }
         },
         methods: {
             login() {
-               axios.post('http://localhost:60461/api/users/login',
+               axios.post('http://localhost:61348/api/users/login',
                {
-                    email: this.input.username,
-                    password: this.input.password
+                    email: this.$data.email,
+                    password: this.$data.password
                })
-               .then(i => {this.input = i.data; alert("Login Succesful"); console.log("Login Succesful"); this.$router.push('/dashboard')
+               .then(resp => {
+                   //this.input = resp.data; 
+                   this.$store.dispatch('emailAction',{Email: this.$data.email}) //ADD MORE STUFF HERE 
+                   this.$store.dispatch('tokenAction',{Token: resp.data})
+                   this.$store.dispatch('isLoginAction',{IsLogin: true})
+                   console.log("Login Succesful"); 
+                   this.$router.push('/dashboard')
                 })
                .catch(e => {console.log(e);
                     if(e.response.status === 404){

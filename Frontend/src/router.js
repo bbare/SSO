@@ -65,19 +65,19 @@ let router = new VueRouter({
     },
     {
       path: '/sendresetlink',
-      name: 'SendResetLink',
+      name: 'sendresetLink',
       component: SendResetLink
     },
     {
       path: '/resetpassword/:id',
-      name: 'ResetPassword',
+      name: 'resetpassword',
       component: ResetPassword
     },
     {
       path: '/updatepassword',
-      name: 'UpdatePassword',
+      name: 'updatepassword',
       component: UpdatePassword
-    }
+    },
     {
       path: '*',
       component: NotFound

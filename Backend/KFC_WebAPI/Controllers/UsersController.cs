@@ -70,13 +70,16 @@ namespace KFC_WebAPI.Controllers
                         request.securityQ2Answer,
                         request.securityQ3,
                         request.securityQ3Answer);
-                } catch (ArgumentException ex)
+                }
+                catch (ArgumentException ex)
                 {
                     return Conflict();
-                } catch (FormatException ex)
+                }
+                catch (FormatException ex)
                 {
                     return Content((HttpStatusCode)406, "Invalid email address.");
-                } catch (PasswordPwnedException ex)
+                }
+                catch (PasswordPwnedException ex)
                 {
                     return Unauthorized();
                 }
@@ -109,7 +112,7 @@ namespace KFC_WebAPI.Controllers
         public IHttpActionResult Login([FromBody] LoginRequest request)
         {
             LoginManager loginM = new LoginManager();
-            if (loginM.LoginCheckUserExists(request.email) == false)
+            if (loginM.LoginCheckUserExists(request) == false)
             {
                 //404
                 return Content(HttpStatusCode.NotFound, "Invalid Username");
@@ -117,7 +120,7 @@ namespace KFC_WebAPI.Controllers
             }
             else
             {
-                if (loginM.LoginCheckUserDisabled())
+                if (loginM.LoginCheckUserDisabled(request))
                 {
                     //401
                     return Content(HttpStatusCode.Unauthorized, "User is Disabled");
@@ -125,7 +128,7 @@ namespace KFC_WebAPI.Controllers
                 }
                 else
                 {
-                    if (loginM.LoginCheckPassword(request.password))
+                    if (loginM.LoginCheckPassword(request))
                     {
                         return Ok(loginM.LoginAuthorized());
                     }

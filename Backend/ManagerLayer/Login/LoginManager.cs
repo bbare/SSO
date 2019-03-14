@@ -26,11 +26,11 @@ namespace ManagerLayer.Login
             _tokenService = new TokenService();
         }
 
-        public bool LoginCheckUserExists(string email)
+        public bool LoginCheckUserExists(LoginRequest request)
         {
             using (var _db = new DatabaseContext())
             {
-                user = _userService.GetUser(_db, email);
+                user = _userService.GetUser(_db, request.email);
                 if (user != null)
                 {
                     return true;
@@ -43,10 +43,11 @@ namespace ManagerLayer.Login
             }
         }
 
-        public bool LoginCheckUserDisabled()
+        public bool LoginCheckUserDisabled(LoginRequest request)
         {
             using (var _db = new DatabaseContext())
             {
+                user = _userService.GetUser(_db, request.email);
                 if (user.Disabled)
                 {
                     return true;
@@ -58,25 +59,27 @@ namespace ManagerLayer.Login
             }
         }
 
-        public bool LoginCheckPassword(string password)
+        public bool LoginCheckPassword(LoginRequest request)
         {
             using (var _db = new DatabaseContext())
             {
-                string hashedPassword = _passwordService.HashPassword(password, user.PasswordSalt);
+                user = _userService.GetUser(_db, request.email);
+                string hashedPassword = _passwordService.HashPassword(request.password, user.PasswordSalt);
                 if (userRepo.ValidatePassword(user, hashedPassword))
                 {
+                    user.IncorrectPasswordCount = 0;
                     return true;
                 }
                 else
                 {
                     user.IncorrectPasswordCount = ++user.IncorrectPasswordCount;
-                    _userService.UpdateUser(_db, user);
-                    _db.SaveChanges();
+                    //_userService.UpdateUser(_db, user);
+                    //_db.SaveChanges();
                     if (user.IncorrectPasswordCount == 3)
                     {
                         user.Disabled = true;
-                        _userService.UpdateUser(_db, user);
-                        _db.SaveChanges();
+                        //_userService.UpdateUser(_db, user);
+                        //_db.SaveChanges();
                     }
                     return false;
                 }

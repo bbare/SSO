@@ -37,7 +37,7 @@ export default {
     }
   },
   methods: {
-    submitEmail: function (e) {
+    submitEmail: function () {
       if (!this.email) {
         this.errors.push('Email required.')
       } else if (!this.validEmail(this.email)) {
@@ -55,7 +55,7 @@ export default {
             'Access-Control-Allow-Credentials': true
           }
         })
-          .then(response => {})
+          .then(response => {this.message = response.data})
           .catch(e => { this.errors.push(e) })
       }
     },
