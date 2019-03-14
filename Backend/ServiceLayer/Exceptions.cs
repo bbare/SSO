@@ -8,4 +8,18 @@ namespace ServiceLayer.Exceptions
 
         public PasswordPwnedException(string message) : base(message) {}
     }
+
+    public class PasswordInvalidException : Exception
+    {
+        public PasswordInvalidException() { }
+
+        public PasswordInvalidException(string message) : base(message) { }
+    }
+
+    public class InvalidDobException : Exception
+    {
+        public InvalidDobException() { }
+
+        public InvalidDobException(string message) : base(message) { }
+    }
 }
