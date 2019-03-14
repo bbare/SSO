@@ -83,7 +83,7 @@ namespace WebAPI.Controllers
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, true);
                 }
-                return Request.CreateResponse(HttpStatusCode.Unauthorized, false);
+                return Request.CreateResponse(HttpStatusCode.BadRequest, false);
             }
             return Request.CreateResponse(HttpStatusCode.Unauthorized, "Reset link is no longer valid");
         }
