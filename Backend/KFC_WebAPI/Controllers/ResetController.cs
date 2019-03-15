@@ -46,11 +46,11 @@ namespace WebAPI.Controllers
                 pm.SendResetToken(email, url);
                 var response = new HttpResponseMessage(HttpStatusCode.OK)
                 {
-                    Content = new StringContent("Email Sent")
+                    Content = new StringContent("An email with further instructions has been sent")
                 };
                 return response;
             }
-            return Request.CreateResponse(HttpStatusCode.BadRequest);
+            return Request.CreateResponse(HttpStatusCode.BadRequest, "No email was provided");
         }
 
         //After the user clicks the link in the email, this action gets called and takes the resetToken that's appended to the URL that was sent to the user

@@ -1,17 +1,11 @@
 <template>
-  <div class="reset">
+  <div id="sendLink">
      <h1>Reset Password</h1>
     <br />
     {{message}}
     <br /><br />
-      <p v-if="errors.length">
-        <b>Please correct the following error(s):</b>
-          <ul>
-            <li v-for="(error, index) in errors" :key="index">
-              {{ error }}
-            </li>
-          </ul>
-      </p>
+      {{errorMessage}}
+      <br/>
     <input
       name="email"
       type="text"
@@ -31,7 +25,7 @@ export default {
   name: 'SendResetLink',
   data () {
     return {
-      errors: [],
+      errorMessage: null,
       message: 'Input email to send the reset link to:',
       email: null
     }
@@ -39,12 +33,11 @@ export default {
   methods: {
     submitEmail: function () {
       if (!this.email) {
-        this.errors.push('Email required.')
+        this.errorMessage = 'Email required.'
       } else if (!this.validEmail(this.email)) {
-        this.errors.push('Valid email required.')
+        this.errorMessage = 'Valid email required.'
       } else {
         this.errors = []
-        this.message = 'An email with further instructions has been sent to the email address inputted'
 
         axios({
           method: 'POST',
@@ -56,7 +49,7 @@ export default {
           }
         })
           .then(response => {this.message = response.data})
-          .catch(e => { this.errors.push(e) })
+          .catch(e => { this.errorMessage = e }, response => {this.message = response.data})
       }
     },
     validEmail: function (email) {
@@ -67,20 +60,12 @@ export default {
   }
 }
 </script>
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h1, h2 {
-  font-weight: normal;
+
+<style>
+
+#sendLink{
+  padding: 70px 0;
+  text-align: center;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+
 </style>

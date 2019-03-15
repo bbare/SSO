@@ -1,5 +1,5 @@
 <template>
-  <div class="update">
+  <div id="update">
      <h1>Update Password</h1>
     <br />
     {{message}}
@@ -54,7 +54,7 @@ export default {
         this.message = 'Updating Password'
         axios({
           method: 'POST',
-          url: 'api.kfcsso.com/api/user/updatpPassword',
+          url: 'api.kfcsso.com/api/user/updatePassword',
           data: {
             email: this.$store.getEmail,
             sessionToken: this.$store.getToken,
@@ -71,3 +71,13 @@ export default {
     }
   }
 }
+</script>
+
+<style>
+
+#reset{
+  padding: 70px 0;
+  text-align: center;
+}
+
+</style>

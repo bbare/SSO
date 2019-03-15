@@ -1,9 +1,12 @@
 <template>
-  <div class="reset">
+  <div id="reset">
      <h1>Reset Password</h1>
     <br />
     {{message}}
     <br /><br />
+    <div v-if="haveNetworkError">
+      {{networkErrorMessage}}
+      </div>
       <p v-if="errors.length">
         <b>Error(s):</b>
           <ul>
@@ -45,7 +48,7 @@ export default {
     return {
       message: 'Fetching Security Questions',
       resetToken: this.$route.params.id,
-      errors: [],
+      errorMessage: null,
       securityQuestions: {
         securityQuestion1: null,
         securityQuestion2: null,
@@ -57,7 +60,9 @@ export default {
       showPasswordResetField: false,
       newPassword: null,
       newPasswordSuccessful: null,
-      passwordMessage: 'Enter a new password in the field'
+      passwordMessage: 'Enter a new password in the field',
+      networkErrorMessage: null,
+      haveNetworkError: false
     }
   },
   created () {
@@ -70,8 +75,10 @@ export default {
       }
     })
       .then(response => (this.securityQuestions = response.data),
-        this.message = 'Enter your answers for the security questions, fields are case sensitive')
-      .catch(e => { this.errors.push(e) })
+        this.message = 'Enter your answers for the security questions, fields are case sensitive'),
+        this.haveNetworkError
+      .catch(e => { this.networkErrorMessage = e })
+      this.haveNetworkError = true
   },
   methods: {
     submitAnswers: function () {
@@ -86,11 +93,18 @@ export default {
           'Access-Control-Allow-Credentials': true
         }
       })
-        .then(response => (this.showPasswordResetField = response.data))
-        .catch(e => { this.errors.push(e) })
+        .then(response => (this.showPasswordResetField = response.data)),
+        this.haveNetworkError
+        .catch(e => { this.networkErrorMessage = e })
+      this.haveNetworkError = true
     },
     submitNewPassword: function () {
-      axios({
+      if (this.newPassword.length < 12){
+        this.errorMessage = "Password must be at least 12 characters"
+      } else if (this.newPassword.length > 2000) {
+        this.errorMessage = "Password must be less than 2000 characters"
+      } else {
+        axios({
         method: 'POST',
         url: 'http://localhost:61348/api/reset/' + this.resetToken + '/resetpassword',
         data: {newPassword: this.$data.newPassword},
@@ -99,12 +113,24 @@ export default {
           'Access-Control-Allow-Credentials': true
         }
       })
-        .then(response => (this.passwordMessage = response.data))
-        .catch(e => { this.errors.push(e) })
+        .then(response => (this.passwordMessage = response.data)),
+        this.haveNetworkError
+        .catch(e => { this.networkErrorMessage = e })
       if (this.passwordMessage === 'Password has been reset') {
         this.showPasswordResetField = false
       }
+      this.haveNetworkError = true
     }
+      }
   }
 }
 </script>
+
+<style>
+
+#reset{
+  padding: 70px 0;
+  text-align: center;
+}
+
+</style>
