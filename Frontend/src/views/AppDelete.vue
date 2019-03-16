@@ -15,7 +15,7 @@
 
 <script>
 import axios from 'axios'
-import dev_const from '../const.js'
+import { apiURL } from '@/const.js'
 
 export default {
   data () {
@@ -28,7 +28,7 @@ export default {
   methods: {
     deleteApp: function () {
         // TODO: replace with SSO backend url
-      const url = `${dev_const.DEV_ROUTE}/applications/delete`
+      const url = `${apiURL}/applications/delete`
       axios.post(url, {
         title: document.getElementById('title').value,
         email: document.getElementById('email').value,

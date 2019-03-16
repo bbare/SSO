@@ -1,9 +1,6 @@
 
 import axios from 'axios';
-import config from "../const.js";
-
-
-let apiURL = localStorage.getItem('base') || config.API_ROUTE;
+import { apiURL } from "@/const.js";
 
 /* eslint-disable */
 let token = localStorage.getItem('token');

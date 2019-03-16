@@ -23,7 +23,7 @@
 
 <script>
 import axios from 'axios'
-import dev_const from '../const.js'
+import { apiURL } from '@/const.js'
 
 export default {
   data () {
@@ -39,7 +39,7 @@ export default {
   methods: {
     register: function () {
         // TODO: replace with SSO backend url
-      const url = `${dev_const.DEV_ROUTE}/applications/create`
+      const url = `${apiURL}/applications/create`
       axios.post(url, {
         title: document.getElementById('title').value,
         launchUrl: document.getElementById('launchUrl').value,
