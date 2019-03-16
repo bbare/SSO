@@ -6,15 +6,8 @@ using DataAccessLayer.Repositories;
 
 namespace ServiceLayer.Services
 {
-    public class ApplicationService : IApplicationService
+    public static class ApplicationService
     {
-        // Application repository instance
-        private ApplicationRepository _ApplicationRepo;
-
-        public ApplicationService()
-        {
-            _ApplicationRepo = new ApplicationRepository();
-        }
 
         /// <summary>
         /// Call the application repository to create a new application record
@@ -22,9 +15,9 @@ namespace ServiceLayer.Services
         /// <param name="_db">database</param>
         /// <param name="app">application</param>
         /// <returns>The application created</returns>
-        public Application CreateApplication(DatabaseContext _db, Application app)
+        public static Application CreateApplication(DatabaseContext _db, Application app)
         {
-            return _ApplicationRepo.CreateNewApplication(_db, app);
+            return ApplicationRepository.CreateNewApplication(_db, app);
         }
 
         /// <summary>
@@ -33,9 +26,9 @@ namespace ServiceLayer.Services
         /// <param name="_db">database</param>
         /// <param name="url">application url</param>
         /// <returns>The deleted application</returns>
-        public Application DeleteApplication(DatabaseContext _db, Guid id)
+        public static Application DeleteApplication(DatabaseContext _db, Guid id)
         {
-            return _ApplicationRepo.DeleteApplication(_db, id);
+            return ApplicationRepository.DeleteApplication(_db, id);
         }
 
         /// <summary>
@@ -44,9 +37,9 @@ namespace ServiceLayer.Services
         /// <param name="_db">database</param>
         /// <param name="url">application</param>
         /// <returns>The retrieved application</returns>
-        public Application GetApplication(DatabaseContext _db, Guid id)
+        public static Application GetApplication(DatabaseContext _db, Guid id)
         {
-            return _ApplicationRepo.GetApplication(_db, id);
+            return ApplicationRepository.GetApplication(_db, id);
         }
 
         /// <summary>
@@ -56,9 +49,9 @@ namespace ServiceLayer.Services
         /// <param name="title">application title</param>
         /// <param name="email">email</param>
         /// <returns></returns>
-        public Application GetApplication(DatabaseContext _db, string title, string email)
+        public static Application GetApplication(DatabaseContext _db, string title, string email)
         {
-            return _ApplicationRepo.GetApplication(_db, title, email);
+            return ApplicationRepository.GetApplication(_db, title, email);
         }
 
         /// <summary>
@@ -67,9 +60,9 @@ namespace ServiceLayer.Services
         /// <param name="_db">database</param>
         /// <param name="app">application</param>
         /// <returns>The updated application</returns>
-        public Application UpdateApplication(DatabaseContext _db, Application app)
+        public static Application UpdateApplication(DatabaseContext _db, Application app)
         {
-            return _ApplicationRepo.UpdateApplication(_db, app);
+            return ApplicationRepository.UpdateApplication(_db, app);
         }
     }
 }
