@@ -25,6 +25,7 @@ namespace ManagerLayer.ApplicationManagement
         private const int xDimension = 55;
         private const int yDimension = 55;
         private const string imageType = ".PNG";
+        private const int urlLength = 500;
 
         // Services
         private IEmailService _emailService;
@@ -60,12 +61,12 @@ namespace ManagerLayer.ApplicationManagement
                 response = new HttpResponseContent(HttpStatusCode.BadRequest, "Invalid Email");
                 return response;
             }
-            else if (request.LaunchUrl == null || !IsValidUrl(request.LaunchUrl, ref launchUrl))
+            else if (request.LaunchUrl == null || !IsValidUrl(request.LaunchUrl, ref launchUrl) || !IsValidStringLength(request.LaunchUrl, urlLength))
             {
                 response = new HttpResponseContent(HttpStatusCode.BadRequest, "Invalid Application Url");
                 return response;
             }
-            else if (request.DeleteUrl == null || !IsValidUrl(request.DeleteUrl, ref deleteUrl))
+            else if (request.DeleteUrl == null || !IsValidUrl(request.DeleteUrl, ref deleteUrl) || !IsValidStringLength(request.DeleteUrl, urlLength))
             {
                 response = new HttpResponseContent(HttpStatusCode.BadRequest, "Invalid User Deletion Url");
                 return response;
