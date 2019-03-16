@@ -32,6 +32,9 @@ namespace DataAccessLayer.Models
 
         [Required, DataType(DataType.Url)]
         public string UserDeletionUrl { get; set; }
+
+        [Required]
+        public string SharedSecretKey { get; set; }
     }
 
     

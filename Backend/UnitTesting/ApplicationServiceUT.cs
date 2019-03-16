@@ -14,7 +14,6 @@ namespace UnitTesting
     public class ApplicationServiceUT
     {
         DatabaseContext _db;
-        ApplicationService aps;
         TestingUtils tu;
         Application newApp;
 
@@ -22,7 +21,6 @@ namespace UnitTesting
         {
             _db = new DatabaseContext();
             tu = new TestingUtils();
-            aps = new ApplicationService();
         }
 
 
@@ -58,14 +56,38 @@ namespace UnitTesting
             using (_db = tu.CreateDataBaseContext())
             {
                 // Act
-                var response = aps.CreateApplication(_db, newApp);
+                var response = ApplicationService.CreateApplication(_db, newApp);
                 _db.SaveChanges();
 
                 // Assert
                 Assert.IsNotNull(response);
                 Assert.AreEqual(response.Id, expected.Id);
 
-                aps.DeleteApplication(_db, response.Id);
+                ApplicationService.DeleteApplication(_db, response.Id);
+                _db.SaveChanges();
+            }
+        }
+
+        [TestMethod]
+        public void CreateApplication_Fail_ExistingAppShouldReturnNull()
+        {
+            // Arrange
+            newApp = tu.CreateApplicationObject();
+            var expected = newApp;
+
+            using (_db = tu.CreateDataBaseContext())
+            {
+                // Act
+                var response = ApplicationService.CreateApplication(_db, newApp);
+                _db.SaveChanges();
+
+                var actual = ApplicationService.CreateApplication(_db, newApp);
+
+                // Assert
+                Assert.IsNull(actual);
+                Assert.AreNotEqual(expected, actual);
+
+                ApplicationService.DeleteApplication(_db, response.Id);
                 _db.SaveChanges();
             }
         }
@@ -81,7 +103,7 @@ namespace UnitTesting
             using (_db = tu.CreateDataBaseContext())
             {
                 // Act
-                var response = aps.CreateApplication(_db, newApp);
+                var response = ApplicationService.CreateApplication(_db, newApp);
                 try
                 {
                     _db.SaveChanges();
@@ -103,6 +125,19 @@ namespace UnitTesting
         }
 
         [TestMethod]
+        public void CreateApplication_Fail_NullValuesReturnNull()
+        {
+            using (_db = tu.CreateDataBaseContext())
+            {
+                // Act
+                var result = ApplicationService.CreateApplication(_db, null);
+
+                // Assert
+                Assert.IsNull(result);
+            }
+        }
+
+        [TestMethod]
         public void DeleteApplication_Pass_ReturnApp()
         {
             // Arrange
@@ -111,12 +146,12 @@ namespace UnitTesting
             using (_db = tu.CreateDataBaseContext())
             {
                 // Act
-                newApp = aps.CreateApplication(_db, newApp);
+                newApp = ApplicationService.CreateApplication(_db, newApp);
                 var expected = newApp;
 
                 _db.SaveChanges();
 
-                var response = aps.DeleteApplication(_db, newApp.Id);
+                var response = ApplicationService.DeleteApplication(_db, newApp.Id);
                 _db.SaveChanges();
                 var result = _db.Applications.Find(expected.Id);
 
@@ -138,7 +173,7 @@ namespace UnitTesting
             using (_db = new DatabaseContext())
             {
                 // Act
-                var response = aps.DeleteApplication(_db, nonExistingId);
+                var response = ApplicationService.DeleteApplication(_db, nonExistingId);
                 _db.SaveChanges();
                 var result = _db.Applications.Find(expected);
 
@@ -158,11 +193,11 @@ namespace UnitTesting
             // Act
             using (_db = tu.CreateDataBaseContext())
             {
-                newApp = aps.CreateApplication(_db, newApp);
+                newApp = ApplicationService.CreateApplication(_db, newApp);
                 _db.SaveChanges();
 
                 newApp.Title = "A new title";
-                var response = aps.UpdateApplication(_db, newApp);
+                var response = ApplicationService.UpdateApplication(_db, newApp);
                 _db.SaveChanges();
 
                 var result = _db.Applications.Find(newApp.Id);
@@ -173,7 +208,7 @@ namespace UnitTesting
                 Assert.AreEqual(result.Id, newApp.Id);
                 Assert.AreNotEqual(expected, result.Title);
 
-                aps.DeleteApplication(_db, newApp.Id);
+                ApplicationService.DeleteApplication(_db, newApp.Id);
                 _db.SaveChanges();
             }
         }
@@ -188,7 +223,7 @@ namespace UnitTesting
             // Act
             using (_db = tu.CreateDataBaseContext())
             {
-                var response = aps.UpdateApplication(_db, newApp);
+                var response = ApplicationService.UpdateApplication(_db, newApp);
                 try
                 {
                     _db.SaveChanges();
@@ -210,6 +245,19 @@ namespace UnitTesting
         }
 
         [TestMethod]
+        public void UpdateApplication_Fail_NullValuesReturnNull()
+        {
+            using (_db = tu.CreateDataBaseContext())
+            {
+                // Act
+                var result = ApplicationService.UpdateApplication(_db, null);
+
+                // Assert
+                Assert.IsNull(result);
+            }
+        }
+
+        [TestMethod]
         public void GetApplicationById_Pass_ReturnApp()
         {
             // Arrange
@@ -219,15 +267,15 @@ namespace UnitTesting
             // Act
             using (_db = tu.CreateDataBaseContext())
             {
-                newApp = aps.CreateApplication(_db, newApp);
+                newApp = ApplicationService.CreateApplication(_db, newApp);
                 _db.SaveChanges();
-                var result = aps.GetApplication(_db, newApp.Id);
+                var result = ApplicationService.GetApplication(_db, newApp.Id);
 
                 // Assert
                 Assert.IsNotNull(result);
                 Assert.AreEqual(expected.Id, result.Id);
 
-                aps.DeleteApplication(_db, newApp.Id);
+                ApplicationService.DeleteApplication(_db, newApp.Id);
                 _db.SaveChanges();
             }
         }
@@ -242,7 +290,7 @@ namespace UnitTesting
             // Act
             using (_db = tu.CreateDataBaseContext())
             {
-                var result = aps.GetApplication(_db, nonExistingApp);
+                var result = ApplicationService.GetApplication(_db, nonExistingApp);
 
                 // Assert
                 Assert.IsNull(result);
@@ -260,16 +308,16 @@ namespace UnitTesting
             // Act
             using (_db = tu.CreateDataBaseContext())
             {
-                newApp = aps.CreateApplication(_db, newApp);
+                newApp = ApplicationService.CreateApplication(_db, newApp);
                 _db.SaveChanges();
-                var result = aps.GetApplication(_db, newApp.Title, newApp.Email);
+                var result = ApplicationService.GetApplication(_db, newApp.Title, newApp.Email);
 
                 // Assert
                 Assert.IsNotNull(result);
                 Assert.AreEqual(expected.Title, result.Title);
                 Assert.AreEqual(expected.Email, result.Email);
 
-                aps.DeleteApplication(_db, newApp.Id);
+                ApplicationService.DeleteApplication(_db, newApp.Id);
                 _db.SaveChanges();
             }
         }
@@ -285,11 +333,24 @@ namespace UnitTesting
             // Act
             using (_db = tu.CreateDataBaseContext())
             {
-                var result = aps.GetApplication(_db, nonExistingTitle, nonExistingEmail);
+                var result = ApplicationService.GetApplication(_db, nonExistingTitle, nonExistingEmail);
 
                 // Assert
                 Assert.IsNull(result);
                 Assert.AreEqual(expected, result);
+            }
+        }
+
+        [TestMethod]
+        public void GetApplicationByTitleEmail_Fail_NullValuesReturnNull()
+        {
+            using (_db = tu.CreateDataBaseContext())
+            {
+                // Act
+                var result = ApplicationService.GetApplication(_db, null, null);
+
+                // Assert
+                Assert.IsNull(result);
             }
         }
     }
