@@ -17,7 +17,6 @@ namespace ManagerLayer.LaunchManagement
 
         // Excluded from signature
         public string signature { get; set; }
-        public string url { get; set; }
 
         // Generate string to be signed
         public string PreSignatureString()
@@ -30,9 +29,15 @@ namespace ManagerLayer.LaunchManagement
         }
     }
 
+    public class LaunchResponse
+    {
+        public string url { get; set; }
+        public LaunchPayload launchPayload { get; set; }   
+    }
+
     public class LaunchManager : ILaunchManager
     {
-        public LaunchPayload SignLaunch(DatabaseContext _db, Session session, Guid appId)
+        public LaunchResponse SignLaunch(DatabaseContext _db, Session session, Guid appId)
         {
             Application app = ApplicationService.GetApplication(_db, appId);
 
@@ -49,7 +54,6 @@ namespace ManagerLayer.LaunchManagement
                 ssoUserId = session.UserId,
                 email = user.Email,
                 timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
-                url = app.LaunchUrl
             };
 
             HMACSHA256 hmacsha1 = new HMACSHA256(Encoding.ASCII.GetBytes(app.SharedSecretKey));
@@ -60,7 +64,11 @@ namespace ManagerLayer.LaunchManagement
 
             launchPayload.signature = Convert.ToBase64String(signatureBytes);
 
-            return launchPayload;
+            return new LaunchResponse
+            {
+                launchPayload = launchPayload,
+                url = app.LaunchUrl
+            };
         }
     }
 }

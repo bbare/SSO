@@ -32,9 +32,9 @@ namespace KFC_WebAPI.Controllers
                 }
 
                 ILaunchManager launchManager = new LaunchManager();
-                LaunchPayload launchPayload = launchManager.SignLaunch(_db, session, request.appId);
+                LaunchResponse launchResponse = launchManager.SignLaunch(_db, session, request.appId);
 
-                return Ok(launchPayload);
+                return Ok(launchResponse);
             }
 
 

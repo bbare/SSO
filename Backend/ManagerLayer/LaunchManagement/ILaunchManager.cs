@@ -6,6 +6,6 @@ namespace ManagerLayer.LaunchManagement
 {
     public interface ILaunchManager
     {
-        LaunchPayload SignLaunch(DatabaseContext _db, Session session, Guid appId);
+        LaunchResponse SignLaunch(DatabaseContext _db, Session session, Guid appId);
     }
 }
