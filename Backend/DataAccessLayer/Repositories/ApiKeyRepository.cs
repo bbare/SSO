@@ -8,7 +8,7 @@ namespace DataAccessLayer.Repositories
 {
     public class ApiKeyRepository
     {
-        /// <summary>
+        /// <summary> 
         /// Create a new Api Key record
         /// </summary>
         /// <param name="_db">database</param>

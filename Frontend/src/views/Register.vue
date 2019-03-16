@@ -7,19 +7,16 @@
       Credentials:<br />
       <v-text-field
         name="email"
-        id="email"
         v-model="email"
         type="email"
         label="Email" /><br />
       <v-text-field
         name="password"
-        id="password"
         type="password"
         v-model="password"
         label="Password" /><br />
       <v-text-field
         name="confirm"
-        id="confirm"
         type="password"
         v-model="confirmPassword"
         label="Confirm Password" /><br />
@@ -40,7 +37,7 @@
         <template v-slot:activator="{ on }">
           <v-text-field
             v-model="dob"
-            label="Date of Birth"
+            label="Birthday date"
             prepend-icon="event"
             readonly
             v-on="on"
@@ -57,17 +54,14 @@
 
       <v-text-field
         name="city"
-        id="city"
         v-model="city"
         label="City" /><br />
       <v-text-field
         name="state"
-        id="state"
         v-model="state"
         label="State" /><br />
       <v-text-field
         name="country"
-        id="country"
         v-model="country"
         label="Country" /><br />
 
@@ -75,12 +69,10 @@
       Security Questions:<br />
       <v-text-field
         name="securityq1"
-        id="securityq1"
         v-model="securityQ1"
         label="Security Question 1" /><br />
       <v-text-field
         name="securitya1"
-        id="securitya1"
         v-model="securityQ1Answer"
         label="Security Answer 1" /><br />
 
@@ -88,12 +80,10 @@
 
       <v-text-field
         name="securityq2"
-        id="securityq2"
         v-model="securityQ2"
         label="Security Question 2" /><br />
       <v-text-field
         name="securitya2"
-        id="securitya2"
         v-model="securityQ2Answer"
         label="Security Answer 2" /><br />
 
@@ -101,12 +91,10 @@
 
       <v-text-field
         name="securityq3"
-        id="securityq3"
         v-model="securityQ3"
         label="Security Question 3" /><br />
       <v-text-field
         name="securitya3"
-        id="securitya3"
         v-model="securityQ3Answer"
         label="Security Answer 3" /><br />
 
@@ -199,7 +187,7 @@ export default {
       }).catch(err => {
         switch(err.response.status) {
           case 401:
-            this.error = err.response.data;
+            this.error = "Your password has been cracked before. Please use a more secure password.";
             break;
           case 406:
             this.error = "Your email address does not follow a recognized format.";
