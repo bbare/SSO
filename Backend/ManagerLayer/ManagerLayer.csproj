@@ -67,6 +67,8 @@
     <Compile Include="ApplicationManagement\ApplicationRequest.cs" />
     <Compile Include="ApplicationManagement\HttpResponseContent.cs" />
     <Compile Include="AuthorizationManagement\IAuthorizationManager.cs" />
+    <Compile Include="LaunchManagement\LaunchManager.cs" />
+    <Compile Include="LaunchManagement\ILaunchManager.cs" />
     <Compile Include="Login\LoginManager.cs" />
     <Compile Include="PasswordManagement\PasswordManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
