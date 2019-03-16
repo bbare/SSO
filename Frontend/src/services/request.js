@@ -1,9 +1,9 @@
 
 import axios from 'axios';
-import dev_const from "../const.js";
+import config from "../const.js";
 
 
-let apiURL = localStorage.getItem('base') || `${window.location.protocol}//${window.location.hostname}:${dev_const.DEV_PORT}/api`;
+let apiURL = localStorage.getItem('base') || config.API_ROUTE;
 
 /* eslint-disable */
 let token = localStorage.getItem('token');
@@ -11,7 +11,7 @@ let token = localStorage.getItem('token');
 const register = registrationData => {
   return axios.post(`${apiURL}/users/register`, registrationData)
     .then(response => {
-      token = response.data.data.token;
+      token = response.data.token;
       localStorage.setItem('token', token);
       return response;
     })
