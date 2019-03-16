@@ -20,8 +20,7 @@ namespace ManagerLayer
             RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
             Byte[] b = new byte[64 / 2];
             provider.GetBytes(b);
-            string hex = BitConverter.ToString(b).Replace("-", "");
-            return hex;
+            return BitConverter.ToString(b).Replace("-", "").ToLower();
         }
 
         public Session CreateSession(DatabaseContext _db, User user)
