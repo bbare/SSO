@@ -77,7 +77,8 @@ namespace ManagerLayer.ApplicationManagement
                 Title = request.Title,
                 LaunchUrl = launchUrl.ToString(),
                 Email = request.Email,
-                UserDeletionUrl = request.DeleteUrl
+                UserDeletionUrl = request.DeleteUrl,
+                SharedSecretKey = _tokenService.GenerateToken()
             };
 
             // Create a new ApiKey
@@ -118,24 +119,23 @@ namespace ManagerLayer.ApplicationManagement
                     return response;
                 }
             }
-            string message = apiKey.Key;
-            //string message;
-
-            //// Attempt to send api key to application email
-            //if(SendAppRegistrationApiKeyEmail(app.Email, apiKey.Key))
+            
+            // Attempt to send api key to application email
+            //if (SendAppRegistrationApiKeyEmail(app.Email, apiKey.Key))
             //{
             //    // Alert front end that email was sent
-            //    message = "Sent to " + app.Email;
+            //    string message = "Sent to " + app.Email;
+            //    response = new HttpResponseContent(HttpStatusCode.OK, message);
             //}
             //else
             //{
             //    // Email could not be sent. Send api key to frontend.
-            //    message = apiKey.Key;
+            //    response = new HttpResponseContent(HttpStatusCode.OK, apiKey.Key, app.SharedSecretKey);
             //}
 
 
             // Return success messge
-            response = new HttpResponseContent(HttpStatusCode.OK, message);
+            response = new HttpResponseContent(HttpStatusCode.OK, apiKey.Key, app.SharedSecretKey);
             return response;
         }
 

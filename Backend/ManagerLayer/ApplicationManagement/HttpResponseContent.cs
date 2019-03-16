@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ManagerLayer.ApplicationManagement
 {
-    public struct HttpResponseContent
+    public class HttpResponseContent
     {
         public HttpResponseContent(HttpStatusCode code, string message)
         {
@@ -15,7 +15,16 @@ namespace ManagerLayer.ApplicationManagement
             Message = message;
         }
 
+        public HttpResponseContent(HttpStatusCode code, string key, string secretKey)
+        {
+            Code = code;
+            Key = key;
+            SharedSecretKey = secretKey;
+        }
+
         public HttpStatusCode Code { get; set; }
         public string Message { get; set; }
+        public string Key { get; set; }
+        public string SharedSecretKey { get; set; }
     }
 }

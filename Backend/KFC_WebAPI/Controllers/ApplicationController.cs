@@ -19,7 +19,7 @@ namespace KFC_WebAPI.Controllers
         public HttpResponseMessage Register([FromBody] ApplicationRequest request)
         {
             HttpResponseContent responseContent = manager.ValidateRegistration(request);
-            HttpResponseMessage response = Request.CreateResponse(responseContent.Code, responseContent.Message);
+            HttpResponseMessage response = Request.CreateResponse(responseContent.Code, responseContent);
             
             return  response;
         }
