@@ -1,7 +1,5 @@
-const port = 61348;
-const route = `http://sso.julianjp.com:8080/api`;
+const apiURL = localStorage.getItem('apiURL') || process.env.VUE_APP_API_URL
 
-export default {
-    API_PORT: port,
-    API_ROUTE: route
+export {
+    apiURL
 }

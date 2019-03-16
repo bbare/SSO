@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 
 namespace ManagerLayer
 {
-    public class AuthorizationManager
+    public class AuthorizationManager : IAuthorizationManager
     {
         private ISessionService _sessionService;
 
@@ -20,8 +20,7 @@ namespace ManagerLayer
             RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
             Byte[] b = new byte[64 / 2];
             provider.GetBytes(b);
-            string hex = BitConverter.ToString(b).Replace("-", "");
-            return hex;
+            return BitConverter.ToString(b).Replace("-", "").ToLower();
         }
 
         public Session CreateSession(DatabaseContext _db, User user)
@@ -36,9 +35,9 @@ namespace ManagerLayer
             return session;
         }
 
-        public Session ValidateAndUpdateSession(DatabaseContext _db, string token, Guid userId)
+        public Session ValidateAndUpdateSession(DatabaseContext _db, string token)
         {
-            Session response = _sessionService.ValidateSession(_db, token, userId);
+            Session response = _sessionService.GetSession(_db, token);
 
             if(response != null)
             {
@@ -50,9 +49,9 @@ namespace ManagerLayer
             }
         }
 
-        public void DeleteSession(DatabaseContext _db, string token, Guid userId)
+        public Session DeleteSession(DatabaseContext _db, string token)
         {
-            _sessionService.DeleteSession(_db, token, userId);
+            return _sessionService.DeleteSession(_db, token);
         }
     }
 }
