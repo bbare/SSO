@@ -19,8 +19,7 @@ namespace ManagerLayer.LaunchManagement
     {
         public LaunchPayload SignLaunch(DatabaseContext _db, Session session, Guid appId)
         {
-            ApplicationService applicationService = new ApplicationService();
-            Application app = applicationService.GetApplication(_db, appId);
+            Application app = ApplicationService.GetApplication(_db, appId);
 
             if (app == null)
             {
