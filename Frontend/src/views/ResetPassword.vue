@@ -1,25 +1,20 @@
 <template>
-  <div id="reset">
-     <h1>Reset Password</h1>
+  <div class="reset">
+    <h1>Reset Password</h1>
     <br />
     {{message}}
     <br /><br />
     <div v-if="haveNetworkError">
-      {{networkErrorMessage}}
-      </div>
-      <p v-if="errors.length">
-        <b>Error(s):</b>
-          <ul>
-            <li v-for="(error, index) in errors" :key="index">
-              {{ error }}
-            </li>
-          </ul>
-      </p>
+      {{errorMessage}}
+      <br/>
+      
+    </div>
+      
     <div class="SecurityQuestions" v-if="securityQuestions.length">
       <br/>
-      <li v-for="(securityQuestion, index) in securityQuestions" :key="index">
+      <div v-for="(securityQuestion, index) in securityQuestions" :key="index">
         {{securityQuestion}}
-      </li>
+      </div>
       <br />
       <input name="SecurityAnswer1" type="text" v-model="securityAnswer1" placeholder="Answer for Question 1"/>
       <br />
@@ -29,14 +24,17 @@
       <br />
       <button type="submit" v-on:click="submitAnswers">Submit Answers</button>
     </div>
-    <div class="NewPassword" v-if="showPasswordResetField">
-      {{passwordMessage}}
+
+    <br/>
+
+    <div id="NewPassword" v-if="showPasswordResetField">
+      Enter a new password into the field
       <br/>
       <input name="Password" type="text" v-model="newPassword"/>
       <br />
-
       <button type="submit" v-on:click="submitNewPassword">Submit New Password</button>
     </div>
+
   </div>
 </template>
 
@@ -46,7 +44,6 @@ export default {
   name: 'ResetPassword',
   data () {
     return {
-      message: 'Fetching Security Questions',
       resetToken: this.$route.params.id,
       errorMessage: null,
       securityQuestions: {
@@ -57,12 +54,12 @@ export default {
       securityAnswer1: null,
       securityAnswer2: null,
       securityAnswer3: null,
-      showPasswordResetField: false,
+      showPasswordResetField: null,
       newPassword: null,
       newPasswordSuccessful: null,
-      passwordMessage: 'Enter a new password in the field',
       networkErrorMessage: null,
-      haveNetworkError: false
+      haveNetworkError: false,
+      wrongAnswerCounter : 0
     }
   },
   created () {
@@ -75,17 +72,26 @@ export default {
       }
     })
       .then(response => (this.securityQuestions = response.data),
-        this.message = 'Enter your answers for the security questions, fields are case sensitive'),
-        this.haveNetworkError
-      .catch(e => { this.networkErrorMessage = e })
-      this.haveNetworkError = true
+        this.message = 'Enter your answers for the security questions, fields are case sensitive')
+      .catch(e => { this.message = e.response.data }, this.haveNetworkError = true)
+    if(this.message === "Reset link is no longer valid"){
+      this.$router.push("SendResetLink")
+    }
   },
   methods: {
     submitAnswers: function () {
-      axios({
+      if(this.wrongAnswerCounter === 3){
+        this.errorMessage = "3 attempts have been made, reset link is no longer valid"
+        this.$router.push("SendResetLink")
+      }
+      if (!this.securityAnswer1 || !this.securityAnswer2 || !this.securityAnswer3){
+        alert("Security answers cannot be empty")
+      } else {
+        axios({
         method: 'POST',
         url: 'http://localhost:61348/api/reset/' + this.resetToken + '/checkanswers',
-        data: { securityA1: this.$data.securityAnswer1,
+        data: { 
+          securityA1: this.$data.securityAnswer1,
           securityA2: this.$data.securityAnswer2,
           securityA3: this.$data.securityAnswer3},
         headers: {
@@ -93,16 +99,21 @@ export default {
           'Access-Control-Allow-Credentials': true
         }
       })
-        .then(response => (this.showPasswordResetField = response.data)),
-        this.haveNetworkError
-        .catch(e => { this.networkErrorMessage = e })
-      this.haveNetworkError = true
+        .then(response => (this.showPasswordResetField = response.data))
+        .catch(e => { this.message = e.response.data }, this.haveNetworkError = true)
+      if (this.showPasswordResetField === false) {
+        this.errorMessage = "Answers are incorrect"
+        this.wrongAnswerCounter = this.wrongAnswerCounter + 1
+      }
+      }
     },
     submitNewPassword: function () {
-      if (this.newPassword.length < 12){
-        this.errorMessage = "Password must be at least 12 characters"
+      if(this.newPassword === null){
+        alert("Password cannot be empty")
+      } else if (this.newPassword.length < 12){
+        alert("Password must be at least 12 characters")
       } else if (this.newPassword.length > 2000) {
-        this.errorMessage = "Password must be less than 2000 characters"
+        alert("Password must be less than 2000 characters")
       } else {
         axios({
         method: 'POST',
@@ -113,24 +124,27 @@ export default {
           'Access-Control-Allow-Credentials': true
         }
       })
-        .then(response => (this.passwordMessage = response.data)),
-        this.haveNetworkError
-        .catch(e => { this.networkErrorMessage = e })
-      if (this.passwordMessage === 'Password has been reset') {
+        .then(response => (this.message = response.data))
+        .catch(e => { this.message = e.response.data }, this.haveNetworkError = true)
+      if (this.message === 'Password has been reset') {
         this.showPasswordResetField = false
       }
-      this.haveNetworkError = true
     }
       }
   }
 }
 </script>
 
-<style>
-
-#reset{
+<style lang="css">
+.reset{
   padding: 70px 0;
   text-align: center;
+}
+
+input[type=text] {
+  border: 2px solid rgb(69, 72, 75);
+  border-radius: 4px;
+  width: 25%
 }
 
 </style>

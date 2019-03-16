@@ -1,20 +1,15 @@
 <template>
-  <div id="sendLink">
-     <h1>Reset Password</h1>
+  <div class="sendLink">
+    <h1>Reset Password</h1>
     <br />
     {{message}}
     <br /><br />
-      {{errorMessage}}
-      <br/>
-    <input
-      name="email"
-      type="text"
-      v-model="email"
-      placeholder="Email"
-      />
-      <br />
-      <br />
-      <button type="submit" v-on:click="submitEmail">Send Email</button>
+    {{errorMessage}}
+    <br/>
+    <input name="email" type="text" v-model="email" placeholder="Email"/>
+    <br />
+    <br />
+    <button type="submit" v-on:click="submitEmail">Send Email</button>
   </div>
 </template>
 
@@ -33,12 +28,10 @@ export default {
   methods: {
     submitEmail: function () {
       if (!this.email) {
-        this.errorMessage = 'Email required.'
+        alert('Email field cannot be empty')
       } else if (!this.validEmail(this.email)) {
-        this.errorMessage = 'Valid email required.'
+        alert('Valid email required.')
       } else {
-        this.errors = []
-
         axios({
           method: 'POST',
           url: 'http://localhost:61348/api/reset/send',
@@ -62,10 +55,13 @@ export default {
 </script>
 
 <style>
-
-#sendLink{
+.sendLink{
   padding: 70px 0;
   text-align: center;
 }
 
+input[type=text] {
+  border: 2px solid  rgb(69, 72, 75);
+  border-radius: 4px;
+}
 </style>

@@ -9,19 +9,17 @@ namespace ManagerLayer
     public class AuthorizationManager
     {
         private ISessionService _sessionService;
+        private ITokenService _tokenService;
 
         public AuthorizationManager()
         {
-             _sessionService = new SessionService();
+            _sessionService = new SessionService();
+            _tokenService = new TokenService();
         }
 
         public string GenerateSessionToken()
         {
-            RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
-            Byte[] b = new byte[64 / 2];
-            provider.GetBytes(b);
-            string hex = BitConverter.ToString(b).Replace("-", "");
-            return hex;
+            return _tokenService.GenerateToken();
         }
 
         public Session CreateSession(DatabaseContext _db, User user)

@@ -75,9 +75,14 @@ export default {
 
 <style>
 
-#reset{
+#update{
   padding: 70px 0;
   text-align: center;
+}
+
+input[type=text] {
+  border: 2px solid rgb(123, 171, 226);
+  border-radius: 4px;
 }
 
 </style>
