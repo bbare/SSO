@@ -1,4 +1,4 @@
-﻿using DataAccessLayer.Models;
+using DataAccessLayer.Models;
 using DataAccessLayer.Repositories;
 using ServiceLayer.Services;
 using DataAccessLayer.Database;
@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity.Validation;
 
 namespace ManagerLayer.Login
 {
@@ -19,11 +20,11 @@ namespace ManagerLayer.Login
         UserRepository userRepo = new UserRepository();
 
         private User user;
-        private ITokenService _tokenService;
+        private ITokenService _tokenService = new TokenService();
 
         public LoginManager()
         {
-            _tokenService = new TokenService();
+
         }
 
         public bool LoginCheckUserExists(LoginRequest request)
@@ -61,6 +62,7 @@ namespace ManagerLayer.Login
 
         public bool LoginCheckPassword(LoginRequest request)
         {
+            bool result;
             using (var _db = new DatabaseContext())
             {
                 user = _userService.GetUser(_db, request.email);
@@ -68,29 +70,32 @@ namespace ManagerLayer.Login
                 if (userRepo.ValidatePassword(user, hashedPassword))
                 {
                     user.IncorrectPasswordCount = 0;
-                    _userService.UpdateUser(_db, user);
-                    _db.SaveChanges();
-                    return true;
+                    result = true;
                 }
                 else
                 {
                     user.IncorrectPasswordCount = ++user.IncorrectPasswordCount;
-                    _userService.UpdateUser(_db, user);
-                    _db.SaveChanges();
                     if (user.IncorrectPasswordCount == 3)
                     {
                         user.Disabled = true;
-                        _userService.UpdateUser(_db, user);
-                        _db.SaveChanges();
                     }
-                    return false;
+                    result = false;
+                }
+
+                try
+                {
+                    _db.SaveChanges();
+                }
+                catch (DbEntityValidationException ex)
+                {
+                    _db.Entry(user).State = System.Data.Entity.EntityState.Detached;
                 }
             }
+            return result;
         }
 
         public string LoginAuthorized(LoginRequest request)
         {
-            _tokenService = new TokenService();
             using (var _db = new DatabaseContext())
             {
                 user = _userService.GetUser(_db, request.email);
@@ -102,7 +107,14 @@ namespace ManagerLayer.Login
                 };
 
                 var response = _sessionService.CreateSession(_db, session);
-                _db.SaveChanges();
+                try
+                {
+                    _db.SaveChanges();
+                }
+                catch (DbEntityValidationException ex)
+                {
+                    _db.Entry(session).State = System.Data.Entity.EntityState.Detached;
+                }
                 return session.Token;
             }
         }
