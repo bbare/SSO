@@ -12,9 +12,19 @@ namespace DataAccessLayer.Database
 {
     public class DatabaseContext : DbContext
     {
+        string username = "Admin";
+        string password = "";
+        string hostname = "mydbinstance.ce5cmkuh7zii.us-east-2.rds.amazonaws.com";
+        string port = "1433";
+        string dbname = "mydbinstance";
+
         public DatabaseContext()
         {
-            this.Database.Connection.ConnectionString = "Data Source=localhost;Initial Catalog=SSO;Integrated Security=True";
+            //dev
+            this.Database.Connection.ConnectionString = "Data Source=localdb;Initial Catalog=SSO;Integrated Security=True";
+
+            //release
+            //this.Database.Connection.ConnectionString = "Data Source=" + hostname + ";Initial Catalog=" + dbname + ";User ID=" + username + ";Password=" + password + ";";
         }
 
         public DbSet<User> Users { get; set; }
@@ -22,7 +32,5 @@ namespace DataAccessLayer.Database
         public DbSet<Application> Applications { get; set; }
         public DbSet<ApiKey> Keys { get; set; }
         public DbSet<PasswordReset> ResetIDs { get; set; }
-
-
     }
 }
