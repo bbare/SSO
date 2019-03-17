@@ -128,19 +128,23 @@
 
 <script>
 import { register } from '@/services/request';
+
 export default {
   name: 'Register',
   data: () => {
     return {
       menu: false,
       error: "",
+
       email: '',
       password: '',
       confirmPassword: '',
+
       dob: '',
       city: '',
       state: '',
       country: '',
+
       securityQ1: '',
       securityQ1Answer: '',
       securityQ2: '',
@@ -165,15 +169,19 @@ export default {
       } else if (this.password !== this.confirmPassword) {
         this.error = "Password entered does not match password confirmation";
       }
+
       if (this.error) return;
+
       register({
         email: this.email,
         password: this.password,
         confirmPassword: this.confirmPassword,
+
         dob: this.dob,
         city: this.city,
         state: this.state,
         country: this.country,
+
         securityQ1: this.securityQ1,
         securityQ1Answer: this.securityQ1Answer,
         securityQ2: this.securityQ2,
@@ -182,6 +190,7 @@ export default {
         securityQ3Answer: this.securityQ3Answer  
       }).then(() => {
         const params = new URLSearchParams(window.location.search)
+
         if (params.has('redirect')) {
           window.location.href = decodeURIComponent(params.get('redirect'));
         } else {
