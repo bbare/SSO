@@ -6,7 +6,7 @@ using System.Data.Entity;
 
 namespace DataAccessLayer.Repositories
 {
-    public class ApplicationRepository
+    public static class ApplicationRepository
     {
         /// <summary>
         /// Create a new application record
@@ -14,15 +14,23 @@ namespace DataAccessLayer.Repositories
         /// <param name="_db">database</param>
         /// <param name="app">application</param>
         /// <returns>Created application</returns>
-        public Application CreateNewApplication(DatabaseContext _db, Application app)
+        public static Application CreateNewApplication(DatabaseContext _db, Application app)
         {
-            var result = GetApplication(_db, app.Title, app.Email);
-            if (result != null)
+            try
+            {
+                var result = GetApplication(_db, app.Title, app.Email);
+                if (result != null)
+                {
+                    return null;
+                }
+                _db.Entry(app).State = EntityState.Added;
+                return app;
+            }
+            catch(Exception)
             {
                 return null;
             }
-            _db.Entry(app).State = EntityState.Added;
-            return app;
+            
         }
 
         /// <summary>
@@ -31,15 +39,23 @@ namespace DataAccessLayer.Repositories
         /// <param name="_db">database</param>
         /// <param name="id">application id</param>
         /// <returns>The deleted application record</returns>
-        public Application DeleteApplication(DatabaseContext _db, Guid id)
+        public static Application DeleteApplication(DatabaseContext _db, Guid id)
         {
-            var app = GetApplication(_db, id);
-            if (app == null)
+            try
+            {
+                var app = GetApplication(_db, id);
+                if (app == null)
+                {
+                    return null;
+                }
+                _db.Entry(app).State = EntityState.Deleted;
+                return app;
+            }
+            catch (Exception)
             {
                 return null;
             }
-            _db.Entry(app).State = EntityState.Deleted;
-            return app;
+            
         }
 
         /// <summary>
@@ -48,9 +64,17 @@ namespace DataAccessLayer.Repositories
         /// <param name="_db">database</param>
         /// <param name="id">application id</param>
         /// <returns>The retrieved application</returns>
-        public Application GetApplication(DatabaseContext _db, Guid id)
+        public static Application GetApplication(DatabaseContext _db, Guid id)
         {
-            return _db.Applications.Find(id);
+            try
+            {
+                var response = _db.Applications.Find(id);
+                return response;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -60,13 +84,20 @@ namespace DataAccessLayer.Repositories
         /// <param name="title">application title</param>
         /// <param name="email">application email</param>
         /// <returns></returns>
-        public Application GetApplication(DatabaseContext _db, string title, string email)
+        public static Application GetApplication(DatabaseContext _db, string title, string email)
         {
-            var app = _db.Applications
+            try
+            {
+                var app = _db.Applications
                 .Where(a => a.Title == title && a.Email == email)
                 .FirstOrDefault<Application>();
 
-            return app;
+                return app;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -75,15 +106,23 @@ namespace DataAccessLayer.Repositories
         /// <param name="_db">database</param>
         /// <param name="app">application</param>
         /// <returns>The updated application</returns>
-        public Application UpdateApplication(DatabaseContext _db, Application app)
+        public static Application UpdateApplication(DatabaseContext _db, Application app)
         {
-            var result = GetApplication(_db, app.Id);
-            if (app == null)
+
+            try
+            {
+                var result = GetApplication(_db, app.Id);
+                if (result == null)
+                {
+                    return null;
+                }
+                _db.Entry(app).State = EntityState.Modified;
+                return result;
+            }
+            catch (Exception)
             {
                 return null;
             }
-            _db.Entry(app).State = EntityState.Modified;
-            return result;
         }
 
     }

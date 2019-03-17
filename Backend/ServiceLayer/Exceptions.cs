@@ -22,4 +22,11 @@ namespace ServiceLayer.Exceptions
 
         public InvalidDobException(string message) : base(message) { }
     }
+
+    public class InvalidTokenException : Exception
+    {
+        public InvalidTokenException() { }
+
+        public InvalidTokenException(string message) : base(message) { }
+    }
 }
