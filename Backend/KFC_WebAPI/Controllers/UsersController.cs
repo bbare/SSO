@@ -170,7 +170,7 @@ namespace KFC_WebAPI.Controllers
                 if (retrievedUser != null)
                 {
                     SessionService ss = new SessionService();
-                    Session session = ss.ValidateSession(_db, request.sessionToken, retrievedUser.Id);
+                    Session session = ss.GetSession(_db, request.sessionToken);
                     if (session != null)
                     {
                         PasswordManager pm = new PasswordManager();
