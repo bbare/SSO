@@ -1,9 +1,8 @@
-﻿
-using System;
+﻿using System;
 using ManagerLayer.UserManagement;
 using ManagerLayer.Login;
-using DataAccessLayer.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using DataAccessLayer.Models;
 
 namespace UnitTesting
 {
@@ -12,17 +11,20 @@ namespace UnitTesting
     public class LoginManagerUT
     {
 
-        private LoginManager lm = new LoginManager();
-        private UserManagementManager um = new UserManagementManager();
-        private User user;
-        private LoginRequest request = new LoginRequest();
+        LoginManager lm;
+        UserManagementManager um;
+        User user;
+        LoginRequest request;
 
         public LoginManagerUT()
         {
-              user = um.CreateUser("test424@gmail.com", "qwerty12345", new DateTime(1996, 12, 15));
-              request.email = "test424@gmail.com";
-              request.password = "qwerty12345";
-
+            lm = new LoginManager();
+            um = new UserManagementManager();
+            user = um.GetUser("cf2080@gmail.com");
+            //CreateUser("new@csulb.edu", "passwordtest54321", new DateTime(1996, 12, 15));
+            request = new LoginRequest();
+            request.email = "cf2080@gmail.com";
+            request.password = "qwertyuiop";
         }
 
         //LoginCheckUserExists()
@@ -30,12 +32,10 @@ namespace UnitTesting
         [TestMethod]
         public void LoginCheckUserExists_Success_ReturnTrue()
         {
-            //um.CreateUser("rrrcf2080@gmail.com", "qwerty12345", new DateTime(1996, 12, 15));
-            //bool result = lm.LoginCheckUserExists("rrrcf2080@gmail.com");
-            //Assert.AreEqual(true, result);
+            bool result = lm.LoginCheckUserExists(request);
+            Assert.AreEqual(true, result);
         }
 
-        //true
         [TestMethod]
         public void LoginCheckUserExists_Fail_ReturnTrue()
         {
@@ -44,7 +44,6 @@ namespace UnitTesting
             Assert.AreNotEqual(true, result);
         }
 
-        //true
         [TestMethod]
         public void LoginCheckUserExists_Success_ReturnFalse()
         {
@@ -83,7 +82,7 @@ namespace UnitTesting
         {
             user.Disabled = false;
             bool result = lm.LoginCheckUserDisabled(request);
-            Assert.AreEqual(true, result);
+            Assert.AreEqual(false, result);
         }
 
         [TestMethod]
@@ -91,7 +90,7 @@ namespace UnitTesting
         {
             user.Disabled = true;
             bool result = lm.LoginCheckUserDisabled(request);
-            Assert.AreNotEqual(false, result);
+            Assert.AreNotEqual(true, result);
         }
 
         //LoginCheckPassword
@@ -100,6 +99,7 @@ namespace UnitTesting
         public void LoginCheckPassword_Success_ReturnTrue()
         {
             bool result = lm.LoginCheckPassword(request);
+            Console.WriteLine(user.IncorrectPasswordCount);
             Assert.AreEqual(true, result);
         }
 
@@ -118,20 +118,6 @@ namespace UnitTesting
             bool result = lm.LoginCheckPassword(request);
             Console.WriteLine(user.IncorrectPasswordCount);
             Assert.AreEqual(false, result);
-            Assert.AreNotEqual(0, user.IncorrectPasswordCount);
-        }
-
-        [TestMethod]
-        public void test()
-        {
-            user = um.CreateUser("rrrcf2080@gmail.com", "qwerty12345", new DateTime(1996, 12, 15));
-            Console.WriteLine(user.IncorrectPasswordCount);
-            request.password = "pass";
-            lm.LoginCheckPassword(request);
-            lm.LoginCheckPassword(request);
-            lm.LoginCheckPassword(request);
-            Console.WriteLine(user.IncorrectPasswordCount);
-            Assert.AreEqual(0, user.IncorrectPasswordCount);
         }
 
         [TestMethod]
@@ -142,19 +128,12 @@ namespace UnitTesting
         }
 
         // LoginAuthorized()
-        /*
+        
         [TestMethod]
         public void LoginAuthorized_Success_ReturnToken()
         {
-
-            lm.LoginAuthorized();
+            string result = lm.LoginAuthorized(request);
+            Assert.IsNotNull(result);
         }
-
-        [TestMethod]
-        public void LoginAuthorized_Fail_ReturnNull()
-        {
-
-        }
-        */
     }
 }
