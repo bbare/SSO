@@ -120,7 +120,7 @@ namespace UnitTesting
 
                 _db.SaveChanges();
 
-                var response = ss.DeleteSession(_db, newSession.Token, newUser.Id);
+                var response = ss.DeleteSession(_db, newSession.Token);
                 _db.SaveChanges();
                 var result = _db.Sessions.Find(expectedResponse.Id);
 
@@ -136,7 +136,7 @@ namespace UnitTesting
         {
             // Arrange
             string nonExistingToken = Guid.NewGuid().ToString();
-
+            Guid nonExistingId = Guid.NewGuid();
             var expectedResponse = nonExistingId;
 
             using (_db = new DatabaseContext())
@@ -245,7 +245,7 @@ namespace UnitTesting
             // Act
             using (_db = tu.CreateDataBaseContext())
             {
-                var result = ss.GetSession(_db, nonExistingToken, nonExistingSession);
+                var result = ss.GetSession(_db, nonExistingToken);
 
                 // Assert
                 Assert.IsNull(result);

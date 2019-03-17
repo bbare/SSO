@@ -32,7 +32,6 @@ namespace ServiceLayer.Services
         public PasswordReset DeletePasswordReset(DatabaseContext _db, string resetToken)
         {
             return _resetRepo.DeleteReset(_db, resetToken);
-            
         }
 
         public PasswordReset GetPasswordReset(DatabaseContext _db, string resetToken)

@@ -51,7 +51,7 @@
             })
         },
         goToResetPassword(){
-            this.$router.push('/sendresendLink')
+            this.$router.push('/sendresetlink')
         }
     }
 }

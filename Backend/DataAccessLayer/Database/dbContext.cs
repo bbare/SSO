@@ -21,7 +21,7 @@ namespace DataAccessLayer.Database
         public DbSet<Session> Sessions { get; set; }
         public DbSet<Application> Applications { get; set; }
         public DbSet<ApiKey> Keys { get; set; }
-        public DbSet<PasswordReset> ResetIDs { get; set; }
+        public DbSet<PasswordReset> PasswordResets { get; set; }
 
 
     }

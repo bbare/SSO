@@ -8,6 +8,9 @@ using System.Web.Http;
 using ManagerLayer;
 using ServiceLayer.Exceptions;
 using System.ComponentModel.DataAnnotations;
+using ManagerLayer.PasswordManagement;
+using ServiceLayer.Services;
+using ManagerLayer.UserManagement;
 
 namespace KFC_WebAPI.Controllers
 {
@@ -37,6 +40,18 @@ namespace KFC_WebAPI.Controllers
         public string securityQ3 { get; set; }
         [Required]
         public string securityQ3Answer { get; set; }
+    }
+
+    public class UpdatePasswordRequest
+    {
+        [Required]
+        public string emailAddress { get; set; }
+        [Required]
+        public string sessionToken { get; set; }
+        [Required]
+        public string oldPassword { get; set; }
+        [Required]
+        public string newPassword { get; set; }
     }
 
     public class UsersController : ApiController
@@ -139,6 +154,43 @@ namespace KFC_WebAPI.Controllers
                         return Content(HttpStatusCode.BadRequest, "Invalid Password");
                     }
                 }
+            }
+        }
+
+        [HttpPost]
+        [Route("api/users/updatepassword")]
+        public IHttpActionResult UpdatePassword([FromBody] UpdatePasswordRequest request)
+        {
+            using(var _db = new DatabaseContext())
+            {
+                UserManagementManager umm = new UserManagementManager();
+                User retrievedUser = umm.GetUser(request.emailAddress);
+                if (retrievedUser != null)
+                {
+                    SessionService ss = new SessionService();
+                    Session session = ss.GetSession(_db, request.sessionToken);
+                    if (session != null)
+                    {
+                        PasswordManager pm = new PasswordManager();
+                        string oldPasswordHashed = pm.HashPassword(request.oldPassword, retrievedUser.PasswordSalt);
+                        if (oldPasswordHashed == retrievedUser.PasswordHash)
+                        {
+                            if (request.newPassword.Length >= 12 || request.newPassword.Length <= 2000)
+                            {
+                                string newPasswordHashed = pm.HashPassword(request.newPassword, retrievedUser.PasswordSalt);
+                                if (pm.UpdatePassword(retrievedUser, request.newPassword))
+                                {
+                                    return Content(HttpStatusCode.OK, "Password has been updated");
+                                }
+                                return Content(HttpStatusCode.BadRequest, "New password matches old password");
+                            }
+                            return Content(HttpStatusCode.BadRequest, "New password does not meet minimum password requirements");
+                        }
+                        return Content(HttpStatusCode.BadRequest, "Current password inputted does not match current password");
+                    }
+                    return Content(HttpStatusCode.Unauthorized, "Session invalid");
+                }
+                return Content(HttpStatusCode.BadRequest, "Email address is not valid");
             }
         }
     }
