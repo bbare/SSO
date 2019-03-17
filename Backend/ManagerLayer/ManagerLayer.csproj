@@ -66,10 +66,13 @@
     <Compile Include="ApplicationManagement\ApplicationManager.cs" />
     <Compile Include="ApplicationManagement\ApplicationRequest.cs" />
     <Compile Include="ApplicationManagement\HttpResponseContent.cs" />
+    <Compile Include="AuthorizationManagement\IAuthorizationManager.cs" />
+    <Compile Include="LaunchManagement\LaunchManager.cs" />
+    <Compile Include="LaunchManagement\ILaunchManager.cs" />
     <Compile Include="Login\LoginManager.cs" />
     <Compile Include="PasswordManagement\PasswordManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="AuthorizationManager.cs" />
+    <Compile Include="AuthorizationManagement\AuthorizationManager.cs" />
     <Compile Include="UserManagement\UserManagementManager.cs" />
     <Compile Include="UserManager.cs" />
     <Compile Include="ValidationManager.cs" />

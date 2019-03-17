@@ -8,22 +8,28 @@
             <input v-model="deleteUrl" id="deleteUrl" class="form-control" v-if="!key" placeholder="User Deletion Url" required>
             <button class="button-register" type="submit" v-if="!key">Register</button>
         </form>
-        <div v-if="key" id="hide">
+        <div v-if="key">
             <h3>Successful Registration!</h3>
             <h3>Your API Key:</h3>
+            <p>{{ key }}</p>
         </div>
-        <p>{{ key }}</p>
+        <div v-if="secretKey">
+            <h3>Your Secret Key</h3>
+            <p>{{ secretKey }}</p>
+        </div>
+        
     </div>
 </template>
 
 <script>
 import axios from 'axios'
-import dev_const from '../const.js'
+import { apiURL } from '@/const.js'
 
 export default {
   data () {
     return {
       key: null,
+      secretKey: null,
       title: '',
       email: '',
       launchUrl: '',
@@ -33,7 +39,7 @@ export default {
   methods: {
     register: function () {
         // TODO: replace with SSO backend url
-      const url = `${dev_const.DEV_ROUTE}/applications/create`
+      const url = `${apiURL}/applications/create`
       axios.post(url, {
         title: document.getElementById('title').value,
         launchUrl: document.getElementById('launchUrl').value,
@@ -45,7 +51,8 @@ export default {
         }
       })
         .then(response => {
-            this.key = response.data; // Retrieve api key from response
+            this.key = response.data.Key; // Retrieve api key from response
+            this.secretKey = response.data.SharedSecretKey // Retrieve shared api key from response
         })
         .catch(function (error) {
             console.log(error);

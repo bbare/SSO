@@ -12,7 +12,7 @@
 
 <script>
     import axios from "axios"
-    //import dev_const from '../const.js'
+    import { apiURL } from '@/const.js'
     
     export default {
         name: 'login',

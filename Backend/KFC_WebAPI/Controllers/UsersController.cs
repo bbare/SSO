@@ -120,7 +120,7 @@ namespace KFC_WebAPI.Controllers
 
                 return Ok(new
                 {
-                    token = user.Id
+                    token = session.Token
                 });
             }
         }
