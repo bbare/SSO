@@ -75,6 +75,10 @@
     <Compile Include="Migrations\201903111003125_upate-sessions-userNotUnique.Designer.cs">
       <DependentUpon>201903111003125_upate-sessions-userNotUnique.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903160219313_update-applications-add-SharedSecretKey.cs" />
+    <Compile Include="Migrations\201903160219313_update-applications-add-SharedSecretKey.Designer.cs">
+      <DependentUpon>201903160219313_update-applications-add-SharedSecretKey.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApiKey.cs" />
     <Compile Include="Models\Application.cs" />
@@ -89,6 +93,7 @@
       <DependentUpon>201903051936518_PasswordReset.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\PasswordReset.cs" />
+    <Compile Include="Repositories\ISessionRepository.cs" />
     <Compile Include="Repositories\ResetRepository.cs" />
     <Compile Include="Repositories\SessionRepository.cs" />
     <Compile Include="Repositories\UserManagementRepository.cs" />
@@ -124,6 +129,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903111003125_upate-sessions-userNotUnique.resx">
       <DependentUpon>201903111003125_upate-sessions-userNotUnique.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903160219313_update-applications-add-SharedSecretKey.resx">
+      <DependentUpon>201903160219313_update-applications-add-SharedSecretKey.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
