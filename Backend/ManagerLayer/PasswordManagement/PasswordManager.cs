@@ -224,11 +224,29 @@ namespace ManagerLayer.PasswordManagement
             return (_passwordService.CheckPasswordPwned(newPasswordToCheck) > 3);
         }
 
-        public string SaltAndHashPassword(string password)
+        public string SaltAndHashPassword(string resetToken, string password)
         {
+            var retrievedPasswordReset = GetPasswordReset(resetToken);
+            var userIDAssociatedWithPasswordReset = retrievedPasswordReset.UserID;
             byte[] salt = _passwordService.GenerateSalt();
-            string hashedPassword = _passwordService.HashPassword(password, salt);
-            return hashedPassword;
+
+            using (var _db = CreateDbContext())
+            {
+                var userToUpdate = _db.Users.Find(userIDAssociatedWithPasswordReset);
+                if (userToUpdate != null)
+                {
+                    userToUpdate.PasswordSalt = salt;
+                    _db.SaveChanges();
+                    string hashedPassword = _passwordService.HashPassword(password, salt);
+                    return hashedPassword;
+                }
+            }
+            return null;
+        }
+
+        public string HashPassword(string password, byte[] salt)
+        {
+            return _passwordService.HashPassword(password, salt);
         }
 
         //This password update function is for when the user is not logged in and has answered the security questions

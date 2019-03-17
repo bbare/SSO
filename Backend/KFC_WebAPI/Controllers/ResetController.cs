@@ -97,7 +97,7 @@ namespace WebAPI.Controllers
                     {
                         if (!pm.CheckIsPasswordPwned(submittedPassword))
                         {
-                            string newPasswordHashed = pm.SaltAndHashPassword(submittedPassword);
+                            string newPasswordHashed = pm.SaltAndHashPassword(resetToken, submittedPassword);
                             pm.UpdatePassword(resetToken, newPasswordHashed);
                             return Content(HttpStatusCode.OK, "Password has been reset");
                         }

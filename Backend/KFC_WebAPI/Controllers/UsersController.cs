@@ -8,6 +8,9 @@ using System.Web.Http;
 using ManagerLayer;
 using ServiceLayer.Exceptions;
 using System.ComponentModel.DataAnnotations;
+using ManagerLayer.PasswordManagement;
+using ServiceLayer.Services;
+using ManagerLayer.UserManagement;
 
 namespace KFC_WebAPI.Controllers
 {
@@ -48,7 +51,7 @@ namespace KFC_WebAPI.Controllers
         [Required]
         public string oldPassword { get; set; }
         [Required]
-        public string NewPassword { get; set; }
+        public string newPassword { get; set; }
     }
 
     public class UsersController : ApiController
@@ -169,13 +172,13 @@ namespace KFC_WebAPI.Controllers
                     if (session != null)
                     {
                         PasswordManager pm = new PasswordManager();
-                        string oldPasswordHashed = pm.SaltAndHashPassword(request.oldPassword);
-                        if (oldPasswordHashed != retrievedUser.PasswordHash)
+                        string oldPasswordHashed = pm.HashPassword(request.oldPassword, retrievedUser.PasswordSalt);
+                        if (oldPasswordHashed == retrievedUser.PasswordHash)
                         {
-                            if (request.NewPassword.Length >= 12 || request.NewPassword.Length <= 2000)
+                            if (request.newPassword.Length >= 12 || request.newPassword.Length <= 2000)
                             {
-                                string newPasswordHashed = pm.SaltAndHashPassword(request.NewPassword);
-                                if (pm.UpdatePassword(retrievedUser, request.NewPassword))
+                                string newPasswordHashed = pm.HashPassword(request.newPassword, retrievedUser.PasswordSalt);
+                                if (pm.UpdatePassword(retrievedUser, request.newPassword))
                                 {
                                     return Content(HttpStatusCode.OK, "Password has been updated");
                                 }

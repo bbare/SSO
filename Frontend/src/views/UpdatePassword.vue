@@ -3,15 +3,9 @@
      <h1>Update Password</h1>
     <br />
     {{message}}
-    <br /><br />
-      <p v-if="errors.length">
-        <b>Please correct the following error(s):</b>
-          <ul>
-            <li v-for="(error, index) in errors" :key="index">
-              {{ error }}
-            </li>
-          </ul>
-      </p>
+    <br />
+    {{errorMessage}}
+    <br />
     <div class="submitPasswords">
         Old Password
         <input name="oldPassword" type="text" v-model="oldPassword"/>
@@ -35,38 +29,38 @@ export default {
   data () {
     return {
       message: 'Enter the new password:',
-      errors: [],
+      errorMessage: 'null',
       oldPassword: null,
       newPassword: null,
       confirmNewPassword: null
     }
   },
   methods: {
-    submitNewPasswords: function () {
+    submitPasswords: function () {
       if (this.newPassword.length < 12 || this.oldPassword.length < 12) {
-        this.errors.push('Password does not meet minimum length of 12')
+        alert('Password does not meet minimum length of 12')
       } else if (this.newPassword.length > 2000 || this.oldPassword.length > 2000) {
-        this.errors.push('Password exceeds maximum length of 2000')
+        alert('Password exceeds maximum length of 2000')
       } else if (this.confirmNewPassword !== this.newPassword) {
-        this.errors.push('Passwords do not match')
+        alert('Passwords do not match')
       } else {
-        this.errors = []
         this.message = 'Updating Password'
         axios({
           method: 'POST',
-          url: 'api.kfcsso.com/api/user/updatePassword',
+          url: 'http://localhost:61348/api/users/updatepassword',
           data: {
             email: this.$store.getEmail,
             sessionToken: this.$store.getToken,
             oldPassword: this.$data.oldPassword,
-            newPassword: this.$data.confirmNewPassword,
-            confirmNewPassword: this.$data.confirmNewPassword
+            newPassword: this.$data.confirmNewPassword
           },
           headers: {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Credentials': true
           }
         })
+          .then(response => {this.message = response.data})
+          .catch(e => { this.errorMessage = e }, response => {this.message = response.data})
       }
     }
   }
