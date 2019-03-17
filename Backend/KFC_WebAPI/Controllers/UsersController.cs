@@ -8,9 +8,6 @@ using System.Web.Http;
 using ManagerLayer;
 using ServiceLayer.Exceptions;
 using System.ComponentModel.DataAnnotations;
-using ManagerLayer.PasswordManagement;
-using ManagerLayer.UserManagement;
-using ServiceLayer.Services;
 
 namespace KFC_WebAPI.Controllers
 {
@@ -130,7 +127,7 @@ namespace KFC_WebAPI.Controllers
         public IHttpActionResult Login([FromBody] LoginRequest request)
         {
             LoginManager loginM = new LoginManager();
-            if (loginM.LoginCheckUserExists(request) == false)
+            if (loginM.LoginCheckUserExists(request.email) == false)
             {
                 //404
                 return Content(HttpStatusCode.NotFound, "Invalid Username");
@@ -138,7 +135,7 @@ namespace KFC_WebAPI.Controllers
             }
             else
             {
-                if (loginM.LoginCheckUserDisabled(request))
+                if (loginM.LoginCheckUserDisabled())
                 {
                     //401
                     return Content(HttpStatusCode.Unauthorized, "User is Disabled");
@@ -146,7 +143,7 @@ namespace KFC_WebAPI.Controllers
                 }
                 else
                 {
-                    if (loginM.LoginCheckPassword(request))
+                    if (loginM.LoginCheckPassword(request.password))
                     {
                         return Ok(loginM.LoginAuthorized());
                     }
@@ -158,7 +155,7 @@ namespace KFC_WebAPI.Controllers
                 }
             }
         }
-
+        
         [HttpPost]
         [Route("api/users/updatepassword")]
         public IHttpActionResult UpdatePassword([FromBody] UpdatePasswordRequest request)
