@@ -192,8 +192,10 @@ namespace UnitTesting
         {
             //Arrange
             string password = "password";
+            var user = tu.CreateUserObject();
+            string resetToken = tu.CreatePasswordResetObject(user).ResetToken;
             //Act
-            var response = pm.SaltAndHashPassword(password);
+            var response = pm.SaltAndHashPassword(resetToken, password);
             //Assert
             Assert.IsNotNull(response);
             Assert.AreNotEqual(response, password);
