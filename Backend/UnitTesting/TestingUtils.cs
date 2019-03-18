@@ -179,7 +179,8 @@ namespace UnitTesting
                 Email = "kfc@email.com",
                 UserDeletionUrl = "https://kfc.com/delete",
                 LogoUrl = "https://kfc.com/logo.png",
-                Description = "A KFC app"
+                Description = "A KFC app",
+                SharedSecretKey = "abcd2312312b1bc23b1c2b312bc312b3b21c3b123cb1b"
             };
             return app;
         }
