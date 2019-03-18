@@ -55,7 +55,7 @@ export default {
             this.secretKey = response.data.SharedSecretKey // Retrieve shared api key from response
         })
         .catch(function (error) {
-            console.log(error);
+            alert(error.response.data.Message);
         })
     }
   }

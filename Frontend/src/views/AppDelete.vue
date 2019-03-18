@@ -41,7 +41,7 @@ export default {
             this.validation = response.data; // Retrieve deletion validation
         })
         .catch(function (error) {
-            console.log(error);
+            alert(error.response.data);
         })
     }
   }

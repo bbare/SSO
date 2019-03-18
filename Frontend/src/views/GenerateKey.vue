@@ -41,7 +41,7 @@ export default {
             this.key = response.data; // Retrieve api key from response
         })
         .catch(function (error) {
-            console.log(error);
+            alert(error.response.data);
         })
     }
   }
