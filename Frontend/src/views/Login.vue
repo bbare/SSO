@@ -24,7 +24,7 @@
         },
         methods: {
             login() {
-               const url = `${dev_const.DEV_ROUTE}/users/login`
+               const url = `${apiURL}/users/login`
                axios.post(url,
                {
                     email: this.$data.email,
