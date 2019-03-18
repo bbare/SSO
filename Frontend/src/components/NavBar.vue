@@ -18,7 +18,27 @@
 
 <script>
 export default {
-  name: 'NavBar'
+  name: 'NavBar',
+  data () {
+    return{
+      isLogged: this.checkIfIsLogged()
+    }
+  },
+  created () {
+    this.$bus.$on('logged', () => {
+      this.isLogged = this.checkIfIsLogged()
+    })
+  },
+  methods: {
+    checkIfIsLogged () {
+      let token = localStorage.getItem('token')
+      if (token) {
+        return true
+      } else {
+        return false
+      }
+    }
+  }
 }
 </script>
 

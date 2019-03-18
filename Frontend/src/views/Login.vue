@@ -31,8 +31,9 @@
                     password: this.$data.password
                })
                .then(resp => {
-                   localStorage.email = this.email;
-                   localStorage.token = resp.data; 
+                   let respData = resp.data
+                   localStorage.setItem('token', respData)
+                   this.$bus.$emit('logged', 'User logged')
                    this.$router.push('/dashboard')
                 })
                .catch(e => {console.log(e);
