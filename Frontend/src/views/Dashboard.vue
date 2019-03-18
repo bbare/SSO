@@ -3,7 +3,7 @@
     <h1>This is the Portal</h1>
 
     <!-- Feel free to hardcode an app ID here until dashboard logic is complete -->
-    <v-btn depressed color="primary" small v-on:click="launch('70579CB0-3D33-47C3-8CAD-650FC4FFBBAC')">Launch App (hardcoded ID)</v-btn>
+    <v-btn depressed color="primary" small v-on:click="launch('DD9F3D39-33C0-44C4-A8B3-379FA5DCA730')">Launch App (PointMap ID)</v-btn>
 
     <v-alert
       :value="error"
