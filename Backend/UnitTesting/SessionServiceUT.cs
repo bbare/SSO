@@ -136,7 +136,7 @@ namespace UnitTesting
         {
             // Arrange
             string nonExistingToken = Guid.NewGuid().ToString();
-
+            Guid nonExistingId = Guid.NewGuid();
             var expectedResponse = nonExistingId;
 
             using (_db = new DatabaseContext())
