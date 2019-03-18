@@ -11,7 +11,7 @@
     <v-btn to="add" flat>App Register</v-btn>
     <v-btn to="key" flat>Generate Key</v-btn>
     <v-btn to="delete" flat>App Delete</v-btn>
-    <v-btn to="login" flat>Login</v-btn>
+    <v-btn v-if="!isLogged" to="login" flat>Login</v-btn>
     <v-btn to="updatepassword" flat>Update Password</v-btn>
   </v-toolbar>
 </template>
