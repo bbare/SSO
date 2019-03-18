@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DataAccessLayer.Models;
 using DataAccessLayer.Database;
+using System.Data.Entity;
 
 namespace DataAccessLayer.Repositories
 {
@@ -13,29 +14,34 @@ namespace DataAccessLayer.Repositories
         
         public PasswordReset GetReset(DatabaseContext _db, string resetToken)
         {
-            var returnedResetToken = _db.ResetIDs.Find(resetToken);
+            var returnedResetToken = _db.PasswordResets
+                                     .Where(r => r.ResetToken == resetToken)
+                                     .FirstOrDefault<PasswordReset>();
             return returnedResetToken;
         }
         
         public PasswordReset CreateReset(DatabaseContext _db, PasswordReset newPasswordReset)
         {
-            _db.ResetIDs.Add(newPasswordReset);
+            _db.Entry(newPasswordReset).State = EntityState.Added;
             return newPasswordReset;
         }
 
         public PasswordReset UpdateReset(DatabaseContext _db, PasswordReset updatedPasswordReset)
         {
-            var originalPasswordReset = _db.ResetIDs.Find(updatedPasswordReset.ResetToken);
-
-            _db.Entry(originalPasswordReset).CurrentValues.SetValues(updatedPasswordReset);
+            _db.Entry(updatedPasswordReset).State = EntityState.Modified;
             return updatedPasswordReset;
         }
 
         public PasswordReset DeleteReset(DatabaseContext _db, string passwordResetTokenToDelete)
         {
-            var passwordReset = _db.ResetIDs.Find(passwordResetTokenToDelete);
-            _db.ResetIDs.Remove(passwordReset);
-            return passwordReset;
+            var PasswordResetToRemove = _db.PasswordResets
+                                     .Where(r => r.ResetToken == passwordResetTokenToDelete)
+                                     .FirstOrDefault<PasswordReset>();
+
+            if (PasswordResetToRemove == null)
+                return null;
+            _db.Entry(PasswordResetToRemove).State = EntityState.Deleted;
+            return PasswordResetToRemove;
         }
 
         public bool ExistingReset(DatabaseContext _db, string resetToken)
