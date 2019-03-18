@@ -24,7 +24,7 @@ namespace ServiceLayer.Services
         public MimeMessage createEmailPlainBody(string receiverName, string receiverEmail, string emailSubject, string emailBody)
         {
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("Support", "support@kfcsso.com"));
+            message.From.Add(new MailboxAddress("Support", "no-reply@kfc-sso.com"));
             message.To.Add(new MailboxAddress(receiverName, receiverEmail));
             message.Subject = emailSubject;
             message.Body = new TextPart("plain")

@@ -37,7 +37,7 @@ namespace ManagerLayer.PasswordManagement
         public PasswordReset CreatePasswordReset(Guid userID)
         {
             string generatedResetToken = _tokenService.GenerateToken();
-            
+
             DateTime newExpirationTime = DateTime.Now.AddMinutes(TimeToExpire);
 
             using (var _db = CreateDbContext())
@@ -103,7 +103,7 @@ namespace ManagerLayer.PasswordManagement
         public DateTime GetPasswordResetExpiration(string resetToken)
         {
             var PasswordResetRetrieved = GetPasswordReset(resetToken);
-            if(PasswordResetRetrieved != null)
+            if (PasswordResetRetrieved != null)
             {
                 return PasswordResetRetrieved.ExpirationTime;
             }
@@ -131,7 +131,7 @@ namespace ManagerLayer.PasswordManagement
         public bool GetPasswordResetStatus(string resetToken)
         {
             var PasswordResetRetrieved = GetPasswordReset(resetToken);
-            if(PasswordResetRetrieved != null)
+            if (PasswordResetRetrieved != null)
             {
                 return PasswordResetRetrieved.Disabled;
             }
@@ -258,21 +258,14 @@ namespace ManagerLayer.PasswordManagement
             using (var _db = CreateDbContext())
             {
                 var userToUpdate = _db.Users.Find(userIDAssociatedWithPasswordReset);
-                if (userToUpdate != null) {
-                    var storedHash = userToUpdate.PasswordHash;
-                    if (storedHash == newPasswordHash)
-                    {
-                        return false;
-                    }
-                    else 
-                    {
-                        userToUpdate.PasswordHash = newPasswordHash;
-                        _db.SaveChanges();
-                        LockPasswordReset(resetToken);
-                        _db.SaveChanges();
-                        SendPasswordChange(userToUpdate.Email);
-                        return true;
-                    }
+                if (userToUpdate != null)
+                {
+                    userToUpdate.PasswordHash = newPasswordHash;
+                    _db.SaveChanges();
+                    LockPasswordReset(resetToken);
+                    _db.SaveChanges();
+                    SendPasswordChange(userToUpdate.Email);
+                    return true;
                 }
                 return false;
             }

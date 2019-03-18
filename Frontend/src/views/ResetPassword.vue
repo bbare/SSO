@@ -3,11 +3,11 @@
     <h1>Reset Password</h1>
     <br />
     {{message}}
-    <br /><br />
+    <br />
+    <br />
     <div v-if="haveNetworkError">
       {{errorMessage}}
-      <br/>
-      
+    <br/>
     </div>
       
     <div class="SecurityQuestions" v-if="securityQuestions.length">
@@ -73,7 +73,7 @@ export default {
     })
       .then(response => (this.securityQuestions = response.data),
         this.message = 'Enter your answers for the security questions, fields are case sensitive')
-      .catch(e => { this.message = e.response.data }, this.haveNetworkError = true)
+      .catch(e => { alert(e.response.data) })
     if(this.message === "Reset link is no longer valid"){
       this.$router.push("SendResetLink")
     }
@@ -99,12 +99,8 @@ export default {
           'Access-Control-Allow-Credentials': true
         }
       })
-        .then(response => (this.showPasswordResetField = response.data))
-        .catch(e => { this.message = e.response.data }, this.haveNetworkError = true)
-      if (this.showPasswordResetField === false) {
-        this.errorMessage = "Answers are incorrect"
-        this.wrongAnswerCounter = this.wrongAnswerCounter + 1
-      }
+        .then(response => (this.showPasswordResetField = response.data), this.wrongAnswerCounter = this.wrongAnswerCounter + 1)
+        .catch(e => { alert(e.response.data + " Answer(s) incorrect") })
       }
     },
     submitNewPassword: function () {
@@ -124,11 +120,8 @@ export default {
           'Access-Control-Allow-Credentials': true
         }
       })
-        .then(response => (this.message = response.data))
-        .catch(e => { this.message = e.response.data }, this.haveNetworkError = true)
-      if (this.message === 'Password has been reset') {
-        this.showPasswordResetField = false
-      }
+        .then(response => (alert(response.data)))
+        .catch(e => { alert(e.response.data) })
     }
       }
   }
