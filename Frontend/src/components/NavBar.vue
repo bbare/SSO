@@ -11,7 +11,7 @@
     <v-btn to="add" flat>Register</v-btn>
     <v-btn to="key" flat>Generate</v-btn>
     <v-btn to="delete" flat>Delete</v-btn>
-    <v-btn to="login" flat v-if="isLogged === false">Login</v-btn>
+    <v-btn to="login" flat v-if="isLogged !== true">Login</v-btn>
   </v-toolbar>
 </template>
 
