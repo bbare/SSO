@@ -11,13 +11,33 @@
     <v-btn to="add" flat>Register</v-btn>
     <v-btn to="key" flat>Generate</v-btn>
     <v-btn to="delete" flat>Delete</v-btn>
-    <v-btn to="login" flat>Login</v-btn>
+    <v-btn to="login" flat v-if="isLogged === false">Login</v-btn>
   </v-toolbar>
 </template>
 
 <script>
 export default {
-  name: 'NavBar'
+  name: 'NavBar',
+  data () {
+    return{
+      isLogged: this.checkIfIsLogged()
+    }
+  },
+  created () {
+    this.$bus.$on('logged', () => {
+      this.isLogged = this.checkIfIsLogged()
+    })
+  },
+  methods: {
+    checkIfIsLogged () {
+      let token = localStorage.getItem('token')
+      if (token) {
+        return true
+      } else {
+        return false
+      }
+    }
+  }
 }
 </script>
 
