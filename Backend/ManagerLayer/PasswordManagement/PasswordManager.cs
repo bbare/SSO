@@ -276,6 +276,7 @@ namespace ManagerLayer.PasswordManagement
         {
             using (var _db = CreateDbContext())
             {
+                var userRetrieved = _db.Users.Find(userToUpdate.Id);
                 var storedHash = userToUpdate.PasswordHash;
                 if (storedHash == newPasswordHash)
                 {
@@ -283,7 +284,7 @@ namespace ManagerLayer.PasswordManagement
                 }
                 else
                 {
-                    userToUpdate.PasswordHash = newPasswordHash;
+                    userRetrieved.PasswordHash = newPasswordHash;
                     _db.SaveChanges();
                     return true;
                 }

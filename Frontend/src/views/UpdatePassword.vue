@@ -4,7 +4,6 @@
     <br />
     {{message}}
     <br />
-    {{errorMessage}}
     <br />
     <div class="submitPasswords">
         Old Password
@@ -29,7 +28,6 @@ export default {
   data () {
     return {
       message: 'Enter the new password:',
-      errorMessage: 'null',
       oldPassword: null,
       newPassword: null,
       confirmNewPassword: null
@@ -49,7 +47,7 @@ export default {
           method: 'POST',
           url: 'http://localhost:61348/api/users/updatepassword',
           data: {
-            email: localStorage.email,
+            emailAddress: localStorage.email,
             sessionToken: localStorage.token,
             oldPassword: this.$data.oldPassword,
             newPassword: this.$data.confirmNewPassword
@@ -59,8 +57,8 @@ export default {
             'Access-Control-Allow-Credentials': true
           }
         })
-          .then(response => {this.message = response.data})
-          .catch(e => { this.errorMessage = e }, response => {this.message = response.data})
+          .then(response => {alert(response.data)})
+          .catch(e => {alert(e.response.data)})
       }
     }
   }

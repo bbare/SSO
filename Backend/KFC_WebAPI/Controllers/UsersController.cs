@@ -177,12 +177,16 @@ namespace KFC_WebAPI.Controllers
                         {
                             if (request.newPassword.Length >= 12 || request.newPassword.Length <= 2000)
                             {
-                                string newPasswordHashed = pm.HashPassword(request.newPassword, retrievedUser.PasswordSalt);
-                                if (pm.UpdatePassword(retrievedUser, request.newPassword))
+                                if (!pm.CheckIsPasswordPwned(request.newPassword))
                                 {
-                                    return Content(HttpStatusCode.OK, "Password has been updated");
+                                    string newPasswordHashed = pm.HashPassword(request.newPassword, retrievedUser.PasswordSalt);
+                                    if (pm.UpdatePassword(retrievedUser, newPasswordHashed))
+                                    {
+                                        return Content(HttpStatusCode.OK, "Password has been updated");
+                                    }
+                                    return Content(HttpStatusCode.BadRequest, "New password matches old password");
                                 }
-                                return Content(HttpStatusCode.BadRequest, "New password matches old password");
+                                return Content(HttpStatusCode.BadRequest, "Password has been pwned, please use a different password");
                             }
                             return Content(HttpStatusCode.BadRequest, "New password does not meet minimum password requirements");
                         }
