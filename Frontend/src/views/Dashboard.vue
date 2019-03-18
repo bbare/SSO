@@ -3,7 +3,7 @@
     <h1>This is the Portal</h1>
 
     <!-- Feel free to hardcode an app ID here until dashboard logic is complete -->
-    <button v-on:click="launch('70579CB0-3D33-47C3-8CAD-650FC4FFBBAC')">Fake App (hardcoded ID)</button>
+    <v-btn depressed color="primary" small v-on:click="launch('70579CB0-3D33-47C3-8CAD-650FC4FFBBAC')">Launch App (hardcoded ID)</v-btn>
 
     <v-alert
       :value="error"
