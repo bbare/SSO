@@ -14,7 +14,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from 'axios';
+import { apiURL } from '@/const.js';
 
 export default {
   name: 'SendResetLink',
@@ -34,7 +35,7 @@ export default {
       } else {
         axios({
           method: 'POST',
-          url: 'http://localhost:61348/api/reset/send',
+          url: `${apiURL}/reset/send`,
           data: {email: this.$data.email, url: this.$data.email},
           headers: {
             'Access-Control-Allow-Origin': '*',
@@ -42,7 +43,7 @@ export default {
           }
         })
           .then(response => {this.message = response.data})
-          .catch(e => { this.errorMessage = e }, response => {this.message = response.data})
+          .catch(e => { this.errorMessage = "Email service is unavailable." }, response => {this.message = response.data})
       }
     },
     validEmail: function (email) {

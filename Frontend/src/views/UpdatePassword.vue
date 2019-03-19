@@ -22,7 +22,9 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from 'axios';
+import { apiURL } from '@/const.js';
+
 export default {
   name: 'UpdatePassword',
   data () {
@@ -45,7 +47,7 @@ export default {
         this.message = 'Updating Password'
         axios({
           method: 'POST',
-          url: 'http://localhost:61348/api/users/updatepassword',
+          url: `${apiURL}/users/updatepassword`,
           data: {
             emailAddress: localStorage.email,
             sessionToken: localStorage.token,

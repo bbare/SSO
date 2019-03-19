@@ -24,7 +24,6 @@ namespace ManagerLayer.PasswordManagement
         {
             _resetService = new ResetService();
             _userService = new UserService();
-            _emailService = new EmailService();
             _tokenService = new TokenService();
             _passwordService = new PasswordService();
         }
@@ -361,6 +360,14 @@ namespace ManagerLayer.PasswordManagement
         //Function to create the email is user exists 
         public void SendResetEmailUserExists(string receiverEmail, string resetURL)
         {
+            try
+            {
+                _emailService = new EmailService();
+            }
+            catch (Exception)
+            {
+                throw new Exception("Email service has encountered a problem.");
+            }
             string resetPasswordSubjectString = "KFC SSO Reset Password";
             string userFullName = receiverEmail;
             string template = "Hi, \r\n" +
@@ -380,6 +387,7 @@ namespace ManagerLayer.PasswordManagement
         //Function to create the email is user exists, but has too many reset links
         public void SendResetEmailUserExistsTooManyResets(string receiverEmail)
         {
+            _emailService = new EmailService();
             string resetPasswordSubjectString = "KFC SSO Reset Password";
             string userFullName = receiverEmail;
             string resetPasswordBodyString = "Hi, \r\n" +
@@ -397,6 +405,7 @@ namespace ManagerLayer.PasswordManagement
         //Function to create the email is user doesn't exist
         public void SendResetEmailUserDoesNotExist(string receiverEmail)
         {
+            _emailService = new EmailService();
             string resetPasswordSubjectString = "KFC SSO Reset Password";
             string userFullName = "Unknown";
             string resetPasswordUserDoesNotExistEmailBody = "Hello, \r\n" +
@@ -416,6 +425,8 @@ namespace ManagerLayer.PasswordManagement
         //Function to create the email if the password was changed
         public void SendPasswordChange(string receiverEmail)
         {
+            _emailService = new EmailService();
+
             //Need SQL Query to get info about user from DB
             string resetPasswordSubjectString = "KFC SSO Reset Password";
             string userFullName = receiverEmail;

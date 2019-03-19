@@ -31,10 +31,11 @@
                     password: this.$data.password
                })
                .then(resp => {
-                   let respData = resp.data
-                   localStorage.setItem('token', respData)
-                   this.$bus.$emit('logged', 'User logged')
-                   this.$router.push('/dashboard')
+                   let respData = resp.data;
+                   localStorage.setItem('token', respData);
+                   localStorage.setItem('email', this.email);
+                   this.$bus.$emit('logged', 'User logged');
+                   this.$router.push('/dashboard');
                 })
                .catch(e => {console.log(e);
                     if(e.response.status === 404){
