@@ -32,6 +32,7 @@
                })
                .then(resp => {
                    let respData = resp.data
+                   localStorage.setItem('email', this.$data.email)
                    localStorage.setItem('token', respData)
                    this.$bus.$emit('logged', 'User logged')
                    this.$router.push('/dashboard')
