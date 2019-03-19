@@ -1,15 +1,55 @@
 <template>
     <div class="register-wrapper">
-        <form class="form-register" @submit.prevent="register">
-            <h2 class="form-register-heading">Register Your Application</h2>
-            <input v-model="title" id="title" class="form-control" v-if="!key" placeholder="Title" required autofocus>
-            <input v-model="launchUrl" id="launchUrl" class="form-control" v-if="!key" placeholder="Launch Url" required>
-            <input v-model="email" id="email" type="email" class="form-control" v-if="!key" placeholder="Email" required>
-            <input v-model="deleteUrl" id="deleteUrl" class="form-control" v-if="!key" placeholder="User Deletion Url" required>
-            <button class="button-register" type="submit" v-if="!key">Register</button>
-        </form>
+        
+        <h1>Register your Application</h1>
+
+        <br />
+        <v-form>
+        <v-text-field
+            name="title"
+            id="title"
+            v-model="title"
+            type="title"
+            label="Title" 
+            v-if="!key"
+            /><br />
+        <v-text-field
+            name="launchUrl"
+            id="launchUrl"
+            type="launchUrl"
+            v-model="launchUrl"
+            label="Launch Url" 
+            v-if="!key"
+            /><br />
+        <v-text-field
+            name="email"
+            id="email"
+            type="email"
+            v-model="email"
+            label="Email" 
+            v-if="!key"
+            /><br />
+        <v-text-field
+            name="deleteUrl"
+            id="deleteUrl"
+            type="deleteUrl"
+            v-model="deleteUrl"
+            label="User Deletion Url" 
+            v-if="!key"
+            /><br />
+
+        
+        <v-alert
+            :value="error"
+            type="error"
+            transition="scale-transition"
+        >
+            {{error}}
+        </v-alert>
+
         <div v-if="key">
             <h3>Successful Registration!</h3>
+            <br />
             <h3>Your API Key:</h3>
             <p>{{ key }}</p>
         </div>
@@ -17,6 +57,12 @@
             <h3>Your Secret Key</h3>
             <p>{{ secretKey }}</p>
         </div>
+
+        <br />
+
+        <v-btn color="success" v-if="!key" v-on:click="register">Register</v-btn>
+
+        </v-form>
         
     </div>
 </template>
@@ -33,12 +79,20 @@ export default {
       title: '',
       email: '',
       launchUrl: '',
-      deleteUrl: ''
+      deleteUrl: '',
+      error: ''
     }
   },
   methods: {
     register: function () {
-        // TODO: replace with SSO backend url
+      
+      this.error = "";
+      if (this.title.length == 0 || this.email.length == 0 || this.launchUrl.length == 0 || this.deleteUrl.length == 0) {
+        this.error = "Fields Cannot Be Left Blank.";
+      }
+
+      if (this.error) return;
+
       const url = `${apiURL}/applications/create`
       axios.post(url, {
         title: document.getElementById('title').value,
@@ -54,8 +108,8 @@ export default {
             this.key = response.data.Key; // Retrieve api key from response
             this.secretKey = response.data.SharedSecretKey // Retrieve shared api key from response
         })
-        .catch(function (error) {
-            alert(error.response.data.Message);
+        .catch(err => {
+            this.error = err.response.data.Message;
         })
     }
   }
@@ -64,44 +118,10 @@ export default {
 </script>
 
 <style lang="css">
+
 .register-wrapper {
-    background: #fff;
     width: 70%;
     margin: 1px auto;
-    text-align: center;
-}
-
-.form-register {
-    max-width: 330px;
-    padding: 5% 10px;
-    margin: 0 auto;
-}
-
-.form-register .form-control {
-    position: relative;
-    height: auto;
-    -webkit-box-sizing: border-box;
-        box-sizing: border-box;
-    padding: 10px;
-    font-size: 16px;
-}
-
-.form-register .form-control:focus {
-    z-index: 2;
-}
-
-.form-register input {
-    margin-bottom: 10px;
-    width: 100%;
-}
-
-.form-register button {
-    width: 100%;
-    height: 40px;
-}
-
-.form-register h3 {
-    margin-top: 50px;
 }
 
 </style>
