@@ -1,15 +1,47 @@
 <template>
     <div class="delete-wrapper">
-        <form class="form-delete" @submit.prevent="deleteApp">
-            <h2 class="form-delete-heading">Delete Your Application</h2>
-            <input v-model="title" id="title" class="form-control" v-if="!validation" placeholder="Application Title" required autofocus>
-            <input v-model="email" id="email" type="email" class="form-control" v-if="!validation" placeholder="Email" required>
-            <button class="button-delete" type="submit" v-if="!validation">Delete</button>
-        </form>
+
+        <h1>Delete Your Application</h1>
+
+        <br />
+        <v-form>
+        <v-text-field
+            name="title"
+            id="title"
+            v-model="title"
+            type="title"
+            label="Application Title" 
+            v-if="!validation"
+            /><br />
+        <v-text-field
+            name="email"
+            id="email"
+            type="email"
+            v-model="email"
+            label="Email" 
+            v-if="!validation"
+            /><br />
+
+        
+        <v-alert
+            :value="error"
+            type="error"
+            transition="scale-transition"
+        >
+            {{error}}
+        </v-alert>
+
         <div v-if="validation" id="hide">
             <h3>Successful Deletion!</h3>
         </div>
         <p>{{ validation }}</p>
+
+        <br />
+
+        <v-btn color="success" v-if="!validation" v-on:click="deleteApp">Delete</v-btn>
+
+        </v-form>
+
     </div>
 </template>
 
@@ -22,12 +54,20 @@ export default {
     return {
       validation: null,
       title: '',
-      email: ''
+      email: '',
+      error: ''
     }
   },
   methods: {
     deleteApp: function () {
-        // TODO: replace with SSO backend url
+      
+      this.error = "";
+      if (this.title.length == 0 || this.email.length == 0) {
+        this.error = "Fields Cannot Be Left Blank.";
+      }
+
+      if (this.error) return;
+
       const url = `${apiURL}/applications/delete`
       axios.post(url, {
         title: document.getElementById('title').value,
@@ -40,8 +80,8 @@ export default {
         .then(response => {
             this.validation = response.data; // Retrieve deletion validation
         })
-        .catch(function (error) {
-            console.log(error);
+        .catch(err => {
+            this.error = err.response.data
         })
     }
   }
@@ -51,43 +91,8 @@ export default {
 
 <style lang="css">
 .delete-wrapper {
-    background: #fff;
     width: 70%;
     margin: 1px auto;
-    text-align: center;
-}
-
-.form-delete {
-    max-width: 330px;
-    padding: 5% 10px;
-    margin: 0 auto;
-}
-
-.form-delete .form-control {
-    position: relative;
-    height: auto;
-    -webkit-box-sizing: border-box;
-        box-sizing: border-box;
-    padding: 10px;
-    font-size: 16px;
-}
-
-.form-delete .form-control:focus {
-    z-index: 2;
-}
-
-.form-delete input {
-    margin-bottom: 10px;
-    width: 100%;
-}
-
-.form-delete button {
-    width: 100%;
-    height: 40px;
-}
-
-.form-delete h3 {
-    margin-top: 50px;
 }
 
 </style>
