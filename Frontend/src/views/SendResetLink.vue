@@ -6,7 +6,7 @@
     <br /><br />
     {{errorMessage}}
     <br/>
-    <input name="email" type="text" v-model="email" placeholder="Email"/>
+    <input id='email' name="email" type="text" v-model="email" placeholder="Email"/>
     <br />
     <br />
     <button type="submit" v-on:click="submitEmail">Send Email</button>
@@ -41,7 +41,7 @@ export default {
             'Access-Control-Allow-Credentials': true
           }
         })
-          .then(response => {this.message = response.data})
+          .then(response => {this.message = response.data}, this.errorMessage = '')
           .catch(e => { this.errorMessage = e }, response => {this.message = response.data})
       }
     },
