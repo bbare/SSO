@@ -3,7 +3,8 @@
     <h1>This is the Dashboard</h1>
 
     <!-- Feel free to hardcode an app ID here until dashboard logic is complete -->
-    <v-btn depressed color="primary" small v-on:click="launch('DD9F3D39-33C0-44C4-A8B3-379FA5DCA730')">Launch App (PointMap ID)</v-btn>
+    <!-- PointMap Registered APP ID -->
+    <v-btn depressed color="primary" small v-on:click="launch('DD479768-E765-4403-8A34-4B65AF653E34')">Launch App (PointMap ID)</v-btn>
 
     <v-alert
       :value="error"
