@@ -105,31 +105,31 @@ namespace UnitTesting
             }
         }
 
-        //[TestMethod]
-        //public void Delete_Session_Success()
-        //{
-        //    // Arrange
-        //    newUser = tu.CreateUserObject();
-        //    newSession = tu.CreateSessionObject(newUser);
+        [TestMethod]
+        public void Delete_Session_Success()
+        {
+            // Arrange
+            newUser = tu.CreateUserObject();
+            newSession = tu.CreateSessionObject(newUser);
 
-        //    using (_db = tu.CreateDataBaseContext())
-        //    {
-        //        // Act
-        //        newSession = ss.CreateSession(_db, newSession);
-        //        var expectedResponse = newSession;
+            using (_db = tu.CreateDataBaseContext())
+            {
+                // Act
+                newSession = ss.CreateSession(_db, newSession);
+                var expectedResponse = newSession;
 
-        //        _db.SaveChanges();
+                _db.SaveChanges();
 
-        //        var response = ss.DeleteSession(_db, newSession.Token, newUser.Id);
-        //        _db.SaveChanges();
-        //        var result = _db.Sessions.Find(expectedResponse.Id);
+                var response = ss.DeleteSession(_db, newSession.Token, newUser.Id);
+                _db.SaveChanges();
+                var result = _db.Sessions.Find(expectedResponse.Id);
 
-        //        // Assert
-        //        Assert.IsNotNull(response);
-        //        Assert.IsNull(result);
-        //        Assert.AreEqual(response.Id, expectedResponse.Id);
-        //    }
-        //}
+                // Assert
+                Assert.IsNotNull(response);
+                Assert.IsNull(result);
+                Assert.AreEqual(response.Id, expectedResponse.Id);
+            }
+        }
 
         [TestMethod]
         public void Delete_Session_NonExisting()
@@ -234,23 +234,23 @@ namespace UnitTesting
             }
         }
 
-        //[TestMethod]
-        //public void Get_Session_NonExisting()
-        //{
-        //    // Arrange
-        //    Guid nonExistingSession = Guid.NewGuid();
-        //    string nonExistingToken = Guid.NewGuid().ToString();
-        //    Session expectedResult = null;
+        [TestMethod]
+        public void Get_Session_NonExisting()
+        {
+            // Arrange
+            Guid nonExistingSession = Guid.NewGuid();
+            string nonExistingToken = Guid.NewGuid().ToString();
+            Session expectedResult = null;
 
-        //    // Act
-        //    using (_db = tu.CreateDataBaseContext())
-        //    {
-        //        var result = ss.GetSession(_db, nonExistingToken, nonExistingSession);
+            // Act
+            using (_db = tu.CreateDataBaseContext())
+            {
+                var result = ss.GetSession(_db, nonExistingToken, nonExistingSession);
 
-        //        // Assert
-        //        Assert.IsNull(result);
-        //        Assert.AreEqual(expectedResult, result);
-        //    }
-        //}
+                // Assert
+                Assert.IsNull(result);
+                Assert.AreEqual(expectedResult, result);
+            }
+        }
     }
 }
