@@ -14,6 +14,7 @@
     <v-btn to="delete" flat>App Delete</v-btn>
     <v-btn v-if="!isLogged" to="login" flat>Login</v-btn>
     <v-btn v-if="isLogged" to="updatepassword" flat>Update Password</v-btn>
+    <v-btn v-if="isLogged" to="logout" flat>Logout</v-btn>
   </v-toolbar>
 </template>
 
