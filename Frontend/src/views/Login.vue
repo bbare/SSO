@@ -68,14 +68,11 @@
                    this.$router.push('/dashboard')
                 })
                .catch(e => {console.log(e);
-                    if(e.response.status === 404){
-                        this.error = "User Not Found"
+                    if(e.response.status === 400){
+                        this.error = "Invalid Username/Password"
                     }
                     else if(e.response.status === 401){
                         this.error = "User is Disabled"
-                    }
-                    else if(e.response.status === 400){ 
-                        this.error = "Invalid Password"
                     }
                     else{
                         this.error = e.response.data
