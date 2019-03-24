@@ -117,8 +117,8 @@ namespace KFC_WebAPI.Controllers
             LoginManager loginM = new LoginManager();
             if (loginM.LoginCheckUserExists(request) == false)
             {
-                //404
-                return Content(HttpStatusCode.NotFound, "Invalid Username");
+                //400
+                return Content(HttpStatusCode.BadRequest, "Invalid Username/Password");
             }
             else
             {
@@ -136,7 +136,7 @@ namespace KFC_WebAPI.Controllers
                     else
                     {
                         //400
-                        return Content(HttpStatusCode.BadRequest, "Invalid Password");
+                        return Content(HttpStatusCode.BadRequest, "Invalid Username/Password");
                     }
                 }
             }
