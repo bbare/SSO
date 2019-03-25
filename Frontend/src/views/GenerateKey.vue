@@ -1,15 +1,47 @@
 <template>
     <div class="generate-wrapper">
-        <form class="form-generate" @submit.prevent="generate">
-            <h2 class="form-generate-heading">Generate a New API Key</h2>
-            <input v-model="title" id="title" class="form-control" v-if="!key" placeholder="Application Title" required autofocus>
-            <input v-model="email" id="email" type="email" class="form-control" v-if="!key" placeholder="Email" required>
-            <button class="button-generate" type="submit" v-if="!key">Generate</button>
-        </form>
+
+        <h1>Generate a New API Key</h1>
+
+        <br />
+        <v-form>
+        <v-text-field
+            name="title"
+            id="title"
+            v-model="title"
+            type="title"
+            label="Application Title" 
+            v-if="!key"
+            /><br />
+        <v-text-field
+            name="email"
+            id="email"
+            type="email"
+            v-model="email"
+            label="Email" 
+            v-if="!key"
+            /><br />
+
+        
+        <v-alert
+            :value="error"
+            type="error"
+            transition="scale-transition"
+        >
+            {{error}}
+        </v-alert>
+
         <div v-if="key" id="hide">
             <h3>Your New API Key:</h3>
         </div>
         <p>{{ key }}</p>
+
+        <br />
+
+        <v-btn color="success" v-if="!key" v-on:click="generate">Generate</v-btn>
+
+        </v-form>
+
     </div>
 </template>
 
@@ -22,12 +54,20 @@ export default {
     return {
       key: null,
       title: '',
-      email: ''
+      email: '',
+      error: ''
     }
   },
   methods: {
     generate: function () {
-        // TODO: replace with SSO backend url
+      
+      this.error = "";
+      if (this.title.length == 0 || this.email.length == 0) {
+        this.error = "Fields Cannot Be Left Blank.";
+      }
+
+      if (this.error) return;
+
       const url = `${apiURL}/applications/generatekey`
       axios.post(url, {
         title: document.getElementById('title').value,
@@ -40,8 +80,8 @@ export default {
         .then(response => {
             this.key = response.data; // Retrieve api key from response
         })
-        .catch(function (error) {
-            console.log(error);
+        .catch(err => {
+            this.error = err.response.data
         })
     }
   }
@@ -51,43 +91,8 @@ export default {
 
 <style lang="css">
 .generate-wrapper {
-    background: #fff;
     width: 70%;
     margin: 1px auto;
-    text-align: center;
-}
-
-.form-generate {
-    max-width: 330px;
-    padding: 5% 10px;
-    margin: 0 auto;
-}
-
-.form-generate .form-control {
-    position: relative;
-    height: auto;
-    -webkit-box-sizing: border-box;
-        box-sizing: border-box;
-    padding: 10px;
-    font-size: 16px;
-}
-
-.form-generate .form-control:focus {
-    z-index: 2;
-}
-
-.form-generate input {
-    margin-bottom: 10px;
-    width: 100%;
-}
-
-.form-generate button {
-    width: 100%;
-    height: 40px;
-}
-
-.form-generate h3 {
-    margin-top: 50px;
 }
 
 </style>
