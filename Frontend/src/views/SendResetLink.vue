@@ -6,7 +6,7 @@
     <br /><br />
     {{errorMessage}}
     <br/>
-    <input name="email" type="text" v-model="email" placeholder="Email"/>
+    <input id='email' name="email" type="text" v-model="email" placeholder="Email"/>
     <br />
     <br />
     <button type="submit" v-on:click="submitEmail">Send Email</button>

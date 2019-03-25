@@ -40,6 +40,7 @@
         <template v-slot:activator="{ on }">
           <v-text-field
             v-model="dob"
+            type="dob"
             label="Date of Birth"
             prepend-icon="event"
             readonly
@@ -58,16 +59,19 @@
       <v-text-field
         name="city"
         id="city"
+        type="City"
         v-model="city"
         label="City" /><br />
       <v-text-field
         name="state"
         id="state"
+        type="State"
         v-model="state"
         label="State" /><br />
       <v-text-field
         name="country"
         id="country"
+        type="Country"
         v-model="country"
         label="Country" /><br />
 
@@ -76,10 +80,12 @@
       <v-text-field
         name="securityq1"
         id="securityq1"
+        type="Security Q1"
         v-model="securityQ1"
         label="Security Question 1" /><br />
       <v-text-field
         name="securitya1"
+        type="Security A1"
         id="securitya1"
         v-model="securityQ1Answer"
         label="Security Answer 1" /><br />
@@ -89,11 +95,13 @@
       <v-text-field
         name="securityq2"
         id="securityq2"
+        type="Security Q2"
         v-model="securityQ2"
         label="Security Question 2" /><br />
       <v-text-field
         name="securitya2"
         id="securitya2"
+        type="Security A2"
         v-model="securityQ2Answer"
         label="Security Answer 2" /><br />
 
@@ -102,11 +110,13 @@
       <v-text-field
         name="securityq3"
         id="securityq3"
+        type="Security Q3"
         v-model="securityQ3"
         label="Security Question 3" /><br />
       <v-text-field
         name="securitya3"
         id="securitya3"
+        type="Security A3"
         v-model="securityQ3Answer"
         label="Security Answer 3" /><br />
 
@@ -189,8 +199,8 @@ export default {
         securityQ3: this.securityQ3,
         securityQ3Answer: this.securityQ3Answer  
       }).then(() => {
-        const params = new URLSearchParams(window.location.search)
-
+        const params = new URLSearchParams(window.location.search);
+        localStorage.setItem('email', this.email);
         if (params.has('redirect')) {
           window.location.href = decodeURIComponent(params.get('redirect'));
         } else {

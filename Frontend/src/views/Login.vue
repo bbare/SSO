@@ -6,7 +6,7 @@
             <input v-model="password" id="password" type="password" class="form-control" placeholder="Password" required>
             <button class="button-login" type="submit">Login</button>
         </form>
-        <button @click="goToResetPassword()" type="submit" >Reset Password</button>
+        <button class="button-reset" @click="goToResetPassword()" type="submit" >Reset Password</button>
     </div>
 </template>
 

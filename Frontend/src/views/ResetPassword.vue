@@ -3,11 +3,11 @@
     <h1>Reset Password</h1>
     <br />
     {{message}}
-    <br />
-    <br />
+    <br /><br />
     <div v-if="haveNetworkError">
       {{errorMessage}}
-    <br/>
+      <br/>
+      
     </div>
       
     <div class="SecurityQuestions" v-if="securityQuestions.length">
@@ -16,13 +16,13 @@
         {{securityQuestion}}
       </div>
       <br />
-      <input name="SecurityAnswer1" type="text" v-model="securityAnswer1" placeholder="Answer for Question 1"/>
+      <input id="SecurityAnswer1" type="text" v-model="securityAnswer1" placeholder="Answer for Question 1"/>
       <br />
-      <input name="SecurityAnswer2" type="text" v-model="securityAnswer2" placeholder="Answer for Question 2"/>
+      <input id="SecurityAnswer2" type="text" v-model="securityAnswer2" placeholder="Answer for Question 2"/>
       <br />
-      <input name="SecurityAnswer3" type="text" v-model="securityAnswer3" placeholder="Answer for Question 3"/>
+      <input id="SecurityAnswer3" type="text" v-model="securityAnswer3" placeholder="Answer for Question 3"/>
       <br />
-      <button type="submit" v-on:click="submitAnswers">Submit Answers</button>
+      <button class="button-submit-answers" type="submit" v-on:click="submitAnswers">Submit Answers</button>
     </div>
 
     <br/>
@@ -30,9 +30,9 @@
     <div id="NewPassword" v-if="showPasswordResetField">
       Enter a new password into the field
       <br/>
-      <input name="Password" type="text" v-model="newPassword"/>
+      <input id="Password" type="text" v-model="newPassword"/>
       <br />
-      <button type="submit" v-on:click="submitNewPassword">Submit New Password</button>
+      <button class="button-submit-password" type="submit" v-on:click="submitNewPassword">Submit New Password</button>
     </div>
 
   </div>
@@ -75,7 +75,7 @@ export default {
     })
       .then(response => (this.securityQuestions = response.data),
         this.message = 'Enter your answers for the security questions, fields are case sensitive')
-      .catch(e => { alert(e.response.data) })
+      .catch(e => { this.message = e.response.data }, this.haveNetworkError = true)
     if(this.message === "Reset link is no longer valid"){
       this.$router.push("SendResetLink")
     }
@@ -101,8 +101,12 @@ export default {
           'Access-Control-Allow-Credentials': true
         }
       })
-        .then(response => (this.showPasswordResetField = response.data), this.wrongAnswerCounter = this.wrongAnswerCounter + 1)
-        .catch(e => { alert(e.response.data + " Answer(s) incorrect") })
+        .then(response => (this.showPasswordResetField = response.data))
+        .catch(e => { this.message = e.response.data }, this.haveNetworkError = true)
+      if (this.showPasswordResetField === false) {
+        this.errorMessage = "Answers are incorrect"
+        this.wrongAnswerCounter = this.wrongAnswerCounter + 1
+      }
       }
     },
     submitNewPassword: function () {
@@ -122,8 +126,11 @@ export default {
           'Access-Control-Allow-Credentials': true
         }
       })
-        .then(response => (alert(response.data)))
-        .catch(e => { alert(e.response.data) })
+        .then(response => (this.message = response.data))
+        .catch(e => { this.message = e.response.data }, this.haveNetworkError = true)
+      if (this.message === 'Password has been reset') {
+        this.showPasswordResetField = false
+      }
     }
       }
   }

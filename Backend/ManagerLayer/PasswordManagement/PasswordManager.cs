@@ -430,17 +430,14 @@ namespace ManagerLayer.PasswordManagement
             //Need SQL Query to get info about user from DB
             string resetPasswordSubjectString = "KFC SSO Reset Password";
             string userFullName = receiverEmail;
-            string template = "Hi {0}, \r\n" +
+            string changedPasswordBody = "Hi, \r\n" +
                                              "You have changed your password on KFC SSO.\r\n" +
                                              "If you did not change your password, please contact us by responding to this email.\r\n\r\n" +
                                              "Thanks, KFC Team";
-            string data = "userFirstName";
-            //Fill the text with information
-            string resetPasswordBodyString = string.Format(template, data);
             //Create the email service object
             EmailService es = new EmailService();
             //Create the message that will be sent
-            MimeMessage emailToSend = _emailService.createEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, resetPasswordBodyString);
+            MimeMessage emailToSend = _emailService.createEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, changedPasswordBody);
             //Send the email with the message
             _emailService.sendEmail(emailToSend);
         }

@@ -8,7 +8,7 @@
     <v-btn v-if="!isLogged" to="home"  flat>Home</v-btn>
     <v-btn v-else to="dashboard" flat>Home</v-btn>
     <v-btn to="about" flat>About</v-btn>
-    <v-btn to="register" flat>Register</v-btn>
+    <v-btn v-if="!isLogged" to="register" flat>Register</v-btn>
     <v-btn to="add" flat>App Register</v-btn>
     <v-btn to="key" flat>Generate Key</v-btn>
     <v-btn to="delete" flat>App Delete</v-btn>
