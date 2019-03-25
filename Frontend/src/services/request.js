@@ -32,8 +32,21 @@ const submitLaunch = launchData => {
     });
 }
 
+const store = {
+  state: {
+    isLogin: false
+  },
+  isLogin(){
+    this.state.isLogin = true;
+  },
+  isLogout(){
+    this.state.isLogin = false;
+  }
+};
+
 export {
   register,
   signLaunch,
-  submitLaunch
+  submitLaunch,
+  store
 }
