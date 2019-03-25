@@ -135,15 +135,14 @@ namespace UnitTesting
         public void Delete_Session_NonExisting()
         {
             // Arrange
-            Guid nonExistingId = Guid.NewGuid();
             string nonExistingToken = Guid.NewGuid().ToString();
-
+            Guid nonExistingId = Guid.NewGuid();
             var expectedResponse = nonExistingId;
 
             using (_db = new DatabaseContext())
             {
                 // Act
-                var response = ss.DeleteSession(_db, nonExistingToken, nonExistingId);
+                var response = ss.DeleteSession(_db, nonExistingToken);
                 // will return null if Session does not exist
                 _db.SaveChanges();
                 var result = _db.Sessions.Find(expectedResponse);
@@ -227,7 +226,7 @@ namespace UnitTesting
             {
                 newSession = ss.CreateSession(_db, newSession);
                 _db.SaveChanges();
-                var result = ss.GetSession(_db, newSession.Token, newUser.Id);
+                var result = ss.GetSession(_db, newSession.Token);
 
                 // Assert
                 Assert.IsNotNull(result);

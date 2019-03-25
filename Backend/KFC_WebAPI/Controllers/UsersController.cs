@@ -105,7 +105,7 @@ namespace KFC_WebAPI.Controllers
 
                 return Ok(new
                 {
-                    token = user.Id
+                    token = session.Token
                 });
             }
         }
@@ -115,25 +115,23 @@ namespace KFC_WebAPI.Controllers
         public IHttpActionResult Login([FromBody] LoginRequest request)
         {
             LoginManager loginM = new LoginManager();
-            if (loginM.LoginCheckUserExists(request.email) == false)
+            if (loginM.LoginCheckUserExists(request) == false)
             {
                 //404
                 return Content(HttpStatusCode.NotFound, "Invalid Username");
-                //return NotFound();
             }
             else
             {
-                if (loginM.LoginCheckUserDisabled())
+                if (loginM.LoginCheckUserDisabled(request))
                 {
                     //401
                     return Content(HttpStatusCode.Unauthorized, "User is Disabled");
-                    //return Unauthorized();
                 }
                 else
                 {
-                    if (loginM.LoginCheckPassword(request.password))
+                    if (loginM.LoginCheckPassword(request))
                     {
-                        return Ok(loginM.LoginAuthorized());
+                        return Ok(loginM.LoginAuthorized(request));
                     }
                     else
                     {

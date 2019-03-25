@@ -1,9 +1,6 @@
 
 import axios from 'axios';
-import config from "../const.js";
-
-
-let apiURL = localStorage.getItem('base') || config.API_ROUTE;
+import { apiURL } from "@/const.js";
 
 /* eslint-disable */
 let token = localStorage.getItem('token');
@@ -14,7 +11,29 @@ const register = registrationData => {
       token = response.data.token;
       localStorage.setItem('token', token);
       return response;
-    })
+    });
 }
 
-export { register }
+const signLaunch = appId => {
+  return axios.get(`${apiURL}/launch`, {
+    params: {
+      token,
+      appId
+    }
+  }).then(response => {
+    return response.data;
+  });
+}
+
+const submitLaunch = launchData => {
+  return axios.post(launchData.url, launchData.launchPayload)
+    .then(response => {
+      return response.data;
+    });
+}
+
+export {
+  register,
+  signLaunch,
+  submitLaunch
+}
