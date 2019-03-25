@@ -56,19 +56,24 @@ namespace ManagerLayer.LaunchManagement
                 timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
             };
 
-            HMACSHA256 hmacsha1 = new HMACSHA256(Encoding.ASCII.GetBytes(app.SharedSecretKey));
-
-            byte[] launchPayloadBuffer = Encoding.ASCII.GetBytes(launchPayload.PreSignatureString());
-
-            byte[] signatureBytes = hmacsha1.ComputeHash(launchPayloadBuffer);
-
-            launchPayload.signature = Convert.ToBase64String(signatureBytes);
+            launchPayload.signature = generateSignature(launchPayload, app);
 
             return new LaunchResponse
             {
                 launchPayload = launchPayload,
                 url = app.LaunchUrl
             };
+        }
+
+        public string generateSignature(LaunchPayload launchPayload, Application app)
+        {
+            HMACSHA256 hmacsha1 = new HMACSHA256(Encoding.ASCII.GetBytes(app.SharedSecretKey));
+
+            byte[] launchPayloadBuffer = Encoding.ASCII.GetBytes(launchPayload.PreSignatureString());
+
+            byte[] signatureBytes = hmacsha1.ComputeHash(launchPayloadBuffer);
+
+            return Convert.ToBase64String(signatureBytes);
         }
     }
 }
