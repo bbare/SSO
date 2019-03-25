@@ -42,6 +42,7 @@
 <script>
     import axios from "axios"
     import { apiURL } from '@/const.js'
+    import { store } from '@/services/request'
     
     export default {
         name: 'login',
@@ -61,10 +62,9 @@
                     password: this.$data.password
                })
                .then(resp => {
+                   store.isLogin()
                    let respData = resp.data
-                   localStorage.setItem('email',this.$data.email)
                    localStorage.setItem('token', respData)
-                   this.$bus.$emit('logged', 'User logged')
                    this.$router.push('/dashboard')
                 })
                .catch(e => {console.log(e);
