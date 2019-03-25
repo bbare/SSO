@@ -41,8 +41,15 @@ namespace WebAPI.Controllers
             if (email != null)
             {
                 PasswordManager pm = new PasswordManager();
-                string url = "localhost:8080/#/resetpassword/";
-                pm.SendResetToken(email, url);
+                string url = "https://kfc-sso.com/#/resetpassword/";
+                try
+                {
+                    pm.SendResetToken(email, url);
+                }
+                catch (Exception ex)
+                {
+                    return Content((HttpStatusCode)503, ex.Message);
+                }
                 return Content(HttpStatusCode.OK, "An email with further instructions has been sent");
             }
             return Content(HttpStatusCode.Unauthorized, "No email was provided");

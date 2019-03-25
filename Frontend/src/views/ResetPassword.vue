@@ -40,6 +40,8 @@
 
 <script>
 import axios from 'axios'
+import { apiURL } from '@/const.js';
+
 export default {
   name: 'ResetPassword',
   data () {
@@ -56,7 +58,6 @@ export default {
       securityAnswer3: null,
       showPasswordResetField: null,
       newPassword: null,
-      newPasswordSuccessful: null,
       networkErrorMessage: null,
       haveNetworkError: false,
       wrongAnswerCounter : 0
@@ -65,7 +66,7 @@ export default {
   created () {
     axios({
       method: 'GET',
-      url: 'http://localhost:61348/api/reset/' + this.resetToken,
+      url: `${apiURL}/reset/` + this.resetToken,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Credentials': true
@@ -89,7 +90,7 @@ export default {
       } else {
         axios({
         method: 'POST',
-        url: 'http://localhost:61348/api/reset/' + this.resetToken + '/checkanswers',
+        url: `${apiURL}/reset/' + this.resetToken + '/checkanswers`,
         data: { 
           securityA1: this.$data.securityAnswer1,
           securityA2: this.$data.securityAnswer2,
@@ -117,7 +118,7 @@ export default {
       } else {
         axios({
         method: 'POST',
-        url: 'http://localhost:61348/api/reset/' + this.resetToken + '/resetpassword',
+        url: `${apiURL}/reset/` + this.resetToken + '/resetpassword',
         data: {newPassword: this.$data.newPassword},
         headers: {
           'Access-Control-Allow-Origin': '*',
