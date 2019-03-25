@@ -36,7 +36,7 @@ export default {
         axios({
           method: 'POST',
           url: `${apiURL}/reset/send`,
-          data: {email: this.$data.email},
+          data: {email: this.$data.email, url: 'https://kfc-sso.com/#/resetpassword/'},
           headers: {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Credentials': true

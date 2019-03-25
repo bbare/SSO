@@ -1,14 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MimeKit;
-using MailKit;
 using MailKit.Net.Smtp;
-using System.Configuration;
-using System.Net.Configuration;
-using System.Web.Configuration;
 
 namespace ServiceLayer.Services
 {
@@ -38,7 +30,7 @@ namespace ServiceLayer.Services
         {
             using (var emailClient = new SmtpClient())
             {
-                emailClient.Connect(SmtpServer, SmtpPort); //Need to setup email server before fully implementing sending email
+                emailClient.Connect(SmtpServer, SmtpPort); 
                 emailClient.AuthenticationMechanisms.Remove("XOAUTH2");
                 emailClient.Authenticate(SmtpUsername, SmtpPassword);
                 emailClient.Send(messageToSend);
