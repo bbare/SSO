@@ -7,24 +7,17 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.SqlServer.Server;
 using System.Data.SqlClient;
+using System.Configuration;
 
 namespace DataAccessLayer.Database
 {
     public class DatabaseContext : DbContext
     {
-        string username = "Admin";
-        string password = "";
-        string hostname = "mydbinstance.ce5cmkuh7zii.us-east-2.rds.amazonaws.com";
-        string port = "1433";
-        string dbname = "mydbinstance";
 
         public DatabaseContext()
         {
-            //dev
-            this.Database.Connection.ConnectionString = "Data Source=localdb;Initial Catalog=SSO;Integrated Security=True";
-
-            //release
-            //this.Database.Connection.ConnectionString = "Data Source=" + hostname + ";Initial Catalog=" + dbname + ";User ID=" + username + ";Password=" + password + ";";
+            var connectionString = ConfigurationManager.ConnectionStrings["Dev_SSODB"].ConnectionString;
+            this.Database.Connection.ConnectionString = connectionString;
         }
 
         public DbSet<User> Users { get; set; }
