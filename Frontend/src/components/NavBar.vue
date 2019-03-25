@@ -11,15 +11,15 @@
     <v-btn to="add" flat>Register</v-btn>
     <v-btn to="key" flat>Generate</v-btn>
     <v-btn to="delete" flat>Delete</v-btn>
-    <v-btn to="login" flat v-if="!isLogged">Login</v-btn>
+    <v-btn to="login" flat v-if="!isLoggedIn.isLogin">Login</v-btn>
     <v-menu
       offset-y
       content-class="dropdown-menu"
-      transition="slide-y-transition" v-if="isLogged">
+      transition="slide-y-transition" v-if="isLoggedIn.isLogin">
 
       <v-btn slot="activator" fab dark color="teal">
         <v-avatar dark>
-          <span class="white--text headline">fg</span>
+          <span class="white--text headline">{{emailInitial.email[0]}}</span>
         </v-avatar>
       </v-btn>
       
@@ -48,7 +48,7 @@ export default {
   data () {
     return{
       links: [],
-      emailInitial: "",
+      emailInitial: store.state,
       isLoggedIn: store.state
     }
   },
