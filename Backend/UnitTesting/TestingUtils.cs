@@ -152,7 +152,8 @@ namespace UnitTesting
                 Email = "kfc@email.com",
                 UserDeletionUrl = "https://kfc.com/delete",
                 LogoUrl = "https://kfc.com/logo.png",
-                Description = "A KFC app"
+                Description = "A KFC app",
+                SharedSecretKey = Guid.NewGuid().ToString("N")
             };
 
             return CreateApplicationInDb(app);
@@ -179,7 +180,8 @@ namespace UnitTesting
                 Email = "kfc@email.com",
                 UserDeletionUrl = "https://kfc.com/delete",
                 LogoUrl = "https://kfc.com/logo.png",
-                Description = "A KFC app"
+                Description = "A KFC app",
+                SharedSecretKey = Guid.NewGuid().ToString("N")
             };
             return app;
         }
