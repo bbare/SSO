@@ -41,31 +41,20 @@
 </template>
 
 <script>
+import {store} from "@/services/request"
+
 export default {
   name: 'NavBar',
   data () {
     return{
       links: [],
       emailInitial: "",
-      isLogged: this.checkIfIsLogged()
+      isLoggedIn: store.state
     }
   },
   created () {
-    this.$bus.$on('logged', () => {
-      this.isLogged = this.checkIfIsLogged()
-      var email = localStorage.getItem('email')
-      this.emailInitial = email[0] + email[1] 
-    })
   },
   methods: {
-    checkIfIsLogged () {
-      let token = localStorage.getItem('token')
-      if (token) {
-        return true
-      } else {
-        return false
-      }
-    }
   }
 }
 </script>
