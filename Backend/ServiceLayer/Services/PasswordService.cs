@@ -7,7 +7,7 @@ namespace ServiceLayer.Services
     public class PasswordService : IPasswordService
     {
         public byte[] GenerateSalt() {
-            byte[] salt = new byte[128 / 8];
+            byte[] salt = new byte[128];
             using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(salt);
@@ -19,7 +19,7 @@ namespace ServiceLayer.Services
         {
             Rfc2898DeriveBytes rfc = new Rfc2898DeriveBytes(password, salt);
             rfc.IterationCount = 10000;
-            byte[] hash = rfc.GetBytes(16);
+            byte[] hash = rfc.GetBytes(256);
             return Convert.ToBase64String(hash);
         }
 
