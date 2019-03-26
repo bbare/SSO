@@ -189,6 +189,7 @@ namespace UnitTesting
         }
 
         [TestMethod]
+        [ExpectedException(typeof(InvalidDobException))]
         public void Create_User_TooYoung()
         {
             // Arrange
