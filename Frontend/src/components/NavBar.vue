@@ -19,7 +19,7 @@
 
       <v-btn slot="activator" fab dark color="teal">
         <v-avatar dark>
-          <span class="white--text headline">{{emailInitial.email[0]}}</span>
+          <span class="white--text headline">{{emailInitial.emailIni}}</span>
         </v-avatar>
       </v-btn>
       

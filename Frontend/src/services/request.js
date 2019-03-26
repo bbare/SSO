@@ -35,7 +35,7 @@ const submitLaunch = launchData => {
 const store = {
   state: {
     isLogin: false,
-    email: ""
+    emailIni: ""
   },
   isLogin(){
     this.state.isLogin = true;

@@ -63,7 +63,7 @@
                })
                .then(resp => {
                    store.isLogin()
-                   store.state.email = this.$data.email
+                   store.state.emailIni = this.email[0]
                    let respData = resp.data
                    localStorage.setItem('token', respData)
                    this.$router.push('/dashboard')
