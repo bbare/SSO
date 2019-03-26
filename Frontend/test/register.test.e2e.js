@@ -107,8 +107,8 @@ describe('registration', () => {
 
         it('rejects submission with invalid email', async () => {
             await fillReg(page)
-            page.evaluate(() => {
-                document.getElementById('email').value = 'invalid@asdf'
+            await page.evaluate(() => {
+                document.getElementById('email').value = 'invalid'
             })
             await page.click('main button')
             let error = await page.$('.v-alert.error')
@@ -117,7 +117,7 @@ describe('registration', () => {
 
         it('rejects submission with passwords that do not match', async () => {
             await fillReg(page)
-            page.evaluate(() => {
+            await page.evaluate(() => {
                 document.getElementById('password').value = '123456'
                 document.getElementById('confirm').value = '12345'
             })
@@ -128,7 +128,7 @@ describe('registration', () => {
 
         it('rejects submission with short password', async () => {
             await fillReg(page)
-            page.evaluate(() => {
+            await page.evaluate(() => {
                 document.getElementById('password').value = '123456'
                 document.getElementById('confirm').value = '123456'
             })
@@ -139,7 +139,7 @@ describe('registration', () => {
 
         it('rejects submission with cracked password', async () => {
             await fillReg(page)
-            page.evaluate(() => {
+            await page.evaluate(() => {
                 document.getElementById('password').value = 'adminpassword'
                 document.getElementById('confirm').value = 'adminpassword'
             })
