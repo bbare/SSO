@@ -91,7 +91,7 @@ export default {
       } else {
         axios({
         method: 'POST',
-        url: `${apiURL}/reset/' + this.resetToken + '/checkanswers`,
+        url: `${apiURL}/reset/${this.resetToken}/checkanswers`,
         data: { 
           securityA1: this.$data.securityAnswer1,
           securityA2: this.$data.securityAnswer2,

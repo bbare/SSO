@@ -36,11 +36,11 @@ export default {
         axios({
           method: 'POST',
           url: `${apiURL}/reset/send`,
-          data: {email: this.$data.email, url: this.$data.email},
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': true
-          }
+          data: {email: this.$data.email},
+           headers: {
+             'Access-Control-Allow-Origin': '*',
+             'Access-Control-Allow-Credentials': true
+           }
         })
           .then(response => {this.message = response.data})
           .catch(e => { this.errorMessage = "Email service is unavailable." }, response => {this.message = response.data})
