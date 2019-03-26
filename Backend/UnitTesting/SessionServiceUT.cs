@@ -159,7 +159,6 @@ namespace UnitTesting
             // Arrange
             newUser = tu.CreateUserObject();
             newSession = tu.CreateSessionObject(newUser);
-            var expectedResultTime = newSession.CreatedAt;
             var expectedResult = newSession;
 
             // ACT
@@ -178,7 +177,6 @@ namespace UnitTesting
                 Assert.AreEqual(result.Id, expectedResult.Id);
                 Assert.AreEqual(result.UpdatedAt, expectedResult.UpdatedAt);
                 Assert.AreEqual(result.ExpiresAt, expectedResult.ExpiresAt);
-                Assert.AreNotEqual(result.CreatedAt, expectedResultTime);
             }
 
         }
