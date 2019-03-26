@@ -17,7 +17,7 @@
                 @click="showInfo = true"
               >info</v-icon>
 
-              <v-card-title primary-title @click="launchLoading = true">
+              <v-card-title primary-title @click="launchLoading = true; launch(app.Id)">
                 <img src="https://www.freeiconspng.com/uploads/no-image-icon-15.png">
                 <div id="content">
                   <h3 class="headline mb-0">
