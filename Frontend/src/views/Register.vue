@@ -124,6 +124,26 @@
       <v-btn color="success" v-on:click="submit">Register</v-btn>
 
     </v-form>
+    <v-dialog
+      v-model="loading"
+      hide-overlay
+      persistent
+      width="300"
+    >
+      <v-card
+        color="primary"
+        dark
+      >
+        <v-card-text>
+          Loading
+          <v-progress-linear
+            indeterminate
+            color="white"
+            class="mb-0"
+          ></v-progress-linear>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -136,6 +156,7 @@ export default {
     return {
       menu: false,
       error: "",
+      loading: false,
 
       email: '',
       password: '',
@@ -173,6 +194,7 @@ export default {
 
       if (this.error) return;
 
+      this.loading = true;
       register({
         email: this.email,
         password: this.password,
@@ -214,6 +236,8 @@ export default {
           case 500:
             this.error = "An unexpected server error occurred. Please try again momentarily.";
         }
+      }).finally(() => {
+        this.loading = false;
       })
     }
   }
