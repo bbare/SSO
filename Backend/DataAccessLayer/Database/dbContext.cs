@@ -16,8 +16,8 @@ namespace DataAccessLayer.Database
 
         public DatabaseContext()
         {
-            var connectionString = ConfigurationManager.ConnectionStrings["Dev_SSODB"].ConnectionString;
-            this.Database.Connection.ConnectionString = connectionString;
+            // set a system enviorment variable for dev, "Data Source=(localdb);Initial Catalog=SSO;Integrated Security = True"
+            var connectionString = Environment.GetEnvironmentVariable("KFC_SSO_DEV_DATABASE", EnvironmentVariableTarget.Machine);
         }
 
         public DbSet<User> Users { get; set; }
