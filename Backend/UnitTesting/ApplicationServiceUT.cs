@@ -63,8 +63,8 @@ namespace UnitTesting
                 Assert.IsNotNull(response);
                 Assert.AreEqual(response.Id, expected.Id);
 
-                ApplicationService.DeleteApplication(_db, response.Id);
-                _db.SaveChanges();
+                //ApplicationService.DeleteApplication(_db, response.Id);
+                //_db.SaveChanges();
             }
         }
 
@@ -351,6 +351,27 @@ namespace UnitTesting
 
                 // Assert
                 Assert.IsNull(result);
+            }
+        }
+
+        [TestMethod]
+        public void GetAllApplications_Pass_ReturnAllApps()
+        {
+            using (_db = tu.CreateDataBaseContext())
+            {
+                // Arrange
+                var expected = true;
+                var actual = false;
+                var applications = ApplicationService.GetAllApplications(_db);
+
+                // Act
+                if (applications != null)
+                {
+                    actual = true;
+                }
+
+                // Assert
+                Assert.AreEqual(expected, actual);
             }
         }
     }
