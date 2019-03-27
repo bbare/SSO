@@ -1,5 +1,24 @@
 <template>
   <div class="reset">
+    <div id="PasswordResetSuccess">
+      <v-alert
+      v-model="successAlert"
+      dismissible
+      type="success"
+    >
+      Password has been reset
+    </v-alert>
+    </div>
+
+    <div id="PasswordResetFail">
+      <v-alert
+      v-model="failAlert"
+      dismissible
+      type="warning"
+    >
+      Password was not reset
+    </v-alert>
+    </div>
     <h1>Reset Password</h1>
     <br />
     {{message}}
@@ -60,7 +79,9 @@ export default {
       newPassword: null,
       networkErrorMessage: null,
       haveNetworkError: false,
-      wrongAnswerCounter : 0
+      wrongAnswerCounter : 0,
+      successAlert: null,
+      failAlert: null
     }
   },
   created () {
@@ -80,6 +101,9 @@ export default {
     }
   },
   methods: {
+    redirectToLogin: function () {
+      this.$router.push( "/login" )
+    }, 
     submitAnswers: function () {
       if(this.wrongAnswerCounter === 3){
         this.errorMessage = "3 attempts have been made, reset link is no longer valid"
@@ -90,7 +114,7 @@ export default {
       } else {
         axios({
         method: 'POST',
-        url: `${apiURL}/reset/' + this.resetToken + '/checkanswers`,
+        url: `${apiURL}/reset/` + this.resetToken + '/checkanswers',
         data: { 
           securityA1: this.$data.securityAnswer1,
           securityA2: this.$data.securityAnswer2,
@@ -125,13 +149,11 @@ export default {
           'Access-Control-Allow-Credentials': true
         }
       })
-        .then(response => (this.message = response.data))
-        .catch(e => { this.message = e.response.data }, this.haveNetworkError = true)
-      if (this.message === 'Password has been reset') {
-        this.showPasswordResetField = false
+        .then(response => (this.message = response.data), this.successAlert = true, 
+        setTimeout(() => this.redirectToLogin(), 3000))
+        .catch(e => { this.message = e.response.data }, this.haveNetworkError = true, this.fail = true)
       }
     }
-      }
   }
 }
 </script>

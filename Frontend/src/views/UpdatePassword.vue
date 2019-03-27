@@ -1,5 +1,14 @@
 <template>
   <div id="update">
+    <div id="UpdatePassword">
+      <v-alert
+      v-model="successAlert"
+      dismissible
+      type="success"
+    >
+      Password has been updated
+    </v-alert>
+      </div>
      <h1>Update Password</h1>
     <br />
     {{message}}
@@ -35,9 +44,13 @@ export default {
       oldPassword: null,
       newPassword: null,
       confirmNewPassword: null,
+      successAlert: null
     }
   },
   methods: {
+    redirectToHome: function () {
+      this.$router.push( "/home" )
+    },
     submitPasswords: function () {
       if (this.newPassword.length < 12 || this.oldPassword.length < 12) {
         alert('Password does not meet minimum length of 12')
@@ -63,7 +76,8 @@ export default {
             'Access-Control-Allow-Credentials': true
           }
         })
-          .then(response => {this.message = response.data}, this.errorMessage = '')
+          .then(response => {this.message = response.data}, this.errorMessage = '', this.successAlert = true,
+          setTimeout(() => this.redirectToHome(), 3000))
           .catch(e => { this.errorMessage = e.data })
       }
     }
