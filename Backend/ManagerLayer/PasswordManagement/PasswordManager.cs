@@ -102,10 +102,10 @@ namespace ManagerLayer.PasswordManagement
 
         public DateTime GetPasswordResetExpiration(string resetToken)
         {
-            var PasswordResetRetrieved = GetPasswordReset(resetToken);
-            if (PasswordResetRetrieved != null)
+            var passwordResetRetrieved = GetPasswordReset(resetToken);
+            if (passwordResetRetrieved != null)
             {
-                return PasswordResetRetrieved.ExpirationTime;
+                return passwordResetRetrieved.ExpirationTime;
             }
             return DateTime.MinValue;
         }
@@ -120,20 +120,20 @@ namespace ManagerLayer.PasswordManagement
 
         public int GetAttemptsPerID(string resetToken)
         {
-            var PasswordResetRetrieved = GetPasswordReset(resetToken);
-            if (PasswordResetRetrieved != null)
+            var passwordResetRetrieved = GetPasswordReset(resetToken);
+            if (passwordResetRetrieved != null)
             {
-                return PasswordResetRetrieved.ResetCount;
+                return passwordResetRetrieved.ResetCount;
             }
             return -1;
         }
 
         public bool GetPasswordResetStatus(string resetToken)
         {
-            var PasswordResetRetrieved = GetPasswordReset(resetToken);
-            if (PasswordResetRetrieved != null)
+            var passwordResetRetrieved = GetPasswordReset(resetToken);
+            if (passwordResetRetrieved != null)
             {
-                return PasswordResetRetrieved.Disabled;
+                return passwordResetRetrieved.Disabled;
             }
             return false;
         }
@@ -148,10 +148,10 @@ namespace ManagerLayer.PasswordManagement
         //Completely disables the PasswordReset from resetting password
         public void LockPasswordReset(string resetToken)
         {
-            var PasswordResetRetrieved = GetPasswordReset(resetToken);
-            PasswordResetRetrieved.Disabled = true;
-            PasswordResetRetrieved.AllowPasswordReset = false;
-            UpdatePasswordReset(PasswordResetRetrieved);
+            var passwordResetRetrieved = GetPasswordReset(resetToken);
+            passwordResetRetrieved.Disabled = true;
+            passwordResetRetrieved.AllowPasswordReset = false;
+            UpdatePasswordReset(passwordResetRetrieved);
         }
 
         public bool CheckPasswordResetValid(string resetToken)
@@ -179,7 +179,7 @@ namespace ManagerLayer.PasswordManagement
 
         public int PasswordResetsMadeInPast24HoursByUser(Guid UserID)
         {
-            int NumOfResetLinks = 3;
+            int numOfResetLinks = 3;
             DateTime past24Hours = DateTime.Now.AddDays(-1);
             DateTime currentTime = DateTime.Now.AddMinutes(5);
             using (var _db = CreateDbContext())
@@ -187,8 +187,8 @@ namespace ManagerLayer.PasswordManagement
                 var listOfTokensFrom24Hours = from r in _db.PasswordResets
                                               where r.ExpirationTime <= currentTime & r.ExpirationTime >= past24Hours & r.UserID == UserID
                                               select r;
-                NumOfResetLinks = listOfTokensFrom24Hours.Count();
-                return NumOfResetLinks;
+                numOfResetLinks = listOfTokensFrom24Hours.Count();
+                return numOfResetLinks;
             }
         }
 
@@ -372,9 +372,9 @@ namespace ManagerLayer.PasswordManagement
             string resetPasswordBodyString = string.Format(template, data);
 
             //Create the message that will be sent
-            MimeMessage emailToSend = _emailService.createEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, resetPasswordBodyString);
+            MimeMessage emailToSend = _emailService.CreateEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, resetPasswordBodyString);
             //Send the email with the message
-            _emailService.sendEmail(emailToSend);
+            _emailService.SendEmail(emailToSend);
         }
 
         //Function to create the email is user exists, but has too many reset links
@@ -389,9 +389,9 @@ namespace ManagerLayer.PasswordManagement
                                              "Thanks, KFC Team";
 
             //Create the message that will be sent
-            MimeMessage emailToSend = _emailService.createEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, resetPasswordBodyString);
+            MimeMessage emailToSend = _emailService.CreateEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, resetPasswordBodyString);
             //Send the email with the message
-            _emailService.sendEmail(emailToSend);
+            _emailService.SendEmail(emailToSend);
         }
 
         //Function to create the email is user doesn't exist
@@ -408,9 +408,9 @@ namespace ManagerLayer.PasswordManagement
                               "Best Regards, KFC Team";
 
             //Create the message that will be sent
-            MimeMessage emailToSend = _emailService.createEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, resetPasswordUserDoesNotExistEmailBody);
+            MimeMessage emailToSend = _emailService.CreateEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, resetPasswordUserDoesNotExistEmailBody);
             //Send the email with the message
-            _emailService.sendEmail(emailToSend);
+            _emailService.SendEmail(emailToSend);
         }
 
         //Function to create the email if the password was changed
@@ -426,9 +426,9 @@ namespace ManagerLayer.PasswordManagement
             //Create the email service object
             EmailService es = new EmailService();
             //Create the message that will be sent
-            MimeMessage emailToSend = _emailService.createEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, changedPasswordBody);
+            MimeMessage emailToSend = _emailService.CreateEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, changedPasswordBody);
             //Send the email with the message
-            _emailService.sendEmail(emailToSend);
+            _emailService.SendEmail(emailToSend);
         }
         #endregion
 

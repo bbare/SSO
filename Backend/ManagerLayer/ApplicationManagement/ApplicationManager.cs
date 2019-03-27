@@ -541,9 +541,9 @@ namespace ManagerLayer.ApplicationManagement
                 string resetPasswordBodyString = string.Format(template, data);
 
                 //Create the message that will be sent
-                MimeMessage emailToSend = _emailService.createEmailPlainBody(userFullName, receiverEmail, registrationSubjectString, resetPasswordBodyString);
+                MimeMessage emailToSend = _emailService.CreateEmailPlainBody(userFullName, receiverEmail, registrationSubjectString, resetPasswordBodyString);
                 //Send the email with the message
-                _emailService.sendEmail(emailToSend);
+                _emailService.SendEmail(emailToSend);
                 return true;
             }
             catch (Exception)
@@ -574,9 +574,9 @@ namespace ManagerLayer.ApplicationManagement
                 string resetPasswordBodyString = string.Format(template, data);
 
                 //Create the message that will be sent
-                MimeMessage emailToSend = _emailService.createEmailPlainBody(userFullName, receiverEmail, newKeySubjectString, resetPasswordBodyString);
+                MimeMessage emailToSend = _emailService.CreateEmailPlainBody(userFullName, receiverEmail, newKeySubjectString, resetPasswordBodyString);
                 //Send the email with the message
-                _emailService.sendEmail(emailToSend);
+                _emailService.SendEmail(emailToSend);
 
                 return true;
             }

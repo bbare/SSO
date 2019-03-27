@@ -9,7 +9,7 @@ namespace ServiceLayer.Services
 {
     public interface IEmailService
     {
-        MimeMessage createEmailPlainBody(string receiverName, string receiverEmail, string emailSubject, string emailBodyPlainText);
-        void sendEmail(MimeMessage messageToSend);
+        MimeMessage CreateEmailPlainBody(string receiverName, string receiverEmail, string emailSubject, string emailBodyPlainText);
+        void SendEmail(MimeMessage messageToSend);
     }
 }

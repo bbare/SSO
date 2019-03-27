@@ -16,7 +16,7 @@ namespace WebAPI.Controllers
             [JsonProperty("email")]
             public string Email { get; set; }
             [JsonProperty("url")]
-            public string url { get; set; }
+            public string Url { get; set; }
         }
 
         public class SecurityAnswerRequest
@@ -46,7 +46,7 @@ namespace WebAPI.Controllers
                 if (email != null)
                 {
                     PasswordManager pm = new PasswordManager();
-                    string url = request.url;
+                    string url = request.Url;
                     try
                     {
                         pm.SendResetToken(email, url);

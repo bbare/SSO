@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using DataAccessLayer.Database;
+﻿using DataAccessLayer.Database;
 using DataAccessLayer.Models;
 using DataAccessLayer.Repositories;
-using MimeKit;
-using MailKit;
-using MailKit.Net.Smtp;
 
 
 namespace ServiceLayer.Services

@@ -13,7 +13,7 @@ namespace ServiceLayer.Services
 
 
         //Function to send an email without formatting
-        public MimeMessage createEmailPlainBody(string receiverName, string receiverEmail, string emailSubject, string emailBody)
+        public MimeMessage CreateEmailPlainBody(string receiverName, string receiverEmail, string emailSubject, string emailBody)
         {
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("Support", "no-reply@kfc-sso.com"));
@@ -26,7 +26,7 @@ namespace ServiceLayer.Services
             return message;
         }
 
-        public void sendEmail(MimeMessage messageToSend)
+        public void SendEmail(MimeMessage messageToSend)
         {
             using (var emailClient = new SmtpClient())
             {
