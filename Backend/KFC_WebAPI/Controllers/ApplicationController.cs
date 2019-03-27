@@ -1,13 +1,31 @@
-﻿using System.Net.Http;
-using System.Web;
+﻿using System.Collections;
+using System.Net;
+using System.Net.Http;
 using System.Web.Http;
+using DataAccessLayer.Database;
 using ManagerLayer.ApplicationManagement;
+using ServiceLayer.Services;
 
 namespace KFC_WebAPI.Controllers
 {
     public class ApplicationController : ApiController
     {
         private ApplicationManager manager = new ApplicationManager();
+
+        /// <summary>
+        /// Get all individual applications registered with the SSO
+        /// </summary>
+        /// <returns>Ok Status Code with the list of all applications registered with the SSO</returns>
+        [HttpGet]
+        [Route("api/applications")]
+        public IHttpActionResult GetAllApplications()
+        {
+            using (var _db = new DatabaseContext())
+            {
+                var applications = ApplicationService.GetAllApplications(_db);
+                return Content((HttpStatusCode) 200, applications);
+            }
+        }
 
         /// <summary>
         /// Register application into portal
