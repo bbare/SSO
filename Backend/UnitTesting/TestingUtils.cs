@@ -102,6 +102,21 @@ namespace UnitTesting
                 return session;
             }
         }
+
+        public Session CreateSessionInDb(User user)
+        {
+            Session session = new Session
+            {
+                Id = Guid.NewGuid(),
+                CreatedAt = DateTime.UtcNow,
+                UserId = user.Id,
+                UpdatedAt = DateTime.UtcNow,
+                ExpiresAt = DateTime.UtcNow.AddMinutes(Session.MINUTES_UNTIL_EXPIRATION),
+                Token = (Guid.NewGuid()).ToString()
+            };
+
+            return CreateSessionInDb(session);
+        }
         
         public PasswordReset CreatePasswordResetInDB()
         {

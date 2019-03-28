@@ -27,7 +27,6 @@ namespace ManagerLayer
         {
             Session session = new Session();
             session.Token = GenerateSessionToken();
-            session.User = user;
             session.UserId = user.Id;
 
             var response = _sessionService.CreateSession(_db, session);
