@@ -45,6 +45,7 @@
 import Loading from "@/components/Dialogs/Loading.vue";
 import AppInfo from "@/components/Dialogs/AppInfo.vue";
 import { signLaunch, submitLaunch } from "@/services/request";
+import { apiURL } from "@/const.js";
 import axios from "axios";
 
 export default {
@@ -109,7 +110,7 @@ export default {
   },
   async mounted() {
     await axios
-      .get("http://api.kfc-sso.com/api/applications")
+      .get(`${apiURL}/api/applications`)
       .then(response => (this.applications = response.data));
 
     // Add attribute for displaying info icon
