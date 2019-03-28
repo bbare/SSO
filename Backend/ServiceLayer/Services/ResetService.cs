@@ -5,9 +5,8 @@ using DataAccessLayer.Repositories;
 
 namespace ServiceLayer.Services
 {
-    public class ResetService: IResetService
+    public class ResetService : IResetService
     {
-
         private ResetRepository _resetRepo;
 
         public ResetService()
@@ -37,7 +36,12 @@ namespace ServiceLayer.Services
 
         public bool ExistingReset(DatabaseContext _db, string resetToken)
         {
-            return _resetRepo.ExistingReset(_db, resetToken);
+            var result = GetPasswordReset(_db, resetToken);
+            if (result != null)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

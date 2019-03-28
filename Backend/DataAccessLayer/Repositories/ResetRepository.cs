@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using DataAccessLayer.Models;
 using DataAccessLayer.Database;
 using System.Data.Entity;
@@ -42,16 +38,6 @@ namespace DataAccessLayer.Repositories
                 return null;
             _db.Entry(PasswordResetToRemove).State = EntityState.Deleted;
             return PasswordResetToRemove;
-        }
-
-        public bool ExistingReset(DatabaseContext _db, string resetToken)
-        {
-            var result = GetReset(_db, resetToken);
-            if (result != null)
-            {
-                return true;
-            }
-            return false;
         }
     }
 }

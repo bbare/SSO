@@ -41,28 +41,29 @@ namespace WebAPI.Controllers
         {
             try
             {
-                string email = request.Email;
-                if (email != null)
+                PasswordManager pm = new PasswordManager();
+                int response = pm.SendResetEmail(request.Email, request.Url);
+                if (response == -1)
                 {
-                    PasswordManager pm = new PasswordManager();
-                    string url = request.Url;
-                    try
-                    {
-                        pm.SendResetToken(email, url);
-                    }
-                    catch (Exception ex)
-                    {
-                        return Content((HttpStatusCode)503, ex.Message);
-                    }
+                    return Content((HttpStatusCode)503, "Email service unavailable");
+                }
+                else if (response == 0)
+                {
+                    return Content(HttpStatusCode.Unauthorized, "No email was provided");
+                }
+                else if (response == 1)
+                {
                     return Content(HttpStatusCode.OK, "An email with further instructions has been sent");
                 }
-                return Content(HttpStatusCode.Unauthorized, "No email was provided");
+                else
+                {
+                    return Content(HttpStatusCode.BadRequest, "Service Unavailable");
+                }
             }
             catch (Exception ex)
             {
                 return Content(HttpStatusCode.BadRequest, "Service Unavailable");
             }
-            
         }
 
         //After the user clicks the link in the email, this action gets called and takes the resetToken that's appended to the URL that was sent to the user
@@ -94,13 +95,13 @@ namespace WebAPI.Controllers
                 PasswordManager pm = new PasswordManager();
                 if (pm.CheckPasswordResetValid(resetToken))
                 {
-                    List<string> userSubmittedSecurityAnswer = new List<string>
+                    List<string> userSubmittedSecurityAnswers = new List<string>
                 {
                     request.SecurityA1,
                     request.SecurityA2,
                     request.SecurityA3
                 };
-                    if (pm.CheckSecurityAnswers(resetToken, userSubmittedSecurityAnswer))
+                    if (pm.CheckSecurityAnswers(resetToken, userSubmittedSecurityAnswers))
                     {
                         return Content(HttpStatusCode.OK, true);
                     }
@@ -120,27 +121,32 @@ namespace WebAPI.Controllers
         {
             try
             {
-                string submittedPassword = request.NewPassword;
-                if (submittedPassword != null && submittedPassword.Length < 2001 && submittedPassword.Length > 11)
+                PasswordManager pm = new PasswordManager();
+                int response = pm.ResetPasswordController(resetToken, request.NewPassword);
+                if(response == 1)
                 {
-                    PasswordManager pm = new PasswordManager();
-                    if (pm.CheckPasswordResetValid(resetToken))
-                    {
-                        if (pm.CheckIfPasswordResetAllowed(resetToken))
-                        {
-                            if (!pm.CheckIsPasswordPwned(submittedPassword))
-                            {
-                                string newPasswordHashed = pm.SaltAndHashPassword(resetToken, submittedPassword);
-                                pm.UpdatePassword(resetToken, newPasswordHashed);
-                                return Content(HttpStatusCode.OK, "Password has been reset");
-                            }
-                            return Content(HttpStatusCode.BadRequest, "Password has been pwned, please use a different password");
-                        }
-                        return Content(HttpStatusCode.Unauthorized, "Reset password not allowed, answered security questions wrong too many times");
-                    }
+                    return Content(HttpStatusCode.OK, "Password has been reset");
+                }
+                else if(response == -1)
+                {
+                    return Content(HttpStatusCode.BadRequest, "Password has been pwned, please use a different password");
+                }
+                else if(response == -2)
+                {
+                    return Content(HttpStatusCode.Unauthorized, "Reset password not allowed, answered security questions wrong too many times");
+                }
+                else if(response == -3)
+                {
                     return Content(HttpStatusCode.Unauthorized, "Reset link is no longer valid");
                 }
-                return Content(HttpStatusCode.BadRequest, "Submitted password does not meet minimum requirements");
+                else if(response == -4)
+                {
+                    return Content(HttpStatusCode.BadRequest, "Submitted password does not meet minimum requirements");
+                }
+                else
+                {
+                    return Content(HttpStatusCode.BadRequest, "Service Unavailable");
+                }
             }
             catch (Exception ex)
             {

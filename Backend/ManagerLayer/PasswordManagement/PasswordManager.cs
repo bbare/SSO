@@ -118,7 +118,7 @@ namespace ManagerLayer.PasswordManagement
             }
         }
 
-        public int GetAttemptsPerID(string resetToken)
+        public int GetAttemptsPerToken(string resetToken)
         {
             var passwordResetRetrieved = GetPasswordReset(resetToken);
             if (passwordResetRetrieved != null)
@@ -133,7 +133,7 @@ namespace ManagerLayer.PasswordManagement
             var passwordResetRetrieved = GetPasswordReset(resetToken);
             if (passwordResetRetrieved != null)
             {
-                return passwordResetRetrieved.Disabled;
+                return passwordResetRetrieved.Disabled; 
             }
             return false;
         }
@@ -163,7 +163,7 @@ namespace ManagerLayer.PasswordManagement
                 {
                     if (!GetPasswordResetStatus(resetToken))
                     {
-                        if (GetAttemptsPerID(resetToken) < 4)
+                        if (GetAttemptsPerToken(resetToken) < 4)
                         {
                             return true;
                         }
@@ -250,7 +250,7 @@ namespace ManagerLayer.PasswordManagement
         }
 
         //This password update function is for when the user is not logged in and has answered the security questions
-        public bool UpdatePassword(string resetToken, string newPasswordHash)
+        public bool ResetPassword(string resetToken, string newPasswordHash)
         {
             var retrievedPasswordReset = GetPasswordReset(resetToken);
             var userIDAssociatedWithPasswordReset = retrievedPasswordReset.UserID;
@@ -357,7 +357,57 @@ namespace ManagerLayer.PasswordManagement
             }
         }
 
-        #region Email Functions
+
+        #region Controller Methods
+        //Function to start the reset password process
+        public int SendResetEmail(string emailAddress, string URL)
+        {
+            if(emailAddress != null)
+            {
+                try
+                {
+                    SendResetToken(emailAddress, URL);
+                    return 1; //1 for 200 response
+                }
+                catch
+                {
+                    return -1; //-1 for 503 error
+                }
+            }
+            else
+            {
+                return 0; // 0 for Unauthorized
+            }
+        }
+
+        //Function to get the security answers 
+        public int ResetPasswordController(string resetToken, string newPassword)
+        {
+            if(newPassword != null && newPassword.Length < 2001 && newPassword.Length > 11)
+            {
+                if (CheckPasswordResetValid(resetToken))
+                {
+                    if (CheckIfPasswordResetAllowed(resetToken))
+                    {
+                        if (!CheckIsPasswordPwned(newPassword))
+                        {
+                            string newPasswordHashed = SaltAndHashPassword(resetToken, newPassword);
+                            ResetPassword(resetToken, newPasswordHashed);
+                            return 1; //1 for 200
+                        }
+                        return -1; // -1 for bad request
+                    }
+                    return -2; // -2 for unauthorized
+                }
+                return -3; // -3 for unauthorized
+            }
+            return -4; //-4 for BadRequest
+        }
+
+        #endregion 
+
+
+        #region Email Methods
         //Function to create the email is user exists 
         public void SendResetEmailUserExists(string receiverEmail, string resetURL)
         {
