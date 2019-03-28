@@ -42,7 +42,7 @@
 <script>
     import axios from "axios"
     import { apiURL } from '@/const.js'
-    import { store } from '@/services/request'
+    //import { store } from '@/services/request'
     
     export default {
         name: 'login',
@@ -62,8 +62,8 @@
                     password: this.$data.password
                })
                .then(resp => {
-                   store.isLogin()
-                   store.state.emailIni = this.email[0]
+                   //store.isLogin()
+                   //store.state.emailIni = this.email[0]
                    let respData = resp.data
                    localStorage.setItem('token', respData)
                    this.$router.push('/dashboard')

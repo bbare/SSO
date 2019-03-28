@@ -8,6 +8,8 @@ using System.Web.Http;
 using ManagerLayer;
 using ServiceLayer.Exceptions;
 using System.ComponentModel.DataAnnotations;
+using ServiceLayer.Services;
+using ManagerLayer.UserManagement;
 
 namespace KFC_WebAPI.Controllers
 {
@@ -108,6 +110,29 @@ namespace KFC_WebAPI.Controllers
                     token = session.Token
                 });
             }
+        }
+
+        [HttpGet]
+        [Route("api/users/{token}")]
+        public char GetEmailInitial(string token)
+        {
+            UserManagementManager umm = new UserManagementManager();
+            SessionService ss = new SessionService();
+            Session session = new Session();
+            User user;
+            char emailIni;
+
+            using (var _db = new DatabaseContext())
+            {
+                session = ss.GetSession(_db,token);
+                Console.WriteLine(session);
+            }
+
+            var id = session.UserId;
+            user = umm.GetUser(id);
+            emailIni = user.Email[0];
+
+            return emailIni;
         }
 
         [HttpPost]

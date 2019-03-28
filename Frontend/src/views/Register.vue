@@ -128,7 +128,7 @@
 
 <script>
 import { register } from '@/services/request';
-import { store } from '@/services/request'
+//import { store } from '@/services/request'
 
 export default {
   name: 'Register',
@@ -191,8 +191,8 @@ export default {
         securityQ3Answer: this.securityQ3Answer  
       }).then(() => {
         const params = new URLSearchParams(window.location.search)
-        store.isLogin()
-        store.state.emailIni = this.email[0]
+        //store.isLogin()
+        //store.state.emailIni = this.email[0]
         if (params.has('redirect')) {
           window.location.href = decodeURIComponent(params.get('redirect'));
         } else {

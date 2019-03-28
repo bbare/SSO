@@ -11,15 +11,15 @@
     <v-btn to="add" flat>Register</v-btn>
     <v-btn to="key" flat>Generate</v-btn>
     <v-btn to="delete" flat>Delete</v-btn>
-    <v-btn to="login" flat v-if="!isLoggedIn.isLogin">Login</v-btn>
+    <v-btn to="login" flat v-if="!this.$data.isLoggedIn">Login</v-btn>
     <v-menu
       offset-y
       content-class="dropdown-menu"
-      transition="slide-y-transition" v-if="isLoggedIn.isLogin">
+      transition="slide-y-transition" v-if="this.$data.isLoggedIn">
 
       <v-btn slot="activator" fab dark color="teal">
         <v-avatar dark>
-          <span class="white--text headline">{{emailInitial.emailIni}}</span>
+          <span class="white--text headline">{{this.$data.emailInitial}}</span>
         </v-avatar>
       </v-btn>
       
@@ -41,16 +41,65 @@
 </template>
 
 <script>
-import {store} from "@/services/request"
+import axios from "axios"
+import { apiURL } from '@/const.js'
 
 export default {
   name: 'NavBar',
   data () {
     return{
       links: [],
-      emailInitial: store.state,
-      isLoggedIn: store.state
+      emailInitial: '',
+      isLoggedIn: false
     }
+  },
+  watch: {
+    isLoggedIn: function() {
+      if(localStorage.getItem('token')){
+            this.$data.isLoggedIn = true
+            const url = `${apiURL}/users/${localStorage.token}`
+            axios.get(url,
+            {
+                params: {
+                  token: localStorage.getItem('token')
+                }      
+            })
+            .then(resp => {
+                this.$data.emailInitial = resp.data
+                console.log(this.$data.emailInitial)
+                console.log(localStorage.getItem('token'))
+            })
+            .catch(e => {console.log(e);
+            })
+          }
+          else{
+            this.isLoggedIn = false
+          }
+      }
+  },
+  mounted(){
+    /*if(localStorage.getItem('token')){
+      this.$data.isLoggedIn = true
+      const url = `${apiURL}/users/${localStorage.token}`
+      axios.get(url,
+      {
+          params: {
+            token: localStorage.getItem('token')
+          }      
+      })
+      .then(resp => {
+          //store.isLogin()
+          //store.state.emailIni = resp.data
+          this.$data.emailInitial = resp.data
+          console.log(this.$data.emailInitial)
+          console.log(localStorage.getItem('token'))
+      })
+      .catch(e => {console.log(e);
+      })
+    }
+    else{
+      this.isLoggedIn = false
+    }*/
   },
   created () {
   },
