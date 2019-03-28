@@ -1,7 +1,7 @@
 <template>
     <div class="generate-wrapper">
 
-        <h1>Generate a New API Key</h1>
+        <h1 class="header">Generate a New API Key</h1>
 
         <br />
         <v-form>
@@ -25,20 +25,21 @@
         
         <v-alert
             :value="error"
+            id="error"
             type="error"
             transition="scale-transition"
         >
             {{error}}
         </v-alert>
 
-        <div v-if="key" id="hide">
+        <div v-if="key" id="keyMessage">
             <h3>Your New API Key:</h3>
+            <p>{{ key }}</p>
         </div>
-        <p>{{ key }}</p>
 
         <br />
 
-        <v-btn color="success" v-if="!key" v-on:click="generate">Generate</v-btn>
+        <v-btn id="btnGenerate" color="success" v-if="!key" v-on:click="generate">Generate</v-btn>
 
         </v-form>
 
