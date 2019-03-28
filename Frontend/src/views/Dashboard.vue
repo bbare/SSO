@@ -109,7 +109,7 @@ export default {
   },
   async mounted() {
     await axios
-      .get("http://localhost:61348/api/applications")
+      .get("http://api.kfc-sso.com/api/applications")
       .then(response => (this.applications = response.data));
 
     // Add attribute for displaying info icon
