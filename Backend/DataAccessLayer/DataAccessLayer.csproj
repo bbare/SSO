@@ -67,10 +67,6 @@
     <Compile Include="Migrations\201903100743056_create-attribute-incorrectPasswordCount.Designer.cs">
       <DependentUpon>201903100743056_create-attribute-incorrectPasswordCount.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201903110756108_ghostMigration.cs" />
-    <Compile Include="Migrations\201903110756108_ghostMigration.Designer.cs">
-      <DependentUpon>201903110756108_ghostMigration.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201903111003125_upate-sessions-userNotUnique.cs" />
     <Compile Include="Migrations\201903111003125_upate-sessions-userNotUnique.Designer.cs">
       <DependentUpon>201903111003125_upate-sessions-userNotUnique.cs</DependentUpon>
@@ -123,9 +119,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903100743056_create-attribute-incorrectPasswordCount.resx">
       <DependentUpon>201903100743056_create-attribute-incorrectPasswordCount.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201903110756108_ghostMigration.resx">
-      <DependentUpon>201903110756108_ghostMigration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903111003125_upate-sessions-userNotUnique.resx">
       <DependentUpon>201903111003125_upate-sessions-userNotUnique.cs</DependentUpon>
