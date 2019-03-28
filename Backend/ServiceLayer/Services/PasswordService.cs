@@ -7,7 +7,7 @@ namespace ServiceLayer.Services
     public class PasswordService : IPasswordService
     {
         public byte[] GenerateSalt() {
-            byte[] salt = new byte[128 / 8];
+            byte[] salt = new byte[128];
             using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(salt);
@@ -19,20 +19,20 @@ namespace ServiceLayer.Services
         {
             Rfc2898DeriveBytes rfc = new Rfc2898DeriveBytes(password, salt);
             rfc.IterationCount = 10000;
-            byte[] hash = rfc.GetBytes(16);
+            byte[] hash = rfc.GetBytes(256);
             return Convert.ToBase64String(hash);
         }
 
         public string HashPasswordSHA1(string password, byte[] salt)
         {
-            var sh = SHA1.Create();
+            SHA1 sh = SHA1.Create();
             byte[] byte_arr = System.Text.Encoding.ASCII.GetBytes(password);
             byte[] hashed_bytes = sh.ComputeHash(byte_arr);
             return BitConverter.ToString(hashed_bytes).Replace("-", "");
         }
 
        public int CheckPasswordPwned(string password) {
-            string url = "https://api.pwnedpasswords.com/range/";
+            string PwnedPasswordAPIURL = "https://api.pwnedpasswords.com/range/";
             //Take user password and hash using SHA-1
             string hashed_Password = HashPasswordSHA1(password, null);
             //Refromat the hashed password into a prefix and suffix
@@ -40,13 +40,13 @@ namespace ServiceLayer.Services
             string suffix = hashed_Password.Substring(5);
 
             //Iterate through each line of the Api Response and compare with our hashed password suffix
-            foreach (var key in QueryPwnedApi(prefix, url))
+            foreach (string key in QueryPwnedApi(prefix, PwnedPasswordAPIURL))
             {
-                var key_value = key.Split(':');
+                string[] pwned_count = key.Split(':');
                 //If the strings match, return the # of times password was compromised
-                if (suffix == key_value[0])
+                if (suffix == pwned_count[0])
                 {
-                    return Int32.Parse(key_value[1]);
+                    return Int32.Parse(pwned_count[1]);
                 }
 
             }
@@ -58,11 +58,10 @@ namespace ServiceLayer.Services
             return password.Length >= 12 && password.Length <= 2000;
         }
 
-        public string[] QueryPwnedApi(string prefix,string url)
+        public string[] QueryPwnedApi(string prefix, string url)
         {
             HttpClient client = new HttpClient();
-            return (client.GetStringAsync(url + prefix).Result).Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-
+            return (client.GetStringAsync(url + prefix).Result).Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
         }
     }
 }

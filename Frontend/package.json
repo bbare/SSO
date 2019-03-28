@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "e2e": "mocha ./test/*.test.e2e.js --timeout 10000"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -18,8 +19,11 @@
     "@vue/cli-plugin-eslint": "^3.4.1",
     "@vue/cli-service": "^3.4.1",
     "babel-eslint": "^10.0.1",
+    "chai": "^4.2.0",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0",
+    "mocha": "^6.0.2",
+    "puppeteer": "^1.13.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
     "vue-cli-plugin-vuetify": "^0.5.0",
