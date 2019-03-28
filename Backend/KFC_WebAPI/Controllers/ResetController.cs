@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 
 namespace WebAPI.Controllers
 {
-    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class ResetController : ApiController
     {
         public class EmailRequest
