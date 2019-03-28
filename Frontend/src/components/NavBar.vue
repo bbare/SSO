@@ -27,7 +27,7 @@
           :key="link.text" 
           router :to="link.route"
         >
-          <v-list-tile-title>{{appLinks.text}}</v-list-tile-title>
+          <v-list-tile-title>{{link.text}}</v-list-tile-title>
         </v-list-tile>
       </v-list>
     </v-menu>
