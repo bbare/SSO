@@ -63,8 +63,8 @@ namespace UnitTesting
                 Assert.IsNotNull(response);
                 Assert.AreEqual(response.Id, expected.Id);
 
-                //ApplicationService.DeleteApplication(_db, response.Id);
-                //_db.SaveChanges();
+                ApplicationService.DeleteApplication(_db, response.Id);
+                _db.SaveChanges();
             }
         }
 

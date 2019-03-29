@@ -164,12 +164,12 @@ namespace ManagerLayer.ApplicationManagement
                 response = new HttpResponseContent(HttpStatusCode.BadRequest, "Invalid Title.");
                 return response;
             }
-            else if (request.Description == null || !IsValidStringLength(request.Description, descriptionLength))
+            else if (!IsValidStringLength(request.Description, descriptionLength))
             {
                 response = new HttpResponseContent(HttpStatusCode.BadRequest, "Invalid Description: Cannot be more than 2000 characters in length.");
                 return response;
             }
-            else if (request.LogoUrl == null || !IsValidUrl(request.LogoUrl, ref logoUrl))
+            else if (!IsValidUrl(request.LogoUrl, ref logoUrl))
             {
                 response = new HttpResponseContent(HttpStatusCode.BadRequest, "Invalid Logo Url.");
                 return response;
@@ -210,6 +210,7 @@ namespace ManagerLayer.ApplicationManagement
                 // Update values of application record
                 app.Description = request.Description;
                 app.LogoUrl = request.LogoUrl;
+                app.UnderMaintenance = request.UnderMaintenance;
                 var appResponse = ApplicationService.UpdateApplication(_db, app);
 
                 // Update values of api key record

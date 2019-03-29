@@ -40,7 +40,7 @@ namespace UnitTesting
             }
 
             // Act
-            var actual = am.IsValidStringLength(title, 100);
+            var actual = am.IsValidStringLength(title, length);
 
             // Assert
             Assert.IsFalse(actual);
