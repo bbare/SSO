@@ -114,13 +114,13 @@ namespace KFC_WebAPI.Controllers
 
         [HttpGet]
         [Route("api/users/{token}")]
-        public char GetEmailInitial(string token)
+        public string GetEmail(string token)
         {
             UserManagementManager umm = new UserManagementManager();
             SessionService ss = new SessionService();
             Session session = new Session();
             User user;
-            char emailIni;
+            string email;
 
             using (var _db = new DatabaseContext())
             {
@@ -130,9 +130,9 @@ namespace KFC_WebAPI.Controllers
 
             var id = session.UserId;
             user = umm.GetUser(id);
-            emailIni = user.Email[0];
+            email = user.Email;
 
-            return emailIni;
+            return email;
         }
 
         [HttpPost]

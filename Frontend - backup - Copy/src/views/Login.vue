@@ -62,10 +62,11 @@
                     password: this.$data.password
                })
                .then(resp => {
+                   //store.isLogin()
+                   //store.state.emailIni = this.email[0]
                    let respData = resp.data
                    localStorage.setItem('token', respData)
-                   store.state.isLogin = true
-                   store.getEmail()
+                   store.isLoginMenu()
                    this.$router.push('/dashboard')
                 })
                .catch(e => {console.log(e);

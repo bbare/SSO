@@ -35,26 +35,21 @@ const submitLaunch = launchData => {
 const store = {
   state: {
     isLogin: false,
-    email: ""
+    emailIni: ""
   },
-  isUserLogin(){
+  isLogin(){
+    this.state.isLogin = true;
+  },
+  isLogout(){
+    this.state.isLogin = false;
+  },
+  isLoginNavbar(){
     if(token !== null){
       this.state.isLogin = true;
     }
     else{
       this.state.isLogin= false;
     }
-  },
-  getEmail(){
-      axios.get(`${apiURL}/users/${localStorage.token}`,
-      {
-        params: {
-          token: this.token
-        }
-      })
-      .then(resp =>{
-        this.state.email = resp.data
-      })  
   }
 };
 
