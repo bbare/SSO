@@ -62,7 +62,7 @@ namespace ManagerLayer.Login
 
         public bool LoginCheckPassword(LoginRequest request)
         {
-            bool result; 
+            bool result;
             using (var _db = new DatabaseContext())
             {
                 user = _userService.GetUser(_db, request.email);
