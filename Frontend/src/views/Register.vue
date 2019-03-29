@@ -44,13 +44,14 @@
             prepend-icon="event"
             readonly
             v-on="on"
+            id="dob"
           ></v-text-field>
         </template>
         <v-date-picker
           ref="picker"
           v-model="dob"
           :max="new Date().toISOString().substr(0, 10)"
-          min="1950-01-01"
+          min="1900-01-01"
           @change="updateDate"
         ></v-date-picker>
       </v-menu>
