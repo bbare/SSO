@@ -158,18 +158,7 @@ namespace UnitTesting
 
         public Application CreateApplicationInDb()
         {
-
-            Application app = new Application
-            {
-                Id = Guid.NewGuid(),
-                Title = "KFC App",
-                LaunchUrl = "https://kfc.com",
-                Email = "kfc@email.com",
-                UserDeletionUrl = "https://kfc.com/delete",
-                LogoUrl = "https://kfc.com/logo.png",
-                Description = "A KFC app",
-                SharedSecretKey = Guid.NewGuid().ToString("N")
-            };
+            var app = CreateApplicationObject();
 
             return CreateApplicationInDb(app);
         }
@@ -189,7 +178,6 @@ namespace UnitTesting
         {
             Application app = new Application
             {
-                Id = Guid.NewGuid(),
                 Title = "KFC App",
                 LaunchUrl = "https://kfc.com",
                 Email = "kfc@email.com",
@@ -203,14 +191,7 @@ namespace UnitTesting
 
         public ApiKey CreateApiKeyInDb()
         {
-            Application app = CreateApplicationObject();
-            ApiKey apiKey = new ApiKey
-            {
-                Id = Guid.NewGuid(),
-                Key = Guid.NewGuid().ToString("N"),
-                ApplicationId = app.Id,
-                IsUsed = false
-            };
+            var apiKey = CreateApiKeyObject();
 
             return CreateApiKeyInDb(apiKey);
         }
@@ -231,10 +212,8 @@ namespace UnitTesting
             Application app = CreateApplicationObject();
             ApiKey apiKey = new ApiKey
             {
-                Id = Guid.NewGuid(),
                 Key = Guid.NewGuid().ToString("N"),
-                ApplicationId = app.Id,
-                IsUsed = false
+                ApplicationId = app.Id
             };
             return apiKey;
         }

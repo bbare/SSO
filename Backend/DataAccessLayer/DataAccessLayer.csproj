@@ -76,6 +76,10 @@
     <Compile Include="Migrations\201903160219313_update-applications-add-SharedSecretKey.Designer.cs">
       <DependentUpon>201903160219313_update-applications-add-SharedSecretKey.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903282245124_update-applications-add-UnderMaintenance.cs" />
+    <Compile Include="Migrations\201903282245124_update-applications-add-UnderMaintenance.Designer.cs">
+      <DependentUpon>201903282245124_update-applications-add-UnderMaintenance.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApiKey.cs" />
     <Compile Include="Models\Application.cs" />
@@ -126,6 +130,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903160219313_update-applications-add-SharedSecretKey.resx">
       <DependentUpon>201903160219313_update-applications-add-SharedSecretKey.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903282245124_update-applications-add-UnderMaintenance.resx">
+      <DependentUpon>201903282245124_update-applications-add-UnderMaintenance.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
