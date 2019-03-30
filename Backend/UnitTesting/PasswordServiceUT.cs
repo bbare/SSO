@@ -26,19 +26,17 @@ namespace UnitTesting
         public void hashPassword()
         {
             //Act
-            string password = "buasd78324yas";
+            string password1 = "buasd78324yas";
             byte[] salt = ps.GenerateSalt();
-            string hash1 = ps.HashPassword(password, salt);
-            string hash2 = ps.HashPassword(password, salt);
+            string password1Hash1 = ps.HashPassword(password1, salt);
+            string password1Hash2 = ps.HashPassword(password1, salt);
 
-            password = "uibava97s133";
-            string hash3 = ps.HashPassword(password, salt);
+            string password2 = "uibava97s133";
+            string password2Hash1 = ps.HashPassword(password2, salt);
             
-
-
             //Assert
-            Assert.AreEqual(hash1, hash2);
-            Assert.AreNotEqual(hash1, hash3);
+            Assert.AreEqual(password1Hash1, password1Hash2);
+            Assert.AreNotEqual(password1Hash1, password2Hash1);
         }
 
         [TestMethod]
