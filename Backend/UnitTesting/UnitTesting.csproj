@@ -64,7 +64,7 @@
     <Reference Include="System.Security" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PasswordManagerUT.cs" />
+    <Compile Include="AuthorizationManagerUT.cs" />
     <Compile Include="UserManagerUT.cs" />
     <Compile Include="ApplicationServiceUT.cs" />
     <Compile Include="EmailServiceUT.cs" />

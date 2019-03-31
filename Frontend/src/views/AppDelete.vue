@@ -1,7 +1,7 @@
 <template>
     <div class="delete-wrapper">
 
-        <h1>Delete Your Application</h1>
+        <h1 class="header">Delete Your Application</h1>
 
         <br />
         <v-form>
@@ -25,20 +25,21 @@
         
         <v-alert
             :value="error"
+            id="error"
             type="error"
             transition="scale-transition"
         >
             {{error}}
         </v-alert>
 
-        <div v-if="validation" id="hide">
+        <div v-if="validation" id="deleteMessage">
             <h3>Successful Deletion!</h3>
+            <p>{{ validation }}</p>
         </div>
-        <p>{{ validation }}</p>
 
         <br />
 
-        <v-btn color="success" v-if="!validation" v-on:click="deleteApp">Delete</v-btn>
+        <v-btn id="btnDelete" color="success" v-if="!validation" v-on:click="deleteApp">Delete</v-btn>
 
         </v-form>
 

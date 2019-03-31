@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "e2e": "mocha ./test/*.test.e2e.js --timeout 10000"
+    "e2e": "mocha ./test/*.test.e2e.js --timeout 20000"
   },
   "dependencies": {
     "axios": "^0.18.0",

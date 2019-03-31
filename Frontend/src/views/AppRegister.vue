@@ -1,7 +1,7 @@
 <template>
     <div class="register-wrapper">
         
-        <h1>Register your Application</h1>
+        <h1 class="header">Register your Application</h1>
 
         <br />
         <v-form>
@@ -41,26 +41,27 @@
         
         <v-alert
             :value="error"
+            id="error"
             type="error"
             transition="scale-transition"
         >
             {{error}}
         </v-alert>
 
-        <div v-if="key">
+        <div id="apiKeyMessage" v-if="key">
             <h3>Successful Registration!</h3>
             <br />
             <h3>Your API Key:</h3>
             <p>{{ key }}</p>
         </div>
-        <div v-if="secretKey">
+        <div id="secretKeyMessage" v-if="secretKey">
             <h3>Your Secret Key</h3>
             <p>{{ secretKey }}</p>
         </div>
 
         <br />
 
-        <v-btn color="success" v-if="!key" v-on:click="register">Register</v-btn>
+        <v-btn id="btnRegister" color="success" v-if="!key" v-on:click="register">Register</v-btn>
 
         </v-form>
         
