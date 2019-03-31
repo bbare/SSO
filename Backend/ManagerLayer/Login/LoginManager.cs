@@ -82,14 +82,7 @@ namespace ManagerLayer.Login
                     result = false;
                 }
 
-                try
-                {
-                    _db.SaveChanges();
-                }
-                catch (DbEntityValidationException ex)
-                {
-                    _db.Entry(user).State = System.Data.Entity.EntityState.Detached;
-                }
+                _db.SaveChanges();
             }
             return result;
         }
