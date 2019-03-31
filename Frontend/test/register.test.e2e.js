@@ -37,11 +37,19 @@ let fillReg = async page => {
     await page.type('#state', 'California', {delay: TYPE_DELAY})
     await page.type('#country', 'United States', {delay: TYPE_DELAY})
 
-    await page.type('#securityq1', 'Question 1?', {delay: TYPE_DELAY})
+    await page.click('#securityq1')
+    await animationTimeout()
+    await page.click('.menuable__content__active .v-select-list .v-list > div:first-child')
     await page.type('#securitya1', 'Answer 1.', {delay: TYPE_DELAY})
-    await page.type('#securityq2', 'Question 2?', {delay: TYPE_DELAY})
+
+    await page.click('#securityq2')
+    await animationTimeout()
+    await page.click('.menuable__content__active .v-select-list .v-list > div:first-child')
     await page.type('#securitya2', 'Answer 2.', {delay: TYPE_DELAY})
-    await page.type('#securityq3', 'Question 3?', {delay: TYPE_DELAY})
+    
+    await page.click('#securityq3')
+    await animationTimeout()
+    await page.click('.menuable__content__active .v-select-list .v-list > div:first-child')
     await page.type('#securitya3', 'Answer 3.', {delay: TYPE_DELAY})
 }
 
