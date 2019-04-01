@@ -1,25 +1,56 @@
 <template>
-    <div class="login-wrapper">
-        <form class="form-login" @submit.prevent="login">
-            <h2 class="form-login-heading">Login</h2>
-            <input v-model="email" id="email" type="email" class="form-control" placeholder="Email" required>
-            <input v-model="password" id="password" type="password" class="form-control" placeholder="Password" required>
-            <button class="button-login" type="submit">Login</button>
-        </form>
-        <button @click="goToResetPassword()" type="submit" >Reset Password</button>
+   <div class="login-wrapper">
+
+        <h1>Login</h1>
+
+        <br />
+        <v-form>
+        <v-text-field
+            name="email"
+            id="email"
+            v-model="email"
+            type="email"
+            label="email" 
+            /><br />
+        <v-text-field
+            name="password"
+            id="password"
+            type="password"
+            v-model="password"
+            label="Password" 
+            /><br />
+
+        
+        <v-alert
+            :value="error"
+            type="error"
+            transition="scale-transition"
+        >
+            {{error}}
+        </v-alert>
+
+        <br />
+
+        <v-btn color="success" v-on:click="login">Login</v-btn>
+
+        <v-btn color="success" v-on:click="goToResetPassword">Reset Password</v-btn>
+        </v-form>
+
     </div>
 </template>
 
 <script>
     import axios from "axios"
     import { apiURL } from '@/const.js'
+    import { store } from '@/services/request'
     
     export default {
         name: 'login',
         data() {
             return {
                 email: "",
-                password: ""
+                password: "",
+                error: ""
             }
         },
         methods: {
@@ -31,22 +62,21 @@
                     password: this.$data.password
                })
                .then(resp => {
-                   localStorage.email = this.email;
-                   localStorage.token = resp.data; 
+                   let respData = resp.data
+                   localStorage.setItem('token', respData)
+                   store.state.isLogin = true
+                   store.getEmail()
                    this.$router.push('/dashboard')
                 })
                .catch(e => {console.log(e);
-                    if(e.response.status === 404){
-                        alert("User Not Found")
+                    if(e.response.status === 400){
+                        this.error = "Invalid Username/Password"
                     }
                     else if(e.response.status === 401){
-                        alert("User is Disabled")
-                    }
-                    else if(e.response.status === 400){ 
-                        alert("Invalid Password")
+                        this.error = "User is Disabled"
                     }
                     else{
-                        alert("Bad Reqiest or Conflict")
+                        this.error = e.response.data
                     }
             })
         },
@@ -59,43 +89,7 @@
 
 <style>
     .login-wrapper {
-        background: #fff;
-        width: 100%;
-        height: 100%;
+        width: 70%;
         margin: 1px auto;
-        text-align: center;
-    }
-
-    .form-login {
-        max-width: 330px;
-        padding: 5% 10px;
-        margin: 0 auto;
-    }
-
-    .form-login .form-control {
-        position: relative;
-        height: auto;
-        -webkit-box-sizing: border-box;
-            box-sizing: border-box;
-        padding: 10px;
-        font-size: 16px;
-    }
-
-    .form-login .form-control:focus {
-        z-index: 2;
-    }
-
-    .form-login input {
-        border: .5px solid #555;
-        width: 100%;
-        padding: 12px 20px;
-        margin: 8px 0;
-        box-sizing: border-box;
-    }
-
-    .form-login button {
-        background: #778899;
-        width: 100%;
-        height: 40px;
     }
 </style>

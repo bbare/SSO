@@ -8,6 +8,8 @@ using System.Web.Http;
 using ManagerLayer;
 using ServiceLayer.Exceptions;
 using System.ComponentModel.DataAnnotations;
+using ServiceLayer.Services;
+using ManagerLayer.UserManagement;
 
 namespace KFC_WebAPI.Controllers
 {
@@ -110,6 +112,29 @@ namespace KFC_WebAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("api/users/{token}")]
+        public string GetEmail(string token)
+        {
+            UserManagementManager umm = new UserManagementManager();
+            SessionService ss = new SessionService();
+            Session session = new Session();
+            User user;
+            string email;
+
+            using (var _db = new DatabaseContext())
+            {
+                session = ss.GetSession(_db,token);
+                Console.WriteLine(session);
+            }
+
+            var id = session.UserId;
+            user = umm.GetUser(id);
+            email = user.Email;
+
+            return email;
+        }
+
         [HttpPost]
         [Route("api/users/login")]
         public IHttpActionResult Login([FromBody] LoginRequest request)
@@ -117,8 +142,8 @@ namespace KFC_WebAPI.Controllers
             LoginManager loginM = new LoginManager();
             if (loginM.LoginCheckUserExists(request) == false)
             {
-                //404
-                return Content(HttpStatusCode.NotFound, "Invalid Username");
+                //400
+                return Content(HttpStatusCode.BadRequest, "Invalid Username/Password");
             }
             else
             {
@@ -136,7 +161,7 @@ namespace KFC_WebAPI.Controllers
                     else
                     {
                         //400
-                        return Content(HttpStatusCode.BadRequest, "Invalid Password");
+                        return Content(HttpStatusCode.BadRequest, "Invalid Username/Password");
                     }
                 }
             }
