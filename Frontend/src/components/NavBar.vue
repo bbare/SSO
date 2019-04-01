@@ -6,10 +6,10 @@
     <v-spacer></v-spacer>
 
     <v-btn to="home" flat>Home</v-btn>
-    <v-btn to="register" flat>Register</v-btn>
+    <v-btn to="register" flat v-if="!isLoggedIn.isLogin">Register</v-btn>
     <v-btn to="about" flat>About</v-btn>
-    <v-btn to="login" flat>Login</v-btn>
-
+    <v-btn to="login" flat v-if="!isLoggedIn.isLogin">Login</v-btn>
+    
     <v-menu open-on-hover top offset-y id="appDropDown">
       <template v-slot:activator="{ on }">
         <v-btn
@@ -31,22 +31,57 @@
         </v-list-tile>
       </v-list>
     </v-menu>
+    
+    <v-menu
+      offset-y
+      content-class="dropdown-menu"
+      transition="slide-y-transition" v-if="isLoggedIn.isLogin">
+      <v-btn slot="activator" fab dark color="teal">
+        <v-avatar dark>
+          <span class="white--text headline">{{isLoggedIn.email[0]}}</span>
+        </v-avatar>
+      </v-btn>
+      
+      <v-card>
+        <v-list dense>
+          <v-list-tile
+            v-for="link in links"
+            :key="link"
+          >
+          <v-list-tile-title
+            v-text="link"
+          />
+          </v-list-tile>
+        </v-list>
+      </v-card>
+    </v-menu>
+
   </v-toolbar>
 </template>
 
 <script>
+import { apiURL } from '@/const.js'
+import { store } from '@/services/request'
+
 export default {
   name: 'NavBar',
-  data(){
-    return {
+  data () {
+    return{
       appLinks: [
         {text: 'Register', route: '/add'},
         {text: 'Generate Key', route: '/key'},
         {text: 'Delete', route: '/delete'},
-      ]
+      ],
+      links: [],
+      isLoggedIn: store.state
+    }
+  },
+  mounted(){
+    store.isUserLogin()
+    if(store.state.isLogin === true){
+      store.getEmail()
     }
   }
 }
 </script>
-
 
