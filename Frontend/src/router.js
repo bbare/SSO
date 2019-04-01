@@ -10,6 +10,7 @@ import Dashboard from '@/views/Dashboard.vue'
 import UpdatePassword from '@/views/UpdatePassword.vue'
 import SendResetLink from '@/views/SendResetLink.vue'
 import ResetPassword from '@/views/ResetPassword.vue'
+import Logout from '@/views/Logout.vue'
 
 Vue.use(VueRouter)
 
@@ -76,6 +77,11 @@ let router = new VueRouter({
       path: '/resetpassword/:id',
       name: 'resetpassword',
       component: ResetPassword
+    },
+    {
+      path: '/logout',
+      name: '/logout',
+      component: Logout
     },
     {
       path: '*',

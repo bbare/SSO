@@ -1,12 +1,13 @@
 
 <script>
 export default {
-    methods:{
-    logout(){
-      localStorage.removeItem(localStorage.token),
+    name: 'Logout',
+    created()
+    {
+      localStorage.removeItem('token'),
       this.$router.push('/home')
-
+      
     }
-  }
+    
 }
 </script>

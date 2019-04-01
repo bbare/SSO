@@ -13,6 +13,7 @@ namespace DataAccessLayer.Models
             UpdatedAt = DateTime.UtcNow;
             ExpiresAt = DateTime.UtcNow.AddMinutes(MINUTES_UNTIL_EXPIRATION);
             Id = Guid.NewGuid();
+            //isExpired = false;
         }
 
         [Required]
@@ -32,5 +33,6 @@ namespace DataAccessLayer.Models
         [Index(IsUnique = false)]
         public Guid UserId { get; set; }
         public User User { get; set; }
+        //public Boolean isExpired {get; set;}
     }
 }

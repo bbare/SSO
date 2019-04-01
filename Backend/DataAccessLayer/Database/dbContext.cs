@@ -21,7 +21,7 @@ namespace DataAccessLayer.Database
         public DatabaseContext()
         {
             //dev
-            this.Database.Connection.ConnectionString = "Data Source=localdb;Initial Catalog=SSO;Integrated Security=True";
+            this.Database.Connection.ConnectionString = "Data Source =(LocalDB)\\MSSQLLocalDB; AttachDbFilename = C:\\Users\\Vik\\Documents\\Project\\Current SSO LOgout Vicotoakdas Kim\\SSO\\Backend\\DataAccessLayer\\Database1.mdf;Integrated Security = True";
 
             //release
             //this.Database.Connection.ConnectionString = "Data Source=" + hostname + ";Initial Catalog=" + dbname + ";User ID=" + username + ";Password=" + password + ";";
