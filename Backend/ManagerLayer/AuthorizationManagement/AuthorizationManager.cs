@@ -37,18 +37,20 @@ namespace ManagerLayer
         public Session ValidateAndUpdateSession(DatabaseContext _db, string token)
         {
             Session response = _sessionService.GetSession(_db, token);
+			//For the Compare method, a -1 is returned if the current Session expiration is shorter than the current time
+			//A 0 is returned if they are equal
+			//A 1 is returned if current Session is longer than the current time
+			if (TimeSpan.Compare(response.ExpiresAt.TimeOfDay, DateTime.UtcNow.TimeOfDay) == -1 || TimeSpan.Compare(response.ExpiresAt.TimeOfDay, DateTime.UtcNow.TimeOfDay) == 0)
+			{
+				return _sessionService.UpdateSession(_db, response);
+			}
+			else
+			{
+				return null;
+			}
+		}
 
-            if(response != null)
-            {
-                return _sessionService.UpdateSession(_db, response);
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public Session DeleteSession(DatabaseContext _db, string token)
+		public Session DeleteSession(DatabaseContext _db, string token)
         {
             return _sessionService.DeleteSession(_db, token);
         }
