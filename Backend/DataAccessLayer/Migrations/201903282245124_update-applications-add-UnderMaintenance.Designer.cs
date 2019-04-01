@@ -7,13 +7,13 @@ namespace DataAccessLayer.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class ghostMigration : IMigrationMetadata
+    public sealed partial class updateapplicationsaddUnderMaintenance : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ghostMigration));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(updateapplicationsaddUnderMaintenance));
         
         string IMigrationMetadata.Id
         {
-            get { return "201903110756108_ghostMigration"; }
+            get { return "201903282245124_update-applications-add-UnderMaintenance"; }
         }
         
         string IMigrationMetadata.Source

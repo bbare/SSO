@@ -44,13 +44,14 @@
             prepend-icon="event"
             readonly
             v-on="on"
+            id="dob"
           ></v-text-field>
         </template>
         <v-date-picker
           ref="picker"
           v-model="dob"
           :max="new Date().toISOString().substr(0, 10)"
-          min="1950-01-01"
+          min="1900-01-01"
           @change="updateDate"
         ></v-date-picker>
       </v-menu>
@@ -73,11 +74,12 @@
 
       <br /><br />
       Security Questions:<br />
-      <v-text-field
-        name="securityq1"
-        id="securityq1"
+      <v-select
+        :items="securityQuestions1"
         v-model="securityQ1"
-        label="Security Question 1" /><br />
+        label="Security Question 1"
+        id="securityq1"
+      ></v-select><br />
       <v-text-field
         name="securitya1"
         id="securitya1"
@@ -86,11 +88,12 @@
 
       <br />
 
-      <v-text-field
-        name="securityq2"
-        id="securityq2"
+      <v-select
+        :items="securityQuestions2"
         v-model="securityQ2"
-        label="Security Question 2" /><br />
+        label="Security Question 2"
+        id="securityq2"
+      ></v-select><br />
       <v-text-field
         name="securitya2"
         id="securitya2"
@@ -99,11 +102,12 @@
 
       <br />
 
-      <v-text-field
-        name="securityq3"
-        id="securityq3"
+      <v-select
+        :items="securityQuestions3"
         v-model="securityQ3"
-        label="Security Question 3" /><br />
+        label="Security Question 3"
+        id="securityq3"
+      ></v-select><br />
       <v-text-field
         name="securitya3"
         id="securitya3"
@@ -123,11 +127,32 @@
       <v-btn color="success" v-on:click="submit">Register</v-btn>
 
     </v-form>
+    <v-dialog
+      v-model="loading"
+      hide-overlay
+      persistent
+      width="300"
+    >
+      <v-card
+        color="primary"
+        dark
+      >
+        <v-card-text>
+          Loading
+          <v-progress-linear
+            indeterminate
+            color="white"
+            class="mb-0"
+          ></v-progress-linear>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import { register } from '@/services/request';
+import { store } from '@/services/request'
 
 export default {
   name: 'Register',
@@ -135,6 +160,7 @@ export default {
     return {
       menu: false,
       error: "",
+      loading: false,
 
       email: '',
       password: '',
@@ -151,6 +177,10 @@ export default {
       securityQ2Answer: '',
       securityQ3: '',
       securityQ3Answer: '',
+
+      securityQuestions1: ["What is your favorite pet's name?", "What is your mother's maiden name?", "What is your favorite superhero?"],
+      securityQuestions2: ["What is your childhood best friend's name?", "In what city were you born?", "What is your favorite food?"],
+      securityQuestions3: ["What is your favorite color?", "What is the make of your first car?", "In what city did you grow up?"],
     }
   },
   watch: {
@@ -172,6 +202,7 @@ export default {
 
       if (this.error) return;
 
+      this.loading = true;
       register({
         email: this.email,
         password: this.password,
@@ -190,7 +221,8 @@ export default {
         securityQ3Answer: this.securityQ3Answer  
       }).then(() => {
         const params = new URLSearchParams(window.location.search)
-
+        store.state.isLogin = true
+        store.getEmail()
         if (params.has('redirect')) {
           window.location.href = decodeURIComponent(params.get('redirect'));
         } else {
@@ -213,6 +245,8 @@ export default {
           case 500:
             this.error = "An unexpected server error occurred. Please try again momentarily.";
         }
+      }).finally(() => {
+        this.loading = false;
       })
     }
   }

@@ -120,7 +120,7 @@ namespace UnitTesting
 
                 _db.SaveChanges();
 
-                var response = ss.DeleteSession(_db, newSession.Token, newUser.Id);
+                var response = ss.DeleteSession(_db, newSession.Token);
                 _db.SaveChanges();
                 var result = _db.Sessions.Find(expectedResponse.Id);
 
@@ -159,7 +159,6 @@ namespace UnitTesting
             // Arrange
             newUser = tu.CreateUserObject();
             newSession = tu.CreateSessionObject(newUser);
-            var expectedResultTime = newSession.CreatedAt;
             var expectedResult = newSession;
 
             // ACT
@@ -178,7 +177,6 @@ namespace UnitTesting
                 Assert.AreEqual(result.Id, expectedResult.Id);
                 Assert.AreEqual(result.UpdatedAt, expectedResult.UpdatedAt);
                 Assert.AreEqual(result.ExpiresAt, expectedResult.ExpiresAt);
-                Assert.AreNotEqual(result.CreatedAt, expectedResultTime);
             }
 
         }
@@ -245,7 +243,7 @@ namespace UnitTesting
             // Act
             using (_db = tu.CreateDataBaseContext())
             {
-                var result = ss.GetSession(_db, nonExistingToken, nonExistingSession);
+                var result = ss.GetSession(_db, nonExistingToken);
 
                 // Assert
                 Assert.IsNull(result);

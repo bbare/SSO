@@ -40,6 +40,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
@@ -67,10 +68,6 @@
     <Compile Include="Migrations\201903100743056_create-attribute-incorrectPasswordCount.Designer.cs">
       <DependentUpon>201903100743056_create-attribute-incorrectPasswordCount.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201903110756108_ghostMigration.cs" />
-    <Compile Include="Migrations\201903110756108_ghostMigration.Designer.cs">
-      <DependentUpon>201903110756108_ghostMigration.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201903111003125_upate-sessions-userNotUnique.cs" />
     <Compile Include="Migrations\201903111003125_upate-sessions-userNotUnique.Designer.cs">
       <DependentUpon>201903111003125_upate-sessions-userNotUnique.cs</DependentUpon>
@@ -78,6 +75,10 @@
     <Compile Include="Migrations\201903160219313_update-applications-add-SharedSecretKey.cs" />
     <Compile Include="Migrations\201903160219313_update-applications-add-SharedSecretKey.Designer.cs">
       <DependentUpon>201903160219313_update-applications-add-SharedSecretKey.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903282245124_update-applications-add-UnderMaintenance.cs" />
+    <Compile Include="Migrations\201903282245124_update-applications-add-UnderMaintenance.Designer.cs">
+      <DependentUpon>201903282245124_update-applications-add-UnderMaintenance.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApiKey.cs" />
@@ -124,14 +125,14 @@
     <EmbeddedResource Include="Migrations\201903100743056_create-attribute-incorrectPasswordCount.resx">
       <DependentUpon>201903100743056_create-attribute-incorrectPasswordCount.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201903110756108_ghostMigration.resx">
-      <DependentUpon>201903110756108_ghostMigration.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903111003125_upate-sessions-userNotUnique.resx">
       <DependentUpon>201903111003125_upate-sessions-userNotUnique.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903160219313_update-applications-add-SharedSecretKey.resx">
       <DependentUpon>201903160219313_update-applications-add-SharedSecretKey.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903282245124_update-applications-add-UnderMaintenance.resx">
+      <DependentUpon>201903282245124_update-applications-add-UnderMaintenance.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

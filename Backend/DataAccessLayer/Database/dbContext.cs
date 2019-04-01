@@ -7,14 +7,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.SqlServer.Server;
 using System.Data.SqlClient;
+using System.Configuration;
 
 namespace DataAccessLayer.Database
 {
     public class DatabaseContext : DbContext
     {
+
         public DatabaseContext()
         {
-            this.Database.Connection.ConnectionString = "Data Source=localhost;Initial Catalog=SSO;Integrated Security=True";
+            // set a system enviorment variable for dev, "Data Source=(localdb);Initial Catalog=SSO;Integrated Security = True"
+            var connectionString = Environment.GetEnvironmentVariable("KFC_SSO_DEV_DATABASE", EnvironmentVariableTarget.User);
+            this.Database.Connection.ConnectionString = connectionString;
         }
 
         public DbSet<User> Users { get; set; }
@@ -22,7 +26,5 @@ namespace DataAccessLayer.Database
         public DbSet<Application> Applications { get; set; }
         public DbSet<ApiKey> Keys { get; set; }
         public DbSet<PasswordReset> ResetIDs { get; set; }
-
-
     }
 }
