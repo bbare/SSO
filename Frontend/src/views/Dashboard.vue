@@ -110,7 +110,7 @@ export default {
   },
   async mounted() {
     await axios
-      .get(`${apiURL}/api/applications`)
+      .get(`${apiURL}/applications`)
       .then(response => (this.applications = response.data));
 
     // Add attribute for displaying info icon
