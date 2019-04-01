@@ -24,7 +24,7 @@ namespace KFC_WebAPI.Controllers
         
         [HttpPost]
         [Route("api/Logout")]
-        public void DeleteSession([FromBody] LogoutRequest request)
+        public IHttpActionResult DeleteSession([FromBody] LogoutRequest request)
         {
             using (var _db = new DatabaseContext())
             {
