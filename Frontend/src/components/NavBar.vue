@@ -60,7 +60,7 @@
         ],
         links: [],
         UserMenuItems: [
-          { title: 'Update Password', route: '' },
+          { title: 'Update Password', route: '/updatepassword' },
           { title: 'Logout', route:'' }       
         ],
         isLoggedIn: store.state
