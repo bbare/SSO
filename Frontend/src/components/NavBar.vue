@@ -5,10 +5,11 @@
     </v-toolbar-title>
     <v-spacer></v-spacer>
 
-    <v-btn to="home" flat>Home</v-btn>
+    <v-btn v-if="!isLoggedIn.isLogin" to="home" flat>Home</v-btn>
+    <v-btn v-else to="dashboard" flat>Home</v-btn>
     <v-btn to="register" flat v-if="!isLoggedIn.isLogin">Register</v-btn>
     <v-btn to="about" flat>About</v-btn>
-    <v-menu open-on-hover top offset-y id="appDropDown">
+    <v-menu offset-y id="appDropDown">
       <template slot="activator">
         <v-btn v-on="on"
                 flat>
@@ -16,7 +17,7 @@
           <v-icon>expand_more</v-icon>
         </v-btn>
       </template>
-      <v-list>
+      <v-list dense>
         <v-list-tile v-for="link in appLinks"
                       :key="link.text"
                       router :to="link.route">
@@ -33,14 +34,14 @@
           <span class="white--text headline">{{isLoggedIn.email[0]}}</span>
         </v-avatar>
       </v-btn>
-      <v-card>
-        <v-list dense>
-          <v-list-tile v-for="link in links"
-                        :key="link">
-            <v-list-tile-title v-text="link" />
-          </v-list-tile>
-        </v-list>
-      </v-card>
+      <v-list dense>
+        <v-list-tile v-for="item in this.UserMenuItems"
+                      :key="item.title"
+                      route :to="item.route"
+                      @click="">
+          <v-list-tile-title>{{item.title}}</v-list-tile-title>
+        </v-list-tile>
+      </v-list>
     </v-menu>
   </v-toolbar>
 </template>
@@ -58,6 +59,10 @@
             { text: 'Delete', route: '/delete' },
         ],
         links: [],
+        UserMenuItems: [
+          { title: 'Update Password', route: '' },
+          { title: 'Logout', route:'' }       
+        ],
         isLoggedIn: store.state
       }
     },
