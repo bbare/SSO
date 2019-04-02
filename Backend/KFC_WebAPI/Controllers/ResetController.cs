@@ -105,7 +105,7 @@ namespace WebAPI.Controllers
                     {
                         return Content(HttpStatusCode.OK, true);
                     }
-                    return Content(HttpStatusCode.BadRequest, false);
+                    return Content(HttpStatusCode.BadRequest, "One or more of the answers inputted are incorrect");
                 }
                 return Content(HttpStatusCode.Unauthorized, "Reset link is no longer valid");
             }

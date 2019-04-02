@@ -6,6 +6,7 @@ using System.Linq;
 using DataAccessLayer.Models;
 using MimeKit;
 using System.Data.Entity.Validation;
+using DataAccessLayer.Requests;
 
 namespace ManagerLayer.PasswordManagement
 {
@@ -19,6 +20,7 @@ namespace ManagerLayer.PasswordManagement
         private IPasswordService _passwordService;
         private IEmailService _emailService;
         private ITokenService _tokenService;
+        private ISessionService _sessionService;
 
         public PasswordManager()
         {
@@ -27,6 +29,7 @@ namespace ManagerLayer.PasswordManagement
             _emailService = new EmailService();
             _tokenService = new TokenService();
             _passwordService = new PasswordService();
+            _sessionService = new SessionService();
         }
 
         private DatabaseContext CreateDbContext()
@@ -404,6 +407,38 @@ namespace ManagerLayer.PasswordManagement
             return -4; //-4 for BadRequest
         }
 
+        public int UpdatePasswordController(UpdatePasswordRequest request)
+        {
+            using (var _db = CreateDbContext())
+            {
+                AuthorizationManager am = new AuthorizationManager();
+                if (am.ValidateAndUpdateSession(_db, request.sessionToken) != null)
+                {
+                    var session = _sessionService.GetSession(_db, request.sessionToken);
+                    var user = _userService.GetUser(_db, session.UserId);
+                    string oldPasswordHashed = HashPassword(request.oldPassword, user.PasswordSalt);
+                    if (oldPasswordHashed == user.PasswordHash)
+                    {
+                        if (request.newPassword.Length >= 12 || request.newPassword.Length <= 2000)
+                        {
+                            if (!CheckIsPasswordPwned(request.newPassword))
+                            {
+                                string newPasswordHashed = HashPassword(request.newPassword, user.PasswordSalt);
+                                if (UpdatePassword(user, newPasswordHashed))
+                                {
+                                    return 1;
+                                }
+                                return -1;
+                            }
+                            return -2;
+                        }
+                        return -3;
+                    }
+                    return -4;
+                }
+                return -5;
+            }
+        }
         #endregion 
 
 

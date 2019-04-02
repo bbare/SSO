@@ -103,6 +103,7 @@
     <Compile Include="Repositories\SessionRepository.cs" />
     <Compile Include="Repositories\UserManagementRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
+    <Compile Include="Requests\UpdatePasswordRequest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

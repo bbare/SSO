@@ -2,14 +2,35 @@
   <div class="sendLink">
     <h1>Reset Password</h1>
     <br />
-    {{message}}
-    <br /><br />
-    {{errorMessage}}
-    <br/>
-    <input id='email' name="email" type="text" v-model="email" placeholder="Email"/>
-    <br />
-    <br />
-    <button type="submit" v-on:click="submitEmail">Send Email</button>
+        <v-form>
+        <v-text-field
+            name="email"
+            id="email"
+            v-model="email"
+            type="email"
+            label="Email" 
+            /><br 
+        />
+        <v-alert
+          :value="errorMessage"
+          dismissible=""
+          type="error"
+          transition="scale-transition"
+        >
+        {{errorMessage}}
+        </v-alert>
+        </v-form>
+
+      <v-alert
+        :value="message"
+        dismissible
+        type="success"
+        transition="scale-transition"
+      >
+      {{message}}
+      </v-alert>
+
+<v-btn color="success" v-on:click="submitEmail">Send Email</v-btn>
   </div>
 </template>
 
@@ -21,17 +42,17 @@ export default {
   name: 'SendResetLink',
   data () {
     return {
-      errorMessage: null,
-      message: 'Input email to send the reset link to:',
-      email: null
+      errorMessage: "",
+      message: "",
+      email: ""
     }
   },
   methods: {
     submitEmail: function () {
       if (!this.email) {
-        alert('Email field cannot be empty')
+        this.errorMessage = 'Email field cannot be empty'
       } else if (!this.validEmail(this.email)) {
-        alert('Valid email required.')
+        this.errorMessage = 'Valid email required'
       } else {
         axios({
           method: 'POST',
@@ -42,8 +63,9 @@ export default {
             'Access-Control-Allow-Credentials': true
           }
         })
-          .then(response => {this.message = response.data}, this.errorMessage = '')
-          .catch(e => { this.errorMessage = "Email service is unavailable." }, response => {this.message = response.data})
+          .then(response => {this.message = response.data}, this.errorMessage = '', 
+          setTimeout(() => this.redirectToLogin(), 3000))
+          .catch(e => { this.errorMessage = e.responsed.data })
       }
     },
     validEmail: function (email) {
@@ -57,12 +79,7 @@ export default {
 
 <style>
 .sendLink{
-  padding: 70px 0;
-  text-align: center;
-}
-
-input[type=text] {
-  border: 2px solid  rgb(69, 72, 75);
-  border-radius: 4px;
+  width: 70%;
+  margin: 1px auto;
 }
 </style>

@@ -2,31 +2,50 @@
   <div id="update">
     <div id="UpdatePassword">
       <v-alert
-      v-model="successAlert"
+      :value="message"
       dismissible
       type="success"
     >
-      Password has been updated
+      {{message}}
     </v-alert>
-      </div>
+
+    <v-alert
+      :value="errorMessage"
+      dismissible
+      type="error"
+      transition="scale-transition"
+    >
+    {{errorMessage}}
+    </v-alert>
+
+    </div>
      <h1>Update Password</h1>
     <br />
-    {{message}}
-    <br />
-    {{errorMessage}}
     <br />
     <div class="submitPasswords">
-        Old Password
-        <input id="oldPassword" type="text" v-model="oldPassword"/>
+        <v-text-field
+            name="oldPassword"
+            id="oldPassword"
+            v-model="oldPassword"
+            type="text"
+            label="Old Password"/>
         <br/>
-        New Password
-        <input id="newPassword" type="text" v-model="newPassword" />
+        <v-text-field
+            name="newPassword"
+            id="newPassword"
+            v-model="newPassword"
+            type="text"
+            label="New Password"/>
+      <br />
+      <v-text-field
+            name="confirmNewPassword"
+            id="confirmNewPassword"
+            v-model="confirmNewPassword"
+            type="text"
+            label="Confirm New Password"/>
+      <br />
         <br/>
-        Confirm New Password
-        <input id="confirmNewPassword" type="text" v-model="confirmNewPassword"/>
-        <br />
-        <br/>
-        <button class="button-submit-password" type="submit" v-on:click="submitPasswords">Update Password</button>
+        <v-btn color="success" v-on:click="submitPasswords">Update Password</v-btn>
     </div>
   </div>
 </template>
@@ -39,12 +58,11 @@ export default {
   name: 'UpdatePassword',
   data () {
     return {
-      message: 'Enter the new password:',
+      message: null,
       errorMessage: null,
       oldPassword: null,
       newPassword: null,
-      confirmNewPassword: null,
-      successAlert: null
+      confirmNewPassword: null
     }
   },
   methods: {
@@ -52,22 +70,23 @@ export default {
       this.$router.push( "/home" )
     },
     submitPasswords: function () {
-      if (this.newPassword.length < 12 || this.oldPassword.length < 12) {
-        alert('Password does not meet minimum length of 12')
-      } else if (this.newPassword.length > 2000 || this.oldPassword.length > 2000) {
-        alert('Password exceeds maximum length of 2000')
+      if(this.newPassword == null || this.confirmNewPassword == null || this.oldPassword == null){
+        this.errorMessage = 'Password fields cannot be empty'
+      }
+      else if (this.newPassword.length < 12 || this.oldPassword.length < 12 || this.confirmNewPassword.length < 12) {
+        this.errorMessage = 'Password does not meet minimum length of 12'
+      } else if (this.newPassword.length > 2000 || this.oldPassword.length > 2000 || this.confirmNewPassword.length > 2000) {
+        this.errorMessage = 'Password exceeds maximum length of 2000'
       } else if (this.confirmNewPassword !== this.newPassword) {
-        alert('Passwords do not match')
+        this.errorMessage = 'Passwords do not match'
       } else if (this.oldPassword === this.newPassword){
-        alert('Cannot use the same password to update')
+        this.errorMessage = 'Cannot use the same password to update'
       } else {
-        this.message = 'Updating Password'
         axios({
           method: 'POST',
           url: `${apiURL}/users/updatepassword`,
           data: {
             sessionToken: localStorage.token,
-            emailAddress: localStorage.email,
             oldPassword: this.$data.oldPassword,
             newPassword: this.$data.confirmNewPassword
           },
@@ -76,9 +95,8 @@ export default {
             'Access-Control-Allow-Credentials': true
           }
         })
-          .then(response => {this.message = response.data}, this.errorMessage = '', this.successAlert = true,
-          setTimeout(() => this.redirectToHome(), 3000))
-          .catch(e => { this.errorMessage = e.data })
+          .then(response => {this.message = response.data}, setTimeout(() => this.redirectToHome(), 3000))
+          .catch(e => { this.errorMessage = e.response.data })
       }
     }
   }
@@ -88,13 +106,8 @@ export default {
 <style>
 
 #update{
-  padding: 70px 0;
-  text-align: center;
-}
-
-input[type=text] {
-  border: 2px solid rgb(123, 171, 226);
-  border-radius: 4px;
+  width: 70%;
+  margin: 1px auto;
 }
 
 </style>

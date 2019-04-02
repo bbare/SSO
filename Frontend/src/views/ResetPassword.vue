@@ -10,38 +10,56 @@
     </v-alert>
     </div>
 
-    <div id="PasswordResetFail">
-      <v-alert
-      v-model="failAlert"
+    <v-alert
+      :value="errorMessage"
       dismissible
-      type="warning"
+      type="error"
+      transition="scale-transition"
     >
-      Password was not reset
+    {{errorMessage}}
     </v-alert>
-    </div>
+
+    <v-alert
+      v-model="wrongAnswerAlert"
+      dismissable
+      type="error"
+       transition="scale-transition"
+    >
+    One or more of the answers are incorrect
+    </v-alert>
+
     <h1>Reset Password</h1>
     <br />
-    {{message}}
-    <br /><br />
-    <div v-if="haveNetworkError">
-      {{errorMessage}}
-      <br/>
-      
-    </div>
-      
     <div class="SecurityQuestions" v-if="securityQuestions.length">
       <br/>
       <div v-for="(securityQuestion, index) in securityQuestions" :key="index">
         {{securityQuestion}}
       </div>
       <br />
-      <input id="SecurityAnswer1" type="text" v-model="securityAnswer1" placeholder="Answer for Question 1"/>
+      <v-text-field
+            name="SecurityAnswer1"
+            id="SecurityAnswer1"
+            v-model="securityAnswer1"
+            type="text"
+            label="Answer for Question 1"/>
       <br />
-      <input id="SecurityAnswer2" type="text" v-model="securityAnswer2" placeholder="Answer for Question 2"/>
+
+      <v-text-field
+            name="SecurityAnswer2"
+            id="SecurityAnswer2"
+            v-model="securityAnswer2"
+            type="text"
+            label="Answer for Question 2"/>
       <br />
-      <input id="SecurityAnswer3" type="text" v-model="securityAnswer3" placeholder="Answer for Question 3"/>
+
+      <v-text-field
+            name="SecurityAnswer3"
+            id="SecurityAnswer3"
+            v-model="securityAnswer3"
+            type="text"
+            label="Answer for Question 3"/>
       <br />
-      <button class="button-submit-answers" type="submit" v-on:click="submitAnswers">Submit Answers</button>
+      <v-btn color="success" v-on:click="submitAnswers">Submit Answers</v-btn>
     </div>
 
     <br/>
@@ -49,11 +67,22 @@
     <div id="NewPassword" v-if="showPasswordResetField">
       Enter a new password into the field
       <br/>
-      <input id="Password" type="text" v-model="newPassword"/>
+      <v-text-field
+            name="Password"
+            id="Password"
+            v-model="newPassword"
+            type="text"
+            label="New Password"/>
       <br />
-      <button class="button-submit-password" type="submit" v-on:click="submitNewPassword">Submit New Password</button>
+      <v-text-field
+            name="ConfirmPassword"
+            id="ConfirmPassword"
+            v-model="confirmNewPassword"
+            type="text"
+            label="Cofirm New Password"/>
+      <br />
+      <v-btn color="success" v-on:click="submitNewPassword">Submit New Password</v-btn>
     </div>
-
   </div>
 </template>
 
@@ -66,6 +95,7 @@ export default {
   data () {
     return {
       resetToken: this.$route.params.id,
+      message: null,
       errorMessage: null,
       securityQuestions: {
         securityQuestion1: null,
@@ -76,12 +106,13 @@ export default {
       securityAnswer2: null,
       securityAnswer3: null,
       showPasswordResetField: null,
+      confirmNewPassword: null,
       newPassword: null,
       networkErrorMessage: null,
       haveNetworkError: false,
       wrongAnswerCounter : 0,
       successAlert: null,
-      failAlert: null
+      wrongAnswerAlert: null
     }
   },
   created () {
@@ -95,22 +126,22 @@ export default {
     })
       .then(response => (this.securityQuestions = response.data),
         this.message = 'Enter your answers for the security questions, fields are case sensitive')
-      .catch(e => { this.message = e.response.data }, this.haveNetworkError = true)
-    if(this.message === "Reset link is no longer valid"){
-      this.$router.push("SendResetLink")
-    }
+      .catch(e => { this.errorMessage = e.response.data })
   },
   methods: {
+    redirectToReset: function () {
+      this.$router.push( "/sendresetlink" )
+    },
     redirectToLogin: function () {
       this.$router.push( "/login" )
     }, 
     submitAnswers: function () {
       if(this.wrongAnswerCounter === 3){
         this.errorMessage = "3 attempts have been made, reset link is no longer valid"
-        this.$router.push("SendResetLink")
+        this.$router.push("/SendResetLink")
       }
       if (!this.securityAnswer1 || !this.securityAnswer2 || !this.securityAnswer3){
-        alert("Security answers cannot be empty")
+        this.errorMessage = "Security answers cannot be empty"
       } else {
         axios({
         method: 'POST',
@@ -125,21 +156,20 @@ export default {
         }
       })
         .then(response => (this.showPasswordResetField = response.data))
-        .catch(e => { this.message = e.response.data }, this.haveNetworkError = true)
-      if (this.showPasswordResetField === false) {
-        this.errorMessage = "Answers are incorrect"
-        this.wrongAnswerCounter = this.wrongAnswerCounter + 1
-      }
+        .catch(e => { this.errorMessage = e.response.data }, this.wrongAnswerCounter = this.wrongAnswerCounter + 1)
       }
     },
     submitNewPassword: function () {
       if(this.newPassword === null){
-        alert("Password cannot be empty")
+        this.errorMessage = "Password cannot be empty"
       } else if (this.newPassword.length < 12){
-        alert("Password must be at least 12 characters")
+        this.errorMessage = "Password must be at least 12 characters"
       } else if (this.newPassword.length > 2000) {
-        alert("Password must be less than 2000 characters")
+        this.errorMessage = "Password must be less than 2000 characters"
+      } else if(this.newPassword != this.confirmNewPassword){
+        this.errorMessage = "Passwords do not match"
       } else {
+        this.errormessage = null
         axios({
         method: 'POST',
         url: `${apiURL}/reset/` + this.resetToken + '/resetpassword',
@@ -151,23 +181,16 @@ export default {
       })
         .then(response => (this.message = response.data), this.successAlert = true, 
         setTimeout(() => this.redirectToLogin(), 3000))
-        .catch(e => { this.message = e.response.data }, this.haveNetworkError = true, this.fail = true)
+        .catch(e => { this.errorMessage = e.response.data })
       }
     }
   }
 }
 </script>
 
-<style lang="css">
+<style>
 .reset{
-  padding: 70px 0;
-  text-align: center;
+  width: 70%;
+  margin: 1px auto;
 }
-
-input[type=text] {
-  border: 2px solid rgb(69, 72, 75);
-  border-radius: 4px;
-  width: 25%
-}
-
 </style>
