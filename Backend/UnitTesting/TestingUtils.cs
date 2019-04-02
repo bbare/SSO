@@ -122,7 +122,7 @@ namespace UnitTesting
         {
             PasswordReset pr = new PasswordReset
             {
-                PasswordResetID = new Guid(),
+                Id = new Guid(),
                 ResetToken = "",
                 UserID = new Guid(),
                 ExpirationTime = DateTime.Now.AddMinutes(5),

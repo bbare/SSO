@@ -80,6 +80,10 @@
     <Compile Include="Migrations\201903282245124_update-applications-add-UnderMaintenance.Designer.cs">
       <DependentUpon>201903282245124_update-applications-add-UnderMaintenance.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201904021012527_upate-passwordresets-modify-table.cs" />
+    <Compile Include="Migrations\201904021012527_upate-passwordresets-modify-table.Designer.cs">
+      <DependentUpon>201904021012527_upate-passwordresets-modify-table.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApiKey.cs" />
     <Compile Include="Models\Application.cs" />
@@ -133,6 +137,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903282245124_update-applications-add-UnderMaintenance.resx">
       <DependentUpon>201903282245124_update-applications-add-UnderMaintenance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904021012527_upate-passwordresets-modify-table.resx">
+      <DependentUpon>201904021012527_upate-passwordresets-modify-table.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
