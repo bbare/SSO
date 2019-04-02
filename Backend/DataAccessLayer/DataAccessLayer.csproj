@@ -103,6 +103,9 @@
     <Compile Include="Repositories\SessionRepository.cs" />
     <Compile Include="Repositories\UserManagementRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
+    <Compile Include="Requests\NewPasswordRequest.cs" />
+    <Compile Include="Requests\SecurityAnswersRequest.cs" />
+    <Compile Include="Requests\SendResetEmailRequest.cs" />
     <Compile Include="Requests\UpdatePasswordRequest.cs" />
   </ItemGroup>
   <ItemGroup>

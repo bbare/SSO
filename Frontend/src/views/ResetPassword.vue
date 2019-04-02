@@ -1,14 +1,13 @@
 <template>
   <div class="reset">
-    <div id="PasswordResetSuccess">
-      <v-alert
-      v-model="successAlert"
+    <v-alert
+      :value="message"
       dismissible
       type="success"
+      transition="scale-transition"
     >
-      Password has been reset
+    {{message}}
     </v-alert>
-    </div>
 
     <v-alert
       :value="errorMessage"
@@ -111,7 +110,6 @@ export default {
       networkErrorMessage: null,
       haveNetworkError: false,
       wrongAnswerCounter : 0,
-      successAlert: null,
       wrongAnswerAlert: null
     }
   },
@@ -124,8 +122,7 @@ export default {
         'Access-Control-Allow-Credentials': true
       }
     })
-      .then(response => (this.securityQuestions = response.data),
-        this.message = 'Enter your answers for the security questions, fields are case sensitive')
+      .then(response => (this.securityQuestions = response.data))
       .catch(e => { this.errorMessage = e.response.data })
   },
   methods: {
@@ -179,8 +176,7 @@ export default {
           'Access-Control-Allow-Credentials': true
         }
       })
-        .then(response => (this.message = response.data), this.successAlert = true, 
-        setTimeout(() => this.redirectToLogin(), 3000))
+        .then(response => (this.message = response.data))
         .catch(e => { this.errorMessage = e.response.data })
       }
     }

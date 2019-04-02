@@ -383,6 +383,25 @@ namespace ManagerLayer.PasswordManagement
             }
         }
 
+        public int CheckSecurityAnswersController(string resetToken, SecurityAnswersRequest request)
+        {
+            if (CheckPasswordResetValid(resetToken))
+            {
+                List<string> userSubmittedSecurityAnswers = new List<string>
+                {
+                    request.securityA1,
+                    request.securityA2,
+                    request.securityA3
+                };
+                if (CheckSecurityAnswers(resetToken, userSubmittedSecurityAnswers))
+                {
+                    return 1;
+                }
+                return -1;
+            }
+            return -2;
+        }
+
         //Function to get the security answers 
         public int ResetPasswordController(string resetToken, string newPassword)
         {
