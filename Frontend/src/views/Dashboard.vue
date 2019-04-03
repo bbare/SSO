@@ -8,7 +8,7 @@
       <v-container fluid grid-list-md>
         <v-layout row wrap>
           <v-flex xs12 sm6 md4 lg3 v-for="(app, index) in applications" :key="index">
-            <v-card hover @mouseover="app.showInfo = true" @mouseleave="app.showInfo = false">
+            <v-card hover>
               <v-icon
                 v-if="app.showInfo"
                 large
@@ -16,14 +16,21 @@
                 style="float: right"
                 @click="showInfo = true"
               >info</v-icon>
-
-              <v-card-title primary-title @click="launchLoading = true; launch(app.Id)">
+              <!-- @click="launchLoading = true; launch(app.Id)" -->
+              <v-card-title primary-title>
                 <img src="https://www.freeiconspng.com/uploads/no-image-icon-15.png">
                 <div id="content">
                   <h3 class="headline mb-0">
                     <strong>{{ app.Title }}</strong>
                   </h3>
                 </div>
+                <read-more
+                  more-str="read more"
+                  :text="msg"
+                  link="#"
+                  less-str="read less"
+                  :max-chars="100"
+                ></read-more>
               </v-card-title>
             </v-card>
             <div v-if="launchLoading">
@@ -42,11 +49,15 @@
 </template>
 
 <script>
+import Vue from "vue";
 import Loading from "@/components/Dialogs/Loading.vue";
 import AppInfo from "@/components/Dialogs/AppInfo.vue";
 import { signLaunch, submitLaunch } from "@/services/request";
 import { apiURL } from "@/const.js";
 import axios from "axios";
+import ReadMore from "vue-read-more";
+
+Vue.use(ReadMore);
 
 export default {
   components: { Loading, AppInfo },
@@ -55,7 +66,9 @@ export default {
       applications: [],
       showInfo: false,
       launchLoading: false,
-      error: ""
+      error: "",
+      msg:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent pharetra, ipsum sit amet aliquam rhoncus, felis tellus tempus mauris, eget interdum turpis enim vel velit. Nulla facilisi. Nulla hendrerit interdum est vel lacinia. Vivamus accumsan odio ultricies, porttitor magna non, ultrices odio. Cras consequat ipsum consequat, pharetra felis non, imperdiet sem. Vivamus vehicula pulvinar velit, et lobortis felis. In id turpis urna. Mauris dictum laoreet enim, nec sollicitudin magna. Maecenas magna quam, elementum sed volutpat at, sollicitudin in ipsum. Etiam pellentesque sem ligula, a faucibus nisl venenatis eu. Fusce rutrum, diam quis sagittis faucibus, diam orci porta diam, a fringilla odio sapien quis elit. Suspendisse semper vulputate mollis."
     };
   },
   watch: {
@@ -116,7 +129,6 @@ export default {
     // Add attribute for displaying info icon
     // Add attribute for editing app description
     for (var i = 0; i < this.applications.length; i++) {
-      this.$set(this.applications[i], "showInfo", false);
       this.$set(this.applications[i], "editDescription", false);
     }
   }
