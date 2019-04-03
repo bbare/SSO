@@ -8,8 +8,10 @@ using System.Web.Http;
 using ManagerLayer;
 using ServiceLayer.Exceptions;
 using System.ComponentModel.DataAnnotations;
+using ManagerLayer.PasswordManagement;
 using ServiceLayer.Services;
 using ManagerLayer.UserManagement;
+using DataAccessLayer.Requests;
 
 namespace KFC_WebAPI.Controllers
 {
@@ -164,6 +166,49 @@ namespace KFC_WebAPI.Controllers
                         return Content(HttpStatusCode.BadRequest, "Invalid Username/Password");
                     }
                 }
+            }
+        }
+
+        [HttpPost]
+        [Route("api/users/updatepassword")]
+        public IHttpActionResult UpdatePassword([FromBody] UpdatePasswordRequest request)
+        {
+            try
+            {
+                PasswordManager pm = new PasswordManager();
+                int result = pm.UpdatePasswordController(request);
+                if (result == 1)
+                {
+                    return Content(HttpStatusCode.OK, "Password has been updated");
+                }
+                else if (result == -1)
+                {
+                    return Content(HttpStatusCode.BadRequest, "New password matches old password");
+                }
+                else if (result == -2)
+                {
+                    return Content(HttpStatusCode.BadRequest, "Password has been pwned, please use a different password");
+                }
+                else if (result == -3)
+                {
+                    return Content(HttpStatusCode.BadRequest, "New password does not meet minimum password requirements");
+                }
+                else if (result == -4)
+                {
+                    return Content(HttpStatusCode.BadRequest, "Current password inputted does not match current password");
+                }
+                else if (result == -5)
+                {
+                    return Content(HttpStatusCode.Unauthorized, "Session invalid");
+                }
+                else
+                {
+                    return Content(HttpStatusCode.BadRequest, "Service Unavailable");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.BadRequest, "Service Unavailable");
             }
         }
     }

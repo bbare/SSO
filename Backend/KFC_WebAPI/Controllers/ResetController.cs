@@ -1,99 +1,130 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
+using DataAccessLayer.Requests;
 using ManagerLayer.PasswordManagement;
-using Newtonsoft.Json;
-
 namespace WebAPI.Controllers
 {
     public class ResetController : ApiController
     {
-        public class SecurityAnswerRequest
-        {
-            public string securityA1;
-            public string securityA2;
-            public string securityA3;
-        }
-
-        //IHttpActionResult
         //After the user fills in the field with email, this action gets called
         [HttpPost]
         [Route("api/reset/send")]
-        public HttpResponseMessage SendResetEmail([FromBody]string email)
+        public IHttpActionResult SendResetEmail([FromBody] SendResetEmailRequest request)
         {
-            if (email != null)
+            try
             {
                 PasswordManager pm = new PasswordManager();
-                string url = Request.RequestUri.ToString();
-
-                pm.AssignResetToken(email, url);
-                var response = new HttpResponseMessage(HttpStatusCode.Created)
+                int response = pm.SendResetEmail(request.email, request.url);
+                if (response == -1)
                 {
-                    Content = new StringContent("Email received")
-                };
-                return response;
+                    return Content((HttpStatusCode)503, "Email service unavailable");
+                }
+                else if (response == 0)
+                {
+                    return Content(HttpStatusCode.Unauthorized, "No email was provided");
+                }
+                else if (response == 1)
+                {
+                    return Content(HttpStatusCode.OK, "An email with further instructions has been sent");
+                }
+                else
+                {
+                    return Content(HttpStatusCode.BadRequest, "Service Unavailable");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
+                return Content(HttpStatusCode.BadRequest, "Service Unavailable");
             }
-
         }
 
         //After the user clicks the link in the email, this action gets called and takes the resetToken that's appended to the URL that was sent to the user
         [HttpGet]
         [Route("api/reset/{resetToken}")]
-        public string Get(string resetToken)
+        public IHttpActionResult Get(string resetToken)
         {
-            PasswordManager pm = new PasswordManager();
-            if (pm.CheckResetIDValid(resetToken))
+            try
             {
-                return JsonConvert.SerializeObject(pm.GetSecurityQuestions(resetToken));
-            }else
+                PasswordManager pm = new PasswordManager();
+                if (pm.CheckPasswordResetValid(resetToken))
+                {
+                    return Content(HttpStatusCode.OK, pm.GetSecurityQuestions(resetToken));
+                }
+                return Content(HttpStatusCode.Unauthorized, "Reset link is no longer valid");
+            }
+            catch (Exception ex)
             {
-                return null;
+                return Content(HttpStatusCode.BadRequest, "Service Unavailable");
             }
         }
 
         [HttpPost]
         [Route("api/reset/{resetToken}/checkanswers")]
-        public bool CheckAnswers(string resetToken, [FromBody] SecurityAnswerRequest request)
+        public IHttpActionResult CheckAnswers(string resetToken, [FromBody] SecurityAnswersRequest request)
         {
-            PasswordManager pm = new PasswordManager();
-            if (pm.CheckResetIDValid(resetToken))
+            try
             {
-                List<string> userSubmittedSecurityAnswer = new List<string>();
-                userSubmittedSecurityAnswer.Add(request.securityA1);
-                userSubmittedSecurityAnswer.Add(request.securityA2);
-                userSubmittedSecurityAnswer.Add(request.securityA3);
-                if (pm.CheckSecurityAnswers(resetToken, userSubmittedSecurityAnswer))
+                PasswordManager pm = new PasswordManager();
+                int response = pm.CheckSecurityAnswersController(resetToken, request);
+                if (response == 1)
                 {
-                    return true;
+                    return Content(HttpStatusCode.OK, true);
                 }
-                else
+                else if (response == -1)
                 {
-                    return false;
+                    return Content(HttpStatusCode.BadRequest, "One or more of the answers inputted are incorrect");
                 }
+                else if (response == -2)
+                {
+                    return Content(HttpStatusCode.Unauthorized, "Reset link is no longer valid");
+                }
+                else { return Content(HttpStatusCode.BadRequest, "Service Unavailable"); }
             }
-            return false;
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.BadRequest, "Service Unavailable");
+            }
         }
 
         [HttpPost]
         [Route("api/reset/{resetToken}/resetpassword")]
-        public bool ResetPassword(string resetToken, [FromBody] string newPasswordHash)
+        public IHttpActionResult ResetPassword(string resetToken, [FromBody] NewPasswordRequest request)
         {
-            PasswordManager pm = new PasswordManager();
-            if (pm.CheckResetIDValid(resetToken))
+            try
             {
-                if (pm.CheckIfPasswordResetAllowed(resetToken))
+                PasswordManager pm = new PasswordManager();
+                int response = pm.ResetPasswordController(resetToken, request.NewPassword);
+                if (response == 1)
                 {
-                    return pm.UpdatePassword(resetToken, newPasswordHash);
+                    return Content(HttpStatusCode.OK, "Password has been reset");
+                }
+                else if (response == -1)
+                {
+                    return Content(HttpStatusCode.BadRequest, "Password has been pwned, please use a different password");
+                }
+                else if (response == -2)
+                {
+                    return Content(HttpStatusCode.Unauthorized, "Reset password not allowed, answered security questions wrong too many times");
+                }
+                else if (response == -3)
+                {
+                    return Content(HttpStatusCode.Unauthorized, "Reset link is no longer valid");
+                }
+                else if (response == -4)
+                {
+                    return Content(HttpStatusCode.BadRequest, "Submitted password does not meet minimum requirements");
+                }
+                else
+                {
+                    return Content(HttpStatusCode.BadRequest, "Service Unavailable");
                 }
             }
-            return false;
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.BadRequest, "Service Unavailable");
+            }
         }
     }
 }

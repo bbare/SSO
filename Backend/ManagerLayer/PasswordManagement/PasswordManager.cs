@@ -3,18 +3,16 @@ using ServiceLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using DataAccessLayer.Models;
 using MimeKit;
 using System.Data.Entity.Validation;
+using DataAccessLayer.Requests;
 
 namespace ManagerLayer.PasswordManagement
 {
     public class PasswordManager
     {
-        //Variable for how long the token is supposed to be live
+        //Variable for how long the token is supposed to be live, in minutes
         private const double TimeToExpire = 5;
 
         private IResetService _resetService;
@@ -22,12 +20,16 @@ namespace ManagerLayer.PasswordManagement
         private IPasswordService _passwordService;
         private IEmailService _emailService;
         private ITokenService _tokenService;
+        private ISessionService _sessionService;
 
         public PasswordManager()
         {
             _resetService = new ResetService();
             _userService = new UserService();
             _emailService = new EmailService();
+            _tokenService = new TokenService();
+            _passwordService = new PasswordService();
+            _sessionService = new SessionService();
         }
 
         private DatabaseContext CreateDbContext()
@@ -37,10 +39,8 @@ namespace ManagerLayer.PasswordManagement
 
         public PasswordReset CreatePasswordReset(Guid userID)
         {
-            _tokenService = new TokenService();
             string generatedResetToken = _tokenService.GenerateToken();
-            
-            //Expiration time for the resetID
+
             DateTime newExpirationTime = DateTime.Now.AddMinutes(TimeToExpire);
 
             using (var _db = CreateDbContext())
@@ -59,10 +59,9 @@ namespace ManagerLayer.PasswordManagement
                 catch (DbEntityValidationException ex)
                 {
                     //catch error
-                    // detach session attempted to be created from the db context - rollback
+                    //detach PasswordReset attempted to be created from the db context - rollback
                     _db.Entry(response).State = System.Data.Entity.EntityState.Detached;
                 }
-
                 return null;
             }
         }
@@ -106,8 +105,12 @@ namespace ManagerLayer.PasswordManagement
 
         public DateTime GetPasswordResetExpiration(string resetToken)
         {
-            var PasswordResetRetrieved = GetPasswordReset(resetToken);
-            return PasswordResetRetrieved.ExpirationTime;
+            var passwordResetRetrieved = GetPasswordReset(resetToken);
+            if (passwordResetRetrieved != null)
+            {
+                return passwordResetRetrieved.ExpirationTime;
+            }
+            return DateTime.MinValue;
         }
 
         public bool ExistingResetToken(string resetToken)
@@ -118,16 +121,24 @@ namespace ManagerLayer.PasswordManagement
             }
         }
 
-        public int GetAttemptsPerID(string resetToken)
+        public int GetAttemptsPerToken(string resetToken)
         {
-            var PasswordResetRetrieved = GetPasswordReset(resetToken);
-            return PasswordResetRetrieved.ResetCount;
+            var passwordResetRetrieved = GetPasswordReset(resetToken);
+            if (passwordResetRetrieved != null)
+            {
+                return passwordResetRetrieved.ResetCount;
+            }
+            return -1;
         }
 
-        public bool GetResetIDStatus(string resetToken)
+        public bool GetPasswordResetStatus(string resetToken)
         {
-            var PasswordResetRetrieved = GetPasswordReset(resetToken);
-            return PasswordResetRetrieved.Disabled;
+            var passwordResetRetrieved = GetPasswordReset(resetToken);
+            if (passwordResetRetrieved != null)
+            {
+                return passwordResetRetrieved.Disabled; 
+            }
+            return false;
         }
 
         public string CreateResetURL(string baseURL, string resetToken)
@@ -137,23 +148,25 @@ namespace ManagerLayer.PasswordManagement
             return resetURL;
         }
 
+        //Completely disables the PasswordReset from resetting password
         public void LockPasswordReset(string resetToken)
         {
-            var PasswordResetRetrieved = GetPasswordReset(resetToken);
-            PasswordResetRetrieved.Disabled = true;
-            UpdatePasswordReset(PasswordResetRetrieved);
+            var passwordResetRetrieved = GetPasswordReset(resetToken);
+            passwordResetRetrieved.Disabled = true;
+            passwordResetRetrieved.AllowPasswordReset = false;
+            UpdatePasswordReset(passwordResetRetrieved);
         }
 
-        public bool CheckResetIDValid(string resetToken)
+        public bool CheckPasswordResetValid(string resetToken)
         {
             //See if ResetID exists 
             if (ExistingResetToken(resetToken))
             {
                 if (GetPasswordResetExpiration(resetToken) > DateTime.Now)
                 {
-                    if (!GetResetIDStatus(resetToken))
+                    if (!GetPasswordResetStatus(resetToken))
                     {
-                        if (GetAttemptsPerID(resetToken) < 4)
+                        if (GetAttemptsPerToken(resetToken) < 4)
                         {
                             return true;
                         }
@@ -167,35 +180,39 @@ namespace ManagerLayer.PasswordManagement
             return false;
         }
 
-        public int CountResetLinksMade24Hours(Guid UserID)
+        public int PasswordResetsMadeInPast24HoursByUser(Guid UserID)
         {
-            int NumOfResetLinks = 3;
+            int numOfResetLinks = 3;
             DateTime past24Hours = DateTime.Now.AddDays(-1);
-            DateTime currentTime = DateTime.Now;
-            using(var _db = CreateDbContext())
+            DateTime currentTime = DateTime.Now.AddMinutes(5);
+            using (var _db = CreateDbContext())
             {
-                var listOfTokensFrom24Hours = from r in _db.ResetIDs
+                var listOfTokensFrom24Hours = from r in _db.PasswordResets
                                               where r.ExpirationTime <= currentTime & r.ExpirationTime >= past24Hours & r.UserID == UserID
                                               select r;
-                NumOfResetLinks = listOfTokensFrom24Hours.Count();
-                return NumOfResetLinks;
+                numOfResetLinks = listOfTokensFrom24Hours.Count();
+                return numOfResetLinks;
             }
         }
 
-        public void AssignResetToken(string email, string url)
+        public void SendResetToken(string email, string url)
         {
-            using(var _db = CreateDbContext())
+            using (var _db = CreateDbContext())
             {
-                if(_userService.ExistingUser(_db, email))
+                if (_userService.ExistingUser(_db, email))
                 {
                     Guid userID = _userService.GetUser(_db, email).Id;
 
-                    if(CountResetLinksMade24Hours(userID) < 3)
+                    if (PasswordResetsMadeInPast24HoursByUser(userID) < 3)
                     {
                         PasswordReset newlyCreatedPasswordReset = CreatePasswordReset(userID);
                         string resetToken = newlyCreatedPasswordReset.ResetToken;
                         string resetLink = CreateResetURL(url, resetToken);
                         SendResetEmailUserExists(email, resetLink);
+                    }
+                    else
+                    {
+                        SendResetEmailUserExistsTooManyResets(email);
                     }
                 }
                 else
@@ -205,62 +222,76 @@ namespace ManagerLayer.PasswordManagement
             }
         }
 
-        //This password update function is for when the user is not logged in and has answered the security questions
-        public bool UpdatePassword(string resetToken, string newPasswordHash)
+        public bool CheckIsPasswordPwned(string newPasswordToCheck)
+        {
+            return (_passwordService.CheckPasswordPwned(newPasswordToCheck) > 3);
+        }
+
+        public string SaltAndHashPassword(string resetToken, string password)
         {
             var retrievedPasswordReset = GetPasswordReset(resetToken);
-            var userID = retrievedPasswordReset.UserID;
+            var userIDAssociatedWithPasswordReset = retrievedPasswordReset.UserID;
+            byte[] salt = _passwordService.GenerateSalt();
 
             using (var _db = CreateDbContext())
             {
-                //Query the User table get the user that matches the UserID in the arguments
-                var storedHash = _db.Users.Find(userID).PasswordHash;
-
-                //Check to see if the new password is the same as the old password
-                if (storedHash == newPasswordHash)
+                var userToUpdate = _db.Users.Find(userIDAssociatedWithPasswordReset);
+                if (userToUpdate != null)
                 {
-                    return false;
+                    userToUpdate.PasswordSalt = salt;
+                    _db.SaveChanges();
+                    string hashedPassword = _passwordService.HashPassword(password, salt);
+                    return hashedPassword;
                 }
-                else //If the new password is different, then update the password
+            }
+            return null;
+        }
+
+        public string HashPassword(string password, byte[] salt)
+        {
+            return _passwordService.HashPassword(password, salt);
+        }
+
+        //This password update function is for when the user is not logged in and has answered the security questions
+        public bool ResetPassword(string resetToken, string newPasswordHash)
+        {
+            var retrievedPasswordReset = GetPasswordReset(resetToken);
+            var userIDAssociatedWithPasswordReset = retrievedPasswordReset.UserID;
+
+            using (var _db = CreateDbContext())
+            {
+                var userToUpdate = _db.Users.Find(userIDAssociatedWithPasswordReset);
+                if (userToUpdate != null)
                 {
-                    //Set that retrieved user's password hash to the new password hash
-                    storedHash = newPasswordHash;
+                    userToUpdate.PasswordHash = newPasswordHash;
+                    _db.SaveChanges();
                     LockPasswordReset(resetToken);
                     _db.SaveChanges();
+                    SendPasswordChange(userToUpdate.Email);
                     return true;
                 }
+                return false;
             }
         }
 
         //This password update function is for when the user is already logged in and wants to update their password
         public bool UpdatePassword(User userToUpdate, string newPasswordHash)
         {
-            var userID = userToUpdate.Id;
-
             using (var _db = CreateDbContext())
             {
-                //Query the User table get the user that matches the UserID in the arguments
-                var storedHash = _db.Users.Find(userID).PasswordHash;
-
-                //Check to see if the new password is the same as the old password
+                var userRetrieved = _db.Users.Find(userToUpdate.Id);
+                var storedHash = userToUpdate.PasswordHash;
                 if (storedHash == newPasswordHash)
                 {
                     return false;
                 }
-                else //If the new password is different, then update the password
+                else
                 {
-                    //Set that retrieved user's password hash to the new password hash
-                    storedHash = newPasswordHash;
+                    userRetrieved.PasswordHash = newPasswordHash;
                     _db.SaveChanges();
                     return true;
                 }
             }
-        }
-
-        public bool CheckPassword(string newPasswordToCheck)
-        {
-            _passwordService = new PasswordService();
-            return (_passwordService.CheckPasswordPwned(newPasswordToCheck) < 3);
         }
 
         //Function to get security questions from the DB
@@ -304,34 +335,133 @@ namespace ManagerLayer.PasswordManagement
                     if (listOfSecurityAnswers[i] != userSubmittedSecurityAnswers[i])
                     {
                         //Needs to be updated to get the most recent PasswordReset
-                        var resetIDToCount = _db.ResetIDs.Find(retrievedUser.Id);
-                        if (resetIDToCount != null)
+                        retrievedPasswordReset.ResetCount = retrievedPasswordReset.ResetCount + 1;
+                        UpdatePasswordReset(retrievedPasswordReset);
+                        if (GetPasswordReset(retrievedPasswordReset.ResetToken).ResetCount > 4)
                         {
-                            resetIDToCount.ResetCount = resetIDToCount.ResetCount + 1;
-                            if(resetIDToCount.ResetCount > 4)
-                            {
-                                resetIDToCount.Disabled = true;
-                                resetIDToCount.AllowPasswordReset = true;
-                            }
-                            _db.SaveChanges();
+                            retrievedPasswordReset.Disabled = true;
+                            UpdatePasswordReset(retrievedPasswordReset);
                         }
                         return false;
                     }
                 }
+                retrievedPasswordReset.AllowPasswordReset = true;
+                UpdatePasswordReset(retrievedPasswordReset);
                 return true;
             }
         }
 
         public bool CheckIfPasswordResetAllowed(string resetToken)
         {
-            using(var _db = CreateDbContext())
+            using (var _db = CreateDbContext())
             {
-                var resetTokenRetrieved = _db.ResetIDs.Find(resetToken);
+                var resetTokenRetrieved = _resetService.GetPasswordReset(_db, resetToken);
                 return resetTokenRetrieved.AllowPasswordReset;
             }
         }
 
-        #region Email Functions
+
+        #region Controller Methods
+        //Function to start the reset password process
+        public int SendResetEmail(string emailAddress, string URL)
+        {
+            if(emailAddress != null)
+            {
+                try
+                {
+                    SendResetToken(emailAddress, URL);
+                    return 1; //1 for 200 response
+                }
+                catch
+                {
+                    return -1; //-1 for 503 error
+                }
+            }
+            else
+            {
+                return 0; // 0 for Unauthorized
+            }
+        }
+
+        public int CheckSecurityAnswersController(string resetToken, SecurityAnswersRequest request)
+        {
+            if (CheckPasswordResetValid(resetToken))
+            {
+                List<string> userSubmittedSecurityAnswers = new List<string>
+                {
+                    request.securityA1,
+                    request.securityA2,
+                    request.securityA3
+                };
+                if (CheckSecurityAnswers(resetToken, userSubmittedSecurityAnswers))
+                {
+                    return 1;
+                }
+                return -1;
+            }
+            return -2;
+        }
+
+        //Function to get the security answers 
+        public int ResetPasswordController(string resetToken, string newPassword)
+        {
+            if(newPassword != null && newPassword.Length < 2001 && newPassword.Length > 11)
+            {
+                if (CheckPasswordResetValid(resetToken))
+                {
+                    if (CheckIfPasswordResetAllowed(resetToken))
+                    {
+                        if (!CheckIsPasswordPwned(newPassword))
+                        {
+                            string newPasswordHashed = SaltAndHashPassword(resetToken, newPassword);
+                            ResetPassword(resetToken, newPasswordHashed);
+                            return 1; //1 for 200
+                        }
+                        return -1; // -1 for bad request
+                    }
+                    return -2; // -2 for unauthorized
+                }
+                return -3; // -3 for unauthorized
+            }
+            return -4; //-4 for BadRequest
+        }
+
+        public int UpdatePasswordController(UpdatePasswordRequest request)
+        {
+            using (var _db = CreateDbContext())
+            {
+                AuthorizationManager am = new AuthorizationManager();
+                if (am.ValidateAndUpdateSession(_db, request.sessionToken) != null)
+                {
+                    var session = _sessionService.GetSession(_db, request.sessionToken);
+                    var user = _userService.GetUser(_db, session.UserId);
+                    string oldPasswordHashed = HashPassword(request.oldPassword, user.PasswordSalt);
+                    if (oldPasswordHashed == user.PasswordHash)
+                    {
+                        if (request.newPassword.Length >= 12 || request.newPassword.Length <= 2000)
+                        {
+                            if (!CheckIsPasswordPwned(request.newPassword))
+                            {
+                                string newPasswordHashed = HashPassword(request.newPassword, user.PasswordSalt);
+                                if (UpdatePassword(user, newPasswordHashed))
+                                {
+                                    return 1;
+                                }
+                                return -1;
+                            }
+                            return -2;
+                        }
+                        return -3;
+                    }
+                    return -4;
+                }
+                return -5;
+            }
+        }
+        #endregion 
+
+
+        #region Email Methods
         //Function to create the email is user exists 
         public void SendResetEmailUserExists(string receiverEmail, string resetURL)
         {
@@ -339,17 +469,33 @@ namespace ManagerLayer.PasswordManagement
             string userFullName = receiverEmail;
             string template = "Hi, \r\n" +
                                              "You recently requested to reset your password for your KFC account, click the link below to reset it.\r\n" +
-                                             "The URL is only valid for the next 5 minutes\r\n {0}" +
+                                             "The URL is only valid for the next 5 minutes\r\n {0}\r\n\r\n" +
                                              "If you did not request to reset your password, please contact us by responding to this email.\r\n\r\n" +
                                              "Thanks, KFC Team";
-            string data = "resetURL";
+            string data = resetURL;
             string resetPasswordBodyString = string.Format(template, data);
 
             //Create the message that will be sent
-            MimeMessage emailToSend = _emailService.createEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, resetPasswordBodyString);
+            MimeMessage emailToSend = _emailService.CreateEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, resetPasswordBodyString);
             //Send the email with the message
-            _emailService.sendEmail(emailToSend);
+            _emailService.SendEmail(emailToSend);
+        }
 
+        //Function to create the email is user exists, but has too many reset links
+        public void SendResetEmailUserExistsTooManyResets(string receiverEmail)
+        {
+            string resetPasswordSubjectString = "KFC SSO Reset Password";
+            string userFullName = receiverEmail;
+            string resetPasswordBodyString = "Hi, \r\n" +
+                                             "You recently requested to reset your password for your KFC account, however 3 resets have been attempted within the past 24 hours.\r\n" +
+                                             "Please wait 24 hours until you attempt to reset your password\r\n\r\n" +
+                                             "If you did not request to reset your password, please contact us by responding to this email.\r\n\r\n" +
+                                             "Thanks, KFC Team";
+
+            //Create the message that will be sent
+            MimeMessage emailToSend = _emailService.CreateEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, resetPasswordBodyString);
+            //Send the email with the message
+            _emailService.SendEmail(emailToSend);
         }
 
         //Function to create the email is user doesn't exist
@@ -366,9 +512,9 @@ namespace ManagerLayer.PasswordManagement
                               "Best Regards, KFC Team";
 
             //Create the message that will be sent
-            MimeMessage emailToSend = _emailService.createEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, resetPasswordUserDoesNotExistEmailBody);
+            MimeMessage emailToSend = _emailService.CreateEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, resetPasswordUserDoesNotExistEmailBody);
             //Send the email with the message
-            _emailService.sendEmail(emailToSend);
+            _emailService.SendEmail(emailToSend);
         }
 
         //Function to create the email if the password was changed
@@ -377,19 +523,16 @@ namespace ManagerLayer.PasswordManagement
             //Need SQL Query to get info about user from DB
             string resetPasswordSubjectString = "KFC SSO Reset Password";
             string userFullName = receiverEmail;
-            string template = "Hi {0}, \r\n" +
+            string changedPasswordBody = "Hi, \r\n" +
                                              "You have changed your password on KFC SSO.\r\n" +
                                              "If you did not change your password, please contact us by responding to this email.\r\n\r\n" +
                                              "Thanks, KFC Team";
-            string data = "userFirstName";
-            //Fill the text with information
-            string resetPasswordBodyString = string.Format(template, data);
             //Create the email service object
             EmailService es = new EmailService();
             //Create the message that will be sent
-            MimeMessage emailToSend = _emailService.createEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, resetPasswordBodyString);
+            MimeMessage emailToSend = _emailService.CreateEmailPlainBody(userFullName, receiverEmail, resetPasswordSubjectString, changedPasswordBody);
             //Send the email with the message
-            _emailService.sendEmail(emailToSend);
+            _emailService.SendEmail(emailToSend);
         }
         #endregion
 

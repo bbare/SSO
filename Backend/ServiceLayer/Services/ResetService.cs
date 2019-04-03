@@ -1,22 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using DataAccessLayer.Database;
+﻿using DataAccessLayer.Database;
 using DataAccessLayer.Models;
 using DataAccessLayer.Repositories;
-using MimeKit;
-using MailKit;
-using MailKit.Net.Smtp;
 
 
 namespace ServiceLayer.Services
 {
-    public class ResetService: IResetService
+    public class ResetService : IResetService
     {
-
         private ResetRepository _resetRepo;
 
         public ResetService()
@@ -32,7 +22,6 @@ namespace ServiceLayer.Services
         public PasswordReset DeletePasswordReset(DatabaseContext _db, string resetToken)
         {
             return _resetRepo.DeleteReset(_db, resetToken);
-            
         }
 
         public PasswordReset GetPasswordReset(DatabaseContext _db, string resetToken)
@@ -47,7 +36,12 @@ namespace ServiceLayer.Services
 
         public bool ExistingReset(DatabaseContext _db, string resetToken)
         {
-            return _resetRepo.ExistingReset(_db, resetToken);
+            var result = GetPasswordReset(_db, resetToken);
+            if (result != null)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

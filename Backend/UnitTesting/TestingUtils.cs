@@ -122,7 +122,7 @@ namespace UnitTesting
         {
             PasswordReset pr = new PasswordReset
             {
-                PasswordResetID = new Guid(),
+                Id = new Guid(),
                 ResetToken = "",
                 UserID = new Guid(),
                 ExpirationTime = DateTime.Now.AddMinutes(5),
@@ -142,19 +142,21 @@ namespace UnitTesting
             }
         }
 
-        public PasswordReset CreatePasswordResetObject()
+        public PasswordReset CreatePasswordResetObject(User user)
         {
             PasswordReset pr = new PasswordReset
             {
-                PasswordResetID = new Guid(),
-                ResetToken = "",
-                UserID = new Guid(),
+                Id = Guid.NewGuid(),
+                ResetToken = Guid.NewGuid().ToString(),
+                UserID = user.Id,
+                User = user,
                 ExpirationTime = DateTime.Now.AddMinutes(5),
                 ResetCount = 0,
                 Disabled = false
             };
             return pr;
         }
+
 
         public Application CreateApplicationInDb()
         {

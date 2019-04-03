@@ -5,14 +5,13 @@
     </v-toolbar-title>
     <v-spacer></v-spacer>
 
-    <v-btn v-if="!isLoggedIn.isLogin" to="home" flat>Home</v-btn>
-    <v-btn v-else to="dashboard" flat>Home</v-btn>
-    <v-btn to="register" flat v-if="!isLoggedIn.isLogin">Register</v-btn>
-    <v-btn to="about" flat>About</v-btn>
+    <v-btn v-if="!isLoggedIn.isLogin" to="/home" flat>Home</v-btn>
+    <v-btn v-else to="/dashboard" flat>Home</v-btn>
+    <v-btn to="/register" flat v-if="!isLoggedIn.isLogin">Register</v-btn>
+    <v-btn to="/about" flat>About</v-btn>
     <v-menu offset-y id="appDropDown">
       <template slot="activator">
-        <v-btn v-on="on"
-                flat>
+        <v-btn flat>
           <span>Application</span>
           <v-icon>expand_more</v-icon>
         </v-btn>
@@ -20,7 +19,7 @@
       <v-list dense>
         <v-list-tile v-for="link in appLinks"
                       :key="link.text"
-                      router :to="link.route">
+                      router :to="link.route" >
           <v-list-tile-title>{{link.text}}</v-list-tile-title>
         </v-list-tile>
       </v-list>
@@ -60,7 +59,7 @@
         ],
         links: [],
         UserMenuItems: [
-          { title: 'Update Password', route: '' },
+          { title: 'Update Password', route: '/updatepassword' },
           { title: 'Logout', route:'' }       
         ],
         isLoggedIn: store.state

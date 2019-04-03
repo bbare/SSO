@@ -26,8 +26,8 @@ namespace UnitTesting
             string ActualEmailSubject = "Message Test";
             string ActualEmailBody = "This is a test body";
             //Act
-            var expected = es.createEmailPlainBody(ExpectedReceiverName, ExpectedReceiverEmail, ExpectedEmailSubject, ExpectedEmailBody);
-            var actual = es.createEmailPlainBody(ActualReceiverName, ActualReceiverEmail, ActualEmailSubject, ActualEmailBody);
+            var expected = es.CreateEmailPlainBody(ExpectedReceiverName, ExpectedReceiverEmail, ExpectedEmailSubject, ExpectedEmailBody);
+            var actual = es.CreateEmailPlainBody(ActualReceiverName, ActualReceiverEmail, ActualEmailSubject, ActualEmailBody);
             //Assert
             Assert.AreEqual(actual, expected);
         }
@@ -46,8 +46,8 @@ namespace UnitTesting
             string ActualEmailSubject = "Message Testz";
             string ActualEmailBody = "This is a test bodyz";
             //Act
-            var expected = es.createEmailPlainBody(ExpectedReceiverName, ExpectedReceiverEmail, ExpectedEmailSubject, ExpectedEmailBody);
-            var actual = es.createEmailPlainBody(ActualReceiverName, ActualReceiverEmail, ActualEmailSubject, ActualEmailBody);
+            var expected = es.CreateEmailPlainBody(ExpectedReceiverName, ExpectedReceiverEmail, ExpectedEmailSubject, ExpectedEmailBody);
+            var actual = es.CreateEmailPlainBody(ActualReceiverName, ActualReceiverEmail, ActualEmailSubject, ActualEmailBody);
             //Assert
             Assert.AreNotEqual(actual, expected);
         }
