@@ -8,6 +8,7 @@ import GenerateKey from '@/views/GenerateKey.vue'
 import AppDelete from '@/views/AppDelete.vue'
 import Login from '@/views/Login.vue'
 import Dashboard from '@/views/Dashboard.vue'
+import Logout from '@/views/Logout.vue'
 
 Vue.use(VueRouter)
 
@@ -59,6 +60,11 @@ let router = new VueRouter({
       path: '/dashboard',
       name: 'dashboard',
       component: Dashboard
+    },
+    {
+      path: '/logout',
+      name: 'logout',
+      component: Logout
     },
     {
       path: '*',

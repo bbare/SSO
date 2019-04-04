@@ -26,7 +26,7 @@
       </v-list>
     </v-menu>
     <v-btn to="login" flat v-if="!isLoggedIn.isLogin">Login</v-btn>
-    <v-menu v-else offset-y
+    <v-menu offset-y
             content-class="dropdown-menu"
             transition="slide-y-transition" v-if="isLoggedIn.isLogin">
       <v-btn slot="activator" fab dark color="teal">
@@ -38,7 +38,8 @@
         <v-list-tile v-for="item in this.UserMenuItems"
                       :key="item.title"
                       route :to="item.route"
-                      @click="">
+                      @click="item.links"
+                      >
           <v-list-tile-title>{{item.title}}</v-list-tile-title>
         </v-list-tile>
       </v-list>
@@ -61,7 +62,7 @@
         links: [],
         UserMenuItems: [
           { title: 'Update Password', route: '' },
-          { title: 'Logout', route:'' }       
+          { title: 'Logout', route:'/Logout',links:'Logout' }       
         ],
         isLoggedIn: store.state
       }
