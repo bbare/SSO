@@ -1,9 +1,9 @@
+using System;
 using DataAccessLayer.Database;
 using DataAccessLayer.Models;
-using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ServiceLayer.Services;
-
+using System.Data.Entity;
 using System.Security.Cryptography;
 
 namespace UnitTesting
@@ -46,7 +46,7 @@ namespace UnitTesting
 
         public User CreateUserInDb(User user)
         {
-            using (var _db = new DatabaseContext())
+            using ( var _db = new DatabaseContext() )
             {
                 _db.Entry(user).State = System.Data.Entity.EntityState.Added;
                 _db.SaveChanges();
@@ -94,7 +94,7 @@ namespace UnitTesting
 
         public Session CreateSessionInDb(Session session)
         {
-            using (var _db = new DatabaseContext())
+            using(var _db = new DatabaseContext())
             {
                 _db.Sessions.Add(session);
                 _db.SaveChanges();
