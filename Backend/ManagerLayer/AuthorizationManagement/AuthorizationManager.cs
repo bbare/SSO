@@ -46,6 +46,7 @@ namespace ManagerLayer
 			}
 			else
 			{
+				_sessionService.DeleteSession(_db, token);
 				return null;
 			}
 		}
