@@ -43,6 +43,12 @@ namespace KFC_WebAPI.Controllers
         public string securityQ3Answer { get; set; }
     }
 
+    public class UserDeleteRequest
+    {
+        [Required]
+        public string token { get; set; }
+    }
+
     public class UsersController : ApiController
     {
         [HttpPost]
@@ -209,6 +215,25 @@ namespace KFC_WebAPI.Controllers
             catch (Exception ex)
             {
                 return Content(HttpStatusCode.BadRequest, "Service Unavailable");
+            }
+        }
+
+        [HttpPost]
+        [Route("api/users/delete")]
+        public IHttpActionResult Delete([FromBody] UserDeleteRequest request)
+        {
+            using (var _db = new DatabaseContext())
+            {
+                IAuthorizationManager authorizationManager = new AuthorizationManager();
+                Session session = authorizationManager.ValidateAndUpdateSession(_db, request.token);
+                if (session == null)
+                {
+                    return Unauthorized();
+                }
+                UserManager um = new UserManager();
+                um.DeleteUser(_db, session.UserId);
+                return Ok();
+                // need to handle errors for invalid session and server errors
             }
         }
     }

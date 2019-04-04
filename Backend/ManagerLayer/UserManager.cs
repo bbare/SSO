@@ -94,5 +94,26 @@ namespace ManagerLayer
             IUserService _userService = new UserService();
             return _userService.GetUser(_db, userId);
         }
+
+        /// <summary>
+        ///     Delete user from SSO
+        ///     - in development
+        /// </summary>
+        public User DeleteUser(DatabaseContext _db, Guid userId)
+        {
+            // IUserDeleteService
+            UserDeleteService udrs = new UserDeleteService();
+            IUserService _userService = new UserService();
+            try
+            {
+
+            }
+            catch
+            {
+
+
+            }
+            return _userService.DeleteUser(_db, userId);
+        }
     }
 }
