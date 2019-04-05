@@ -3,6 +3,10 @@ using DataAccessLayer.Models;
 using ServiceLayer.Exceptions;
 using ServiceLayer.Services;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Net.Http;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 
@@ -101,11 +105,24 @@ namespace ManagerLayer
         /// </summary>
         public User DeleteUser(DatabaseContext _db, Guid userId)
         {
-            // IUserDeleteService
-            UserDeleteService udrs = new UserDeleteService();
+            UserDeleteService uds = new UserDeleteService();
             IUserService _userService = new UserService();
+            User user = _userService.GetUser(_db, userId);
+            var applications = ApplicationService.GetAllApplications(_db);
+            List<Application> appList = applications.Cast<Application>().ToList();
             try
             {
+                Parallel.ForEach(appList, app =>
+                {
+                    Task<HttpResponseMessage> HttpResponse = uds.DeleteFromApp(app, user.Id, user.Email);
+                    if (!HttpResponse.Result.IsSuccessStatusCode || HttpResponse.Result.StatusCode != System.Net.HttpStatusCode.NotFound)
+                    {
+                        //means individual application failed to perform user delete if not a 404 not found
+
+                        //re run delete service
+                    }
+
+                });
 
             }
             catch
