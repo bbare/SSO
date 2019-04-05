@@ -27,18 +27,19 @@ namespace KFC_WebAPI.Controllers
         [Route("api/Logout")]
         public IHttpActionResult DeleteSession([FromBody] LogoutRequest request)
         {
+            SessionService serv = new SessionService();
             using (var _db = new DatabaseContext())
             {
                 IAuthorizationManager authorizationManager = new AuthorizationManager();
-               
-                Session session = authorizationManager.DeleteSession(_db, request.token);
-                var result = 
-               
+                
+              
+                
                 try
                 {
+                    var response = authorizationManager.DeleteSession(_db, request.token);
                     _db.SaveChanges();
                     
-                    if (result == null)
+                    if (response != null)
                     {
                         
                         return Ok("User has logged out");

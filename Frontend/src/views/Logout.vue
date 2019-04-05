@@ -17,7 +17,7 @@ export default {
     
       axios.post(url, 
         {
-          token: this.$data.token
+          token: localStorage.getItem('token')
         })
         .then(resp=>{
           let respData = resp.data;

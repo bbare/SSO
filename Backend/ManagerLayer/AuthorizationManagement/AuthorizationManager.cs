@@ -50,6 +50,8 @@ namespace ManagerLayer
 
         public Session DeleteSession(DatabaseContext _db, string token)
         {
+            
+
             return _sessionService.DeleteSession(_db, token);
         }
     }
