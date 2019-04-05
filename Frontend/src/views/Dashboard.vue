@@ -1,43 +1,36 @@
 <template>
   <div id="portal">
-    <!-- Feel free to hardcode an app ID here until dashboard logic is complete -->
-    <!-- <button v-on:click="launch('D146A971-593A-47E4-ABCB-8B3AAF686ECD')">Fake App (hardcoded ID)</button> -->
-
     <v-card>
       <h1 id="applicationPortal">Application Portal</h1>
       <v-container fluid grid-list-md>
         <v-layout row wrap>
           <v-flex xs12 sm6 md4 lg3 v-for="(app, index) in applications" :key="index">
             <v-card hover>
-              <v-icon
-                v-if="app.showInfo"
-                large
-                color="orange"
-                style="float: right"
-                @click="showInfo = true"
-              >info</v-icon>
-              <!-- @click="launchLoading = true; launch(app.Id)" -->
               <v-card-title primary-title>
-                <img src="https://www.freeiconspng.com/uploads/no-image-icon-15.png">
+                <!-- If there is no logo, then a default image will be shown -->
+                <img
+                  v-if="app.LogoUrl === null"
+                  src="https://www.freeiconspng.com/uploads/no-image-icon-15.png"
+                >
+                <img v-else :src="app.LogoUrl">
                 <div id="content">
-                  <h3 class="headline mb-0">
+                  <!-- Launching to an app can be done by clicking the app title -->
+                  <h3 class="headline mb-0" @click="launchLoading = true; launch(app.Id)">
                     <strong>{{ app.Title }}</strong>
                   </h3>
                 </div>
+                <!-- Allows expansion or shrinkage of app description -->
                 <read-more
                   more-str="read more"
-                  :text="msg"
-                  link="#"
+                  :text="app.Description"
                   less-str="read less"
-                  :max-chars="100"
+                  :max-chars="150"
                 ></read-more>
               </v-card-title>
             </v-card>
+            <!-- Loads only if app is in progress of launching -->
             <div v-if="launchLoading">
               <Loading :dialog="launchLoading"/>
-            </div>
-            <div v-if="showInfo">
-              <AppInfo :dialog="showInfo" :appDetails="app" @exitAppInfo="exitAppInfo"/>
             </div>
           </v-flex>
         </v-layout>
@@ -51,7 +44,6 @@
 <script>
 import Vue from "vue";
 import Loading from "@/components/Dialogs/Loading.vue";
-import AppInfo from "@/components/Dialogs/AppInfo.vue";
 import { signLaunch, submitLaunch } from "@/services/request";
 import { apiURL } from "@/const.js";
 import axios from "axios";
@@ -60,27 +52,22 @@ import ReadMore from "vue-read-more";
 Vue.use(ReadMore);
 
 export default {
-  components: { Loading, AppInfo },
+  components: { Loading },
   data() {
     return {
       applications: [],
-      showInfo: false,
       launchLoading: false,
-      error: "",
-      msg:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent pharetra, ipsum sit amet aliquam rhoncus, felis tellus tempus mauris, eget interdum turpis enim vel velit. Nulla facilisi. Nulla hendrerit interdum est vel lacinia. Vivamus accumsan odio ultricies, porttitor magna non, ultrices odio. Cras consequat ipsum consequat, pharetra felis non, imperdiet sem. Vivamus vehicula pulvinar velit, et lobortis felis. In id turpis urna. Mauris dictum laoreet enim, nec sollicitudin magna. Maecenas magna quam, elementum sed volutpat at, sollicitudin in ipsum. Etiam pellentesque sem ligula, a faucibus nisl venenatis eu. Fusce rutrum, diam quis sagittis faucibus, diam orci porta diam, a fringilla odio sapien quis elit. Suspendisse semper vulputate mollis."
+      error: ""
     };
   },
   watch: {
+    // Loading animation will need to be modified to finish when the app finishes launching
     launchLoading(val) {
       if (!val) return;
       setTimeout(() => (this.launchLoading = false), 3000);
     }
   },
   methods: {
-    exitAppInfo(hideInfo) {
-      this.showInfo = hideInfo;
-    },
     launch(appId) {
       this.error = "";
 
@@ -125,12 +112,6 @@ export default {
     await axios
       .get(`${apiURL}/applications`)
       .then(response => (this.applications = response.data));
-
-    // Add attribute for displaying info icon
-    // Add attribute for editing app description
-    for (var i = 0; i < this.applications.length; i++) {
-      this.$set(this.applications[i], "editDescription", false);
-    }
   }
 };
 </script>
@@ -153,5 +134,9 @@ export default {
 img {
   width: 55px;
   height: 55px;
+}
+
+.headline:hover {
+  text-decoration: underline;
 }
 </style>
