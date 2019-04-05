@@ -39,6 +39,7 @@ namespace DataAccessLayer.Repositories
             if (session == null)
                 return null;
             _db.Entry(session).State = EntityState.Deleted;
+			_db.SaveChanges();
             return session;
         }
     }
