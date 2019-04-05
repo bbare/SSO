@@ -14,12 +14,12 @@ namespace DataAccessLayer.Database
     public class DatabaseContext : DbContext
     {
 
-        public DatabaseContext()
-        {
+       // public DatabaseContext()
+       // {
             // set a system enviorment variable for dev, "Data Source=(localdb);Initial Catalog=SSO;Integrated Security = True"
-            var connectionString = Environment.GetEnvironmentVariable("KFC_SSO_DEV_DATABASE", EnvironmentVariableTarget.User);
-            this.Database.Connection.ConnectionString = connectionString;
-        }
+         //   var connectionString = Environment.GetEnvironmentVariable("KFC_SSO_DEV_DATABASE", EnvironmentVariableTarget.User);
+        //    this.Database.Connection.ConnectionString = connectionString;
+      //  }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Session> Sessions { get; set; }

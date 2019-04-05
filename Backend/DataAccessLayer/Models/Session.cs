@@ -14,6 +14,13 @@ namespace DataAccessLayer.Models
             ExpiresAt = DateTime.UtcNow.AddMinutes(MINUTES_UNTIL_EXPIRATION);
             Id = Guid.NewGuid();
         }
+		public Session(DateTime CreatedAt, DateTime UpdatedAt, DateTime ExpiresAt)
+		{
+			this.CreatedAt = CreatedAt;
+			this.UpdatedAt = UpdatedAt;
+			this.ExpiresAt = ExpiresAt;
+			Id = Guid.NewGuid();
+		}
 
         [Required]
         public string Token { get; set; }

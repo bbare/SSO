@@ -92,6 +92,7 @@ namespace UnitTesting
             return session;
         }
 
+
         public Session CreateSessionInDb(Session session)
         {
             using(var _db = new DatabaseContext())
@@ -117,8 +118,22 @@ namespace UnitTesting
 
             return CreateSessionInDb(session);
         }
-        
-        public PasswordReset CreatePasswordResetInDB()
+		public Session CreateExpiredSessionInDb(User user)
+		{
+			Session session = new Session
+			{
+				Id = Guid.NewGuid(),
+				UserId = user.Id,
+				CreatedAt = DateTime.UtcNow.AddHours(-2),
+				UpdatedAt = DateTime.UtcNow.AddHours(-2),
+				ExpiresAt = DateTime.UtcNow.AddHours(-1.5),
+			Token = (Guid.NewGuid()).ToString()
+			};
+
+			return CreateSessionInDb(session);
+		}
+
+		public PasswordReset CreatePasswordResetInDB()
         {
             PasswordReset pr = new PasswordReset
             {
